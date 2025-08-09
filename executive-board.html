@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Executive Board - AJHA Consultancy Services</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" />
+<style>
+:root {
+    --primary-bg: #0f172a;
+    --secondary-bg: #1e293b;
+    --accent-color: #f97316;
+    --text-color-light: #e2e8f0;
+    --text-color-muted: #94a3b8;
+    --heading-color: #cbd5e1;
+}
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--primary-bg);
+    color: var(--text-color-light);
+    scroll-behavior: smooth;
+}
+header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: var(--primary-bg);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+}
+.header-logo-container { display: flex; align-items: center; gap: 0.72rem; }
+.header-logo { height: 45px; width: auto; margin-right: 0.35rem; }
+.company-name {
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 1.25rem;
+}
+nav { margin-left: auto; }
+nav a, .dropbtn {
+    margin-left: 1.25rem;
+    text-decoration: none;
+    color: var(--text-color-light);
+    font-weight: 400;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    outline: none;
+    display: inline-block;
+}
+nav a.active, .dropbtn.active {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+nav a:hover, .dropbtn:hover {
+    color: var(--accent-color);
+}
+.dropdown { position: relative; display: inline-block; }
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: var(--secondary-bg);
+    min-width: 230px;
+    top: 100%;
+    left: 0;
+    border-radius: 7px;
+    box-shadow: 0 8px 28px rgba(31, 38, 135, 0.17);
+    z-index: 3;
+    padding: 10px 0;
+}
+.dropdown-content a {
+    color: var(--text-color-light);
+    padding: 12px 18px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.97rem;
+    transition: background 0.2s, color 0.2s;
+}
+.dropdown-content a:hover, .dropdown-content a.active {
+    background: rgba(249, 115, 22, 0.09);
+    color: var(--accent-color);
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.executive-board-hero {
+    position: relative;
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--secondary-bg);
+    background-size: cover;
+    background-position: center;
+}
+.executive-board-hero .video-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0,0,0,0.6);
+    z-index: 1;
+}
+.executive-board-hero h1 {
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: var(--heading-color);
+    margin: 0;
+    z-index: 2;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
+.board-members-section {
+    padding: 4rem 5%;
+    text-align: center;
+}
+.board-category-heading {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    margin: 3rem auto 2rem auto;
+    max-width: 1200px;
+    text-align: left;
+    border-bottom: 2px solid var(--secondary-bg);
+    padding-bottom: 1rem;
+}
+.board-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+    gap: 3rem;
+}
+.board-member-card {
+    background-color: var(--secondary-bg);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    text-align: center;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.board-member-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(255,102,0,0.4);
+}
+.board-member-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1.5rem;
+    border: 4px solid var(--accent-color);
+    transition: border-color 0.3s ease;
+}
+.board-member-card:hover img {
+    border-color: var(--text-color-light);
+}
+.board-member-card h3 {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+}
+.board-member-card p {
+    font-size: 1rem;
+    color: var(--text-color-muted);
+    line-height: 1.6;
+}
+.board-member-card p strong {
+    color: var(--heading-color);
+}
+.board-member-card .bio {
+    color: var(--text-color-light);
+}
+footer {
+    background-color: var(--secondary-bg);
+    padding: 3rem 5% 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+.footer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.footer-logo img { height: 60px; }
+.footer-logo h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: 600;
+}
+.footer-section h4 {
+    color: #fff;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    position: relative;
+}
+.footer-section h4::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    background-color: var(--accent-color);
+    margin-top: 5px;
+}
+.footer-section p, .footer-section a, .footer-section address {
+    color: var(--text-color-muted);
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+    font-style: normal;
+}
+.footer-section a:hover {
+    color: var(--accent-color);
+}
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.social-links a {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+    color: #fff;
+    font-size: 1.2rem;
+}
+.social-links a:hover {
+    background-color: var(--accent-color);
+    color: var(--primary-bg);
+}
+.contact-info {
+    margin-bottom: 1.5rem;
+}
+.contact-info h5 {
+    color: #fff;
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+.footer-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.footer-nav li a {
+    padding: 0.2rem 0;
+    display: inline-block;
+}
+.footer-bottom {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #333;
+    color: #888;
+    font-size: 0.9rem;
+}
+@media (max-width: 1024px) {
+    .board-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    footer {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+    }
+    .footer-section {
+        align-items: center;
+    }
+    .footer-section h4::after {
+        margin: 5px auto 0;
+    }
+    .footer-nav {
+        text-align: center;
+    }
+}
+@media (max-width: 768px) {
+    .executive-board-hero h1 {
+        font-size: 2.5rem;
+    }
+    .board-grid {
+        grid-template-columns: 1fr;
+    }
+    .board-category-heading {
+        text-align: center;
+    }
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 0.5rem;
+    }
+    nav a, .dropbtn {
+        margin-left: 0.75rem;
+        font-size: 0.9rem;
+    }
+}
+</style>
+</head>
+<body>
+<header>
+    <div class="header-logo-container">
+        <img src="logo.png" alt="AJHA Consultancy Services Logo" class="header-logo" />
+        <span class="company-name">AJHA CONSULTANCY SERVICES</span>
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="about-us.html">About Us</a>
+        <div class="dropdown">
+            <a href="#" class="dropbtn" tabindex="0">Services <i class="fas fa-caret-down"></i></a>
+            <div class="dropdown-content">
+                <a href="our-services.html#advanced-enterprise">Advanced Enterprise</a>
+                <a href="our-services.html#digital-transformation">Digital Transformation</a>
+                <a href="our-services.html#application-maintenance">Application Maintenance</a>
+                <a href="our-services.html#hr-consultancy">HR Consultancy</a>
+            </div>
+        </div>
+        <a href="industries.html">Industries</a>
+        <a href="executive-board.html" class="active">Executive Board</a>
+        <a href="careers.html">Careers</a>
+        <a href="index.html#clients">Clients</a>
+        <a href="index.html#contact">Contact</a>
+    </nav>
+</header>
+
+<!-- Hero section with background image -->
+<section class="executive-board-hero" style="background-image: url('executive_banner.jpg');">
+    <div class="video-overlay"></div>
+    <h1>Our Executive Board</h1>
+</section>
+
+<section class="board-members-section">
+    <h2 class="board-category-heading">Leadership</h2>
+    <div class="board-grid">
+        <div class="board-member-card" data-aos="fade-up">
+            <img src="placeholder-male1.jpg" alt="Ram Annadanam" />
+            <h3>Ram Annadanam</h3>
+            <p><strong>Chief Executive Officer</strong></p>
+            <p class="bio">Ram Annadanam is a visionary leader with over two decades of experience as an SAP S/4HANA Solution Architect. He specializes in business process integration and design across multiple industries. With a strong track record of steering successful projects for Fortune 500 companies and top consulting firms, his passion for leveraging automation and intelligent ERP cloud solutions is the driving force behind Ajha's commitment to delivering cutting-edge, cost-effective solutions.</p>
+        </div>
+    </div>
+
+    <h2 class="board-category-heading">Advisory Board</h2>
+    <div class="board-grid">
+        <div class="board-member-card" data-aos="fade-up" data-aos-delay="200">
+            <img src="placeholder-male.jpg" alt="Prasad Kompalli" />
+            <h3>Prasad Kompalli</h3>
+            <p><strong>Advisor - Technology</strong></p>
+            <p class="bio">Prasad Kompalli is a seasoned entrepreneur and technology executive with a long tenure at SAP, where he served as Senior Vice President. He led technology development teams at both SAP Labs India and Germany, building the core technology platform. Post-SAP, he co-founded successful tech ventures in e-commerce (Myntra), healthcare (Mfine), and ed-tech (OnCourse). His extensive experience in building and scaling technology companies provides us with invaluable strategic and technical mentorship, helping us innovate for our clients.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-section">
+        <div class="footer-logo">
+            <img src="logo.png" alt="AJHA Consultancy Services Logo" height="60" />
+            <h3>AJHA CONSULTANCY SERVICES</h3>
+        </div>
+        <p>Your partner in Enterprise Application Solutions, Digital Transformation, and Strategic Staffing.</p>
+        <div class="social-links">
+            <a href="https://www.instagram.com/ajhaconsultancy/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/ajha.consultancy.services?_rdr" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/AjhaServices" target="_blank"><i class="fab fa-x-twitter"></i></a>
+        </div>
+    </div>
+    <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul class="footer-nav">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about-us.html">About Us</a></li>
+            <li><a href="our-services.html">Services</a></li>
+            <li><a href="industries.html">Industries</a></li>
+            <li><a href="executive-board.html">Executive Board</a></li>
+            <li><a href="careers.html">Careers</a></li>
+            <li><a href="index.html#clients">Clients</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </div>
+    <div class="footer-section">
+        <h4>Contact Us</h4>
+        <div class="contact-info">
+            <h5>India Office</h5>
+            <address>HD-066, We work Cinnabar Hills, Challaghatta Road,<br />Bengaluru, Karnataka, 560071.</address>
+            <p>Phone: <a href="tel:+918904178430">+91 8904178430</a></p>
+        </div>
+        <div class="contact-info">
+            <h5>USA Office</h5>
+            <address>2716 Baron Ln Irving,<br />TX, 75063-75063, USA</address>
+            <p>Phone: <a href="tel:+19806177933">+1 980-617-7933</a></p>
+        </div>
+        <div class="contact-info">
+            <h5>Email</h5>
+            <p><a href="mailto:marketing@ajhacs.com">marketing@ajhacs.com</a></p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2019 Ajha Consultancy Services, Inc. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+AOS.init({ duration: 1000, once: true });
+</script>
+</body>
+</html>
+
+
