@@ -144,14 +144,15 @@ nav a:hover, .dropbtn:hover {
     box-shadow: 0 5px 20px rgba(0,0,0,0.5);
     text-align: center;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
+    position: relative;
 }
 .board-member-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 30px rgba(255,102,0,0.4);
 }
 .board-member-card img {
-    width: 150px;
-    height: 150px;
+    width: 200px; /* increased size */
+    height: 200px; /* increased size */
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 1.5rem;
@@ -160,6 +161,33 @@ nav a:hover, .dropbtn:hover {
 }
 .board-member-card:hover img {
     border-color: var(--text-color-light);
+}
+.linkedin-overlay {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: rgba(249, 115, 22, 0.85);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.linkedin-overlay a {
+    color: white;
+    font-size: 1.4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+}
+.board-member-card:hover .linkedin-overlay {
+    opacity: 1;
 }
 .board-member-card h3 {
     font-size: 1.8rem;
@@ -353,6 +381,11 @@ footer {
     <div class="board-grid">
         <div class="board-member-card" data-aos="fade-up">
             <img src="placeholder-male1.jpg" alt="Ram Annadanam" />
+            <div class="linkedin-overlay">
+                <a href="https://www.linkedin.com/in/ram-annadanam-7a860267/" target="_blank" aria-label="LinkedIn profile of Ram Annadanam">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
             <h3>Ram Annadanam</h3>
             <p><strong>Chief Executive Officer</strong></p>
             <p class="bio">Ram Annadanam is a visionary leader with over two decades of experience as an SAP S/4HANA Solution Architect. He specializes in business process integration and design across multiple industries. With a strong track record of steering successful projects for Fortune 500 companies and top consulting firms, his passion for leveraging automation and intelligent ERP cloud solutions is the driving force behind Ajha's commitment to delivering cutting-edge, cost-effective solutions.</p>
@@ -363,6 +396,11 @@ footer {
     <div class="board-grid">
         <div class="board-member-card" data-aos="fade-up" data-aos-delay="200">
             <img src="placeholder-male.jpg" alt="Prasad Kompalli" />
+            <div class="linkedin-overlay">
+                <a href="https://www.linkedin.com/in/prasadkompalli/" target="_blank" aria-label="LinkedIn profile of Prasad Kompalli">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
             <h3>Prasad Kompalli</h3>
             <p><strong>Advisor - Technology</strong></p>
             <p class="bio">Prasad Kompalli is a seasoned entrepreneur and technology executive with a long tenure at SAP, where he served as Senior Vice President. He led technology development teams at both SAP Labs India and Germany, building the core technology platform. Post-SAP, he co-founded successful tech ventures in e-commerce (Myntra), healthcare (Mfine), and ed-tech (OnCourse). His extensive experience in building and scaling technology companies provides us with invaluable strategic and technical mentorship, helping us innovate for our clients.</p>
@@ -424,5 +462,6 @@ AOS.init({ duration: 1000, once: true });
 </script>
 </body>
 </html>
+
 
 
