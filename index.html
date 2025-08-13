@@ -9,261 +9,72 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 <style>
 *{box-sizing:border-box;}
-body{
-  margin:0;
-  font-family:'Poppins',sans-serif;
-  background:#0c0e16;
-  color:#fff;
-  overflow-x:hidden;
-}
-header,section,footer{width:100%}
-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:1rem 3%;
-  background:#0c0e16;
-  position:fixed;
-  top:0;left:0;
-  z-index:1000;
-}
+body{margin:0;font-family:'Poppins',sans-serif;background:#0c0e16;color:#fff;overflow-x:hidden;}
+header,section,footer{width:100%;}
+header{display:flex;justify-content:space-between;align-items:center;padding:1rem 3%;background:#0c0e16;position:fixed;top:0;left:0;z-index:1000;}
 .logo{display:flex;align-items:center;gap:1rem;}
 .logo img{height:60px;}
 .logo h2{font-size:1.5rem;margin:0;font-weight:600;}
-nav{
-  display:flex;
-  align-items:center;
-  transition:max-height 0.3s ease;
-}
-nav a{
-  margin-left:1rem;
-  text-decoration:none;
-  color:#fff;
-  transition:color 0.3s;
-}
+nav{display:flex;align-items:center;transition:max-height 0.3s ease;}
+nav a{margin-left:1rem;text-decoration:none;color:#fff;transition:color 0.3s;}
 nav a:hover{color:#ff6600;}
 .dropdown{position:relative;}
-.dropdown-content{
-  display:none;
-  position:absolute;
-  background-color:#1a1c26;
-  min-width:250px;
-  box-shadow:0 8px 16px rgba(0,0,0,0.2);
-  z-index:1;
-  padding:10px 0;
-  border-radius:5px;
-}
-.dropdown-content a{
-  color:#fff;
-  padding:12px 16px;
-  display:block;
-  text-decoration:none;
-}
-.dropdown-content a:hover{background-color:#2a2c36;color:#ff6600;}
+.dropdown-content{display:none;position:absolute;background:#1a1c26;min-width:250px;box-shadow:0 8px 16px rgba(0,0,0,0.2);z-index:1;padding:10px 0;border-radius:5px;}
+.dropdown-content a{color:#fff;padding:12px 16px;display:block;text-decoration:none;}
+.dropdown-content a:hover{background:#2a2c36;color:#ff6600;}
 .dropdown:hover .dropdown-content{display:block;}
-.hamburger{
-  display:none;
-  font-size:1.6rem;
-  background:none;
-  border:none;
-  color:white;
-  cursor:pointer;
-}
-.hero{
-  position:relative;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  padding-top:80px;
-  text-align:center;
-}
-.hero video{
-  position:absolute;top:0;left:0;width:100%;height:100%;
-  object-fit:cover;
-  z-index:-1;
-}
-.hero h1{
-  font-size:clamp(1.5rem,4vw + 0.5rem,3rem);
-  border-right:3px solid #fff;
-  font-family:'Courier New',monospace;
-  white-space:nowrap;
-  overflow:hidden;
-}
+.hamburger{display:none;font-size:1.6rem;background:none;border:none;color:white;cursor:pointer;}
+
+/* Hero */
+.hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding-top:80px;text-align:center;}
+.hero video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;}
+.hero h1{font-size:clamp(1.5rem,4vw + 0.5rem,3rem);border-right:3px solid #fff;font-family:'Courier New',monospace;white-space:nowrap;overflow:hidden;}
 .typed-text{display:inline;}
+/* Wrap fix */
+@media (max-width:600px){
+  .hero h1{white-space:normal;word-break:break-word;border-right:none;text-align:center;}
+}
+
 .clients,.services,.contact,.who-we-are{padding:4rem 5%;}
 .who-we-are{background:#1a1c26;text-align:center;}
-.who-we-are h2{
-  font-size:clamp(1.75rem,3.5vw,2.5rem);
-  margin-bottom:3rem;
-}
-.who-we-are p{
-  font-size:1.1rem;
-  line-height:1.8;
-  max-width:800px;
-  margin:auto;
-  color:#dcdcdc;
-}
-.services h2,.clients h2,.contact h2{
-  font-size:clamp(1.75rem,3.5vw,2.5rem);
-  margin-bottom:3rem;
-  text-align:center;
-}
-.services-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:2rem;
-  max-width:1200px;
-  margin:auto;
-}
-.service-card{
-  background:#2c2e35;
-  border-radius:10px;
-  padding:2rem;
-  box-shadow:0 0 20px rgba(0,0,0,0.4);
-  min-height:180px;
-  text-decoration:none;
-  display:block;
-  transition:0.3s;
-}
-.service-card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 10px 30px rgba(255,102,0,0.3);
-  background:#3c3e45;
-}
+.who-we-are h2{font-size:clamp(1.75rem,3.5vw,2.5rem);margin-bottom:3rem;}
+.who-we-are p{font-size:1.1rem;line-height:1.8;max-width:800px;margin:auto;color:#dcdcdc;}
+.services h2,.clients h2,.contact h2{font-size:clamp(1.75rem,3.5vw,2.5rem);margin-bottom:3rem;text-align:center;}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;max-width:1200px;margin:auto;}
+.service-card{background:#2c2e35;border-radius:10px;padding:2rem;box-shadow:0 0 20px rgba(0,0,0,0.4);min-height:180px;text-decoration:none;display:block;transition:0.3s;}
+.service-card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(255,102,0,0.3);background:#3c3e45;}
 .service-card h3{color:#ff6600;margin-top:0;}
 .service-card p{color:#dcdcdc;}
 .service-card:hover h3{color:#fff;}
 .service-card .read-more{color:#ff6600;font-weight:600;}
 .logo-slider{overflow:hidden;position:relative;background:#0c0e16;padding:2rem 0;}
-.logo-track{
-  display:flex;
-  width:max-content;
-  animation:scroll 30s linear infinite;
-}
-.logo-track a{
-  flex:0 0 auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:0 40px;
-}
-.logo-track img{
-  max-height:60px;
-  filter:brightness(0.8);
-  transition:filter 0.3s;
-}
+.logo-track{display:flex;width:max-content;animation:scroll 30s linear infinite;}
+.logo-track a{flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:0 40px;}
+.logo-track img{max-height:60px;filter:brightness(0.8);transition:filter 0.3s;}
 .logo-track a:hover img{filter:brightness(1);}
-@keyframes scroll{
-  0%{transform:translateX(0);}
-  100%{transform:translateX(-50%);}
-}
-.contact form{
-  width:100%;
-  max-width:600px;
-  margin-inline:auto;
-  display:flex;
-  flex-direction:column;
-  gap:1rem;
-  padding-inline:1rem;
-}
-form input,form textarea{
-  padding:0.8rem;
-  background:#1a1c26;
-  border:1px solid #333;
-  border-radius:5px;
-  color:#fff;
-}
-form button{
-  padding:0.8rem 2rem;
-  background:#ff6600;
-  border:none;
-  border-radius:5px;
-  font-weight:600;
-  cursor:pointer;
-}
+@keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.contact form{width:100%;max-width:600px;margin-inline:auto;display:flex;flex-direction:column;gap:1rem;padding-inline:1rem;}
+form input,form textarea{padding:0.8rem;background:#1a1c26;border:1px solid #333;border-radius:5px;color:#fff;}
+form button{padding:0.8rem 2rem;background:#ff6600;border:none;border-radius:5px;font-weight:600;cursor:pointer;}
 form button:hover{background:#e65c00;}
-footer{
-  background:#1a1c26;
-  padding:3rem 5% 2rem;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:3rem;
-}
+footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:3rem;}
 .footer-section{display:flex;flex-direction:column;}
 .footer-logo{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
 .footer-logo img{height:60px;}
-.footer-section h4{
-  color:#fff;
-  margin-bottom:1rem;
-  font-size:1.2rem;
-  font-weight:600;
-}
-.footer-section h4::after{
-  content:'';
-  display:block;
-  width:40px;
-  height:3px;
-  background:#ff6600;
-  margin-top:5px;
-}
-.footer-section p,.footer-section a{
-  color:#b8b8b8;
-  line-height:1.6;
-  margin-bottom:0.5rem;
-  text-decoration:none;
-}
+.footer-section h4{color:#fff;margin-bottom:1rem;font-size:1.2rem;font-weight:600;}
+.footer-section h4::after{content:'';display:block;width:40px;height:3px;background:#ff6600;margin-top:5px;}
+.footer-section p,.footer-section a{color:#b8b8b8;line-height:1.6;margin-bottom:0.5rem;text-decoration:none;}
 .footer-section a:hover{color:#ff6600;}
 .social-links{display:flex;gap:1rem;margin-top:1rem;}
-.social-links a{
-  width:40px;
-  height:40px;
-  background:#333;
-  border-radius:50%;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  transition:background-color 0.3s;
-  color:#fff;
-  font-size:1.2rem;
-}
+.social-links a{width:40px;height:40px;background:#333;border-radius:50%;display:flex;justify-content:center;align-items:center;transition:background-color 0.3s;color:#fff;font-size:1.2rem;}
 .social-links a:hover{background:#ff6600;color:#0c0e16;}
-.footer-bottom{
-  grid-column:1/-1;
-  text-align:center;
-  padding-top:2rem;
-  border-top:1px solid #333;
-  color:#888;
-  font-size:0.9rem;
-}
-/* mobile */
+.footer-bottom{grid-column:1/-1;text-align:center;padding-top:2rem;border-top:1px solid #333;color:#888;font-size:0.9rem;}
 @media (max-width:768px){
   .hamburger{display:block;position:relative;z-index:1600;}
-  nav{
-    position:fixed;
-    top:70px;
-    right:0;
-    background:#0c0e16;
-    flex-direction:column;
-    align-items:flex-start;
-    width:100vw;
-    max-height:0;
-    overflow:hidden;
-    padding-inline:0;
-    z-index:1500;
-  }
+  nav{position:fixed;top:70px;right:0;background:#0c0e16;flex-direction:column;align-items:flex-start;width:100vw;max-height:0;overflow:hidden;padding-inline:0;z-index:1500;}
   nav.active{max-height:500px;padding:1rem 1.5rem;}
   nav a{margin:0.5rem 0;width:100%;}
-  .dropdown-content{
-    position:static!important;
-    display:none;
-    background:transparent!important;
-    padding-left:1rem;
-    max-height:0;
-    overflow:hidden;
-    transition:max-height 0.3s ease;
-  }
+  .dropdown-content{position:static!important;display:none;background:transparent!important;padding-left:1rem;max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
   .dropdown.open .dropdown-content{display:block;max-height:500px;}
   .dropdown:hover .dropdown-content{display:none!important;}
 }
@@ -276,6 +87,7 @@ footer{
 </style>
 </head>
 <body>
+
 <header>
   <div class="logo">
     <img src="logo.png" alt="ACS Logo" />
@@ -311,7 +123,7 @@ footer{
 
 <section class="who-we-are" data-aos="fade-up">
   <h2>Who We Are</h2>
-  <p>AJHA Consultancy Services Pvt Ltd is a dynamic startup founded in 2023 by a team of seasoned SAP consultants...</p>
+  <p>AJHA Consultancy Services Pvt Ltd is a dynamic startup founded in 2023 by a team of seasoned SAP consultants, united by a passion to deliver cutting-edge technology services for ERP implementations and maintenance. Headquartered in Bangalore, India, with a registered presence in Texas, USA, we proudly serve clients across the globe.</p>
 </section>
 
 <section class="services" id="services" data-aos="fade-up">
@@ -339,16 +151,23 @@ footer{
   <h2>Our Clients</h2>
   <div class="logo-slider">
     <div class="logo-track">
-      <!-- duplicate logos for scrolling -->
-      <a href="#"><img src="danfoss.png" alt="Danfoss"></a>
-      <a href="#"><img src="deloitte.png" alt="Deloitte"></a>
-      <a href="#"><img src="kellton.png" alt="Kellton"></a>
-      <a href="#"><img src="appizion.png" alt="Appizion"></a>
-      <a href="#"><img src="tecnics.png" alt="Tecnics"></a>
-      <a href="#"><img src="3rg3g.png" alt="3rg3gglobal"></a>
-      <a href="#"><img src="SPL.png" alt="SPL"></a>
-      <a href="#"><img src="NBL.png" alt="NBL"></a>
-      <!-- repeat -->
+      <a href="https://www.danfoss.com" target="_blank"><img src="danfoss.png" alt="Danfoss"></a>
+      <a href="https://www2.deloitte.com" target="_blank"><img src="deloitte.png" alt="Deloitte"></a>
+      <a href="https://www.kelltontech.com" target="_blank"><img src="kellton.png" alt="Kellton"></a>
+      <a href="https://www.appizion.com" target="_blank"><img src="appizion.png" alt="Appizion"></a>
+      <a href="https://www.tecnics.com" target="_blank"><img src="tecnics.png" alt="Tecnics"></a>
+      <a href="https://www.3rg3global.com/" target="_blank"><img src="3rg3g.png" alt="3rg3gglobal"></a>
+      <a href="#" target="https://www.shriramproperties.com/"><img src="SPL.png" alt="SPL"></a>
+      <a href="#" target="https://nbl.in/"><img src="NBL.png" alt="NBL"></a>
+      <!-- duplicate for smooth loop -->
+      <a href="https://www.danfoss.com" target="_blank"><img src="danfoss.png" alt="Danfoss"></a>
+      <a href="https://www2.deloitte.com" target="_blank"><img src="deloitte.png" alt="Deloitte"></a>
+      <a href="https://www.kelltontech.com" target="_blank"><img src="kellton.png" alt="Kellton"></a>
+      <a href="https://www.appizion.com" target="_blank"><img src="appizion.png" alt="Appizion"></a>
+      <a href="https://www.tecnics.com" target="_blank"><img src="tecnics.png" alt="Tecnics"></a>
+      <a href="https://www.3rg3global.com/" target="_blank"><img src="3rg3g.png" alt="3rg3gglobal"></a>
+      <a href="#" target="_blank"><img src="SPL.png" alt="SPL"></a>
+      <a href="#" target="_blank"><img src="NBL.png" alt="NBL"></a>
     </div>
   </div>
 </section>
@@ -372,11 +191,12 @@ footer{
     </div>
     <p>Your partner in Enterprise Application Solutions, Digital Transformation, and Strategic Staffing.</p>
     <div class="social-links">
-      <a href="#"><i class="fab fa-instagram"></i></a>
-      <a href="#"><i class="fab fa-facebook-f"></i></a>
-      <a href="#"><i class="fab fa-x-twitter"></i></a>
+      <a href="https://www.instagram.com/ajhaconsultancy/" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.facebook.com/ajha.consultancy.services?_rdr" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://x.com/AjhaServices" target="_blank"><i class="fab fa-x-twitter"></i></a>
     </div>
   </div>
+
   <div class="footer-section">
     <h4>Quick Links</h4>
     <ul>
@@ -390,16 +210,23 @@ footer{
       <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
+  
   <div class="footer-section">
     <h4>Contact Us</h4>
     <div class="contact-info">
       <h5>India Office</h5>
-      <address>HD-066, We work Cinnabar Hills, Challaghatta Road,<br>Bengaluru, Karnataka, 560071.</address>
+      <address>
+        HD-066, We work Cinnabar Hills, Challaghatta Road,<br>
+        Bengaluru, Karnataka, 560071.
+      </address>
       <p>Phone: <a href="tel:+918904178430">+91 8904178430</a></p>
     </div>
     <div class="contact-info">
       <h5>USA Office</h5>
-      <address>2716 Baron Ln Irving,<br>TX, 75063, USA</address>
+      <address>
+        2716 Baron Ln Irving,<br>
+        TX, 75063, USA
+      </address>
       <p>Phone: <a href="tel:+19806177933">+1 980-617-7933</a></p>
     </div>
     <div class="contact-info">
@@ -407,6 +234,7 @@ footer{
       <p><a href="mailto:marketing@ajhacs.com">marketing@ajhacs.com</a></p>
     </div>
   </div>
+
   <div class="footer-bottom">
     <p>© 2019 Ajha Consultancy Services, Inc. All rights reserved.</p>
   </div>
@@ -415,12 +243,12 @@ footer{
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 AOS.init({duration:1000,once:true});
-const message="Innovating ERP.Empowering Businesses";
-const typedTextSpan=document.querySelector(".typed-text");
+const message = "Innovating ERP. Empowering Businesses";
+const typedTextSpan = document.querySelector(".typed-text");
 let index=0;
 function type(){
-  if(index<message.length){
-    typedTextSpan.textContent+=message.charAt(index++);
+  if(index < message.length){
+    typedTextSpan.textContent += message.charAt(index++);
     setTimeout(type,50);
   }
 }
@@ -447,3 +275,4 @@ document.querySelectorAll('nav a').forEach(link=>{
 </script>
 </body>
 </html>
+
