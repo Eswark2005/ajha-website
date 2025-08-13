@@ -8,74 +8,373 @@
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 <style>
-/* --- main styles same as before --- */
-body { margin: 0; font-family: 'Poppins', sans-serif; background-color: #0c0e16; color: #fff; }
-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 5%; background-color: #0c0e16; position: fixed; top: 0; left: 0; width: 90%; z-index: 1000; }
-.logo { display: flex; align-items: center; gap: 1rem; }
-.logo img { height: 60px; }
-.logo h2 { font-size: 1.5rem; margin: 0; font-weight: 600; }
-nav a { margin-left: 1rem; text-decoration: none; color: #fff; transition: color 0.3s; }
-nav a:hover { color: #ff6600; }
-.dropdown { position: relative; display: inline-block; }
-.dropdown-content { display: none; position: absolute; background-color: #1a1c26; min-width: 250px; box-shadow: 0 8px 16px rgba(0,0,0,0.2); z-index: 1; padding: 10px 0; border-radius: 5px; }
-.dropdown-content a { color: #fff; padding: 12px 16px; display: block; text-decoration: none; }
-.dropdown-content a:hover { background-color: #2a2c36; color: #ff6600; }
-.dropdown:hover .dropdown-content { display: block; }
+/* Reset & Base */
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #0c0e16;
+    color: #fff;
+}
+header, section, footer {
+    width: 100%;
+    box-sizing: border-box;
+}
 
-/* hero */
-.hero { position: relative; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-top: 80px; text-align: center; }
-.hero video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
-.hero h1 { font-size: 2.5rem; border-right: 3px solid #fff; font-family: 'Courier New', monospace; white-space: nowrap; overflow: hidden; }
-.typed-text { display: inline; }
+/* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 3%;
+    background-color: #0c0e16;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.logo img {
+    height: 60px;
+}
+.logo h2 {
+    font-size: 1.5rem;
+    margin: 0;
+    font-weight: 600;
+}
 
-/* section spacing */
-.clients, .about, .services, .contact, .who-we-are { padding: 4rem 5%; }
+nav {
+    display: flex;
+    align-items: center;
+    transition: max-height 0.3s ease;
+}
+nav a {
+    margin-left: 1rem;
+    text-decoration: none;
+    color: #fff;
+    transition: color 0.3s;
+}
+nav a:hover {
+    color: #ff6600;
+}
+.dropdown {
+    position: relative;
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #1a1c26;
+    min-width: 250px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    padding: 10px 0;
+    border-radius: 5px;
+}
+.dropdown-content a {
+    color: #fff;
+    padding: 12px 16px;
+    display: block;
+    text-decoration: none;
+}
+.dropdown-content a:hover {
+    background-color: #2a2c36;
+    color: #ff6600;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
 
-/* who we are */
-.who-we-are { background: #1a1c26; text-align: center; }
-.who-we-are h2 { font-size: 2.5rem; margin-bottom: 3rem; }
-.who-we-are p { font-size: 1.1rem; line-height: 1.8; max-width: 800px; margin: auto; color:#dcdcdc; }
+/* Hamburger Button */
+.hamburger {
+    display: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+}
 
-/* services */
-.services h2, .clients h2, .contact h2 { font-size: 2.5rem; margin-bottom: 3rem; text-align: center; }
-.services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: auto; }
-.service-card { background-color: #2c2e35; border-radius: 10px; padding: 2rem; box-shadow: 0 0 20px rgba(0,0,0,0.4); min-height: 180px; text-decoration: none; display: block; transition: 0.3s; }
-.service-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(255, 102, 0, 0.3); background-color: #3c3e45; }
-.service-card h3 { color: #ff6600; margin-top: 0; }
-.service-card p { color: #dcdcdc; }
-.service-card:hover h3 { color: #fff; }
-.service-card .read-more { color: #ff6600; font-weight: 600; }
-.service-card .read-more:hover { text-decoration: underline; }
+/* Hero */
+.hero {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-top: 80px;
+    text-align: center;
+}
+.hero video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+}
+.hero h1 {
+    font-size: clamp(1.5rem, 4vw + 0.5rem, 3rem);
+    border-right: 3px solid #fff;
+    font-family: 'Courier New', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.typed-text {
+    display: inline;
+}
 
-/* moving client logos */
-.logo-slider { overflow: hidden; position: relative; background-color: #0c0e16; padding: 2rem 0; }
-.logo-track { display: flex; width: max-content; animation: scroll 30s linear infinite; }
-.logo-track a { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; padding: 0 40px; }
-.logo-track img { max-height: 60px; width: auto; filter: brightness(0.8); transition: filter 0.3s; }
-.logo-track a:hover img { filter: brightness(1); }
-@keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+/* Sections */
+.clients, .about, .services, .contact, .who-we-are {
+    padding: 4rem 5%;
+}
 
-/* contact */
-.contact form { max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 1rem; }
-form input, form textarea { padding: 0.8rem; background-color: #1a1c26; border: 1px solid #333; border-radius: 5px; color: #fff; }
-form button { padding: 0.8rem 2rem; background-color: #ff6600; border: none; border-radius: 5px; font-weight: 600; cursor: pointer; }
-form button:hover { background-color: #e65c00; }
+/* Who We Are */
+.who-we-are {
+    background: #1a1c26;
+    text-align: center;
+}
+.who-we-are h2 {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    margin-bottom: 3rem;
+}
+.who-we-are p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: auto;
+    color: #dcdcdc;
+}
 
-/* footer */
-footer { background: #1a1c26; padding: 3rem 5% 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 3rem; }
-.footer-section { display: flex; flex-direction: column; align-items: flex-start; }
-.footer-logo { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-.footer-logo img { height: 60px; }
-.footer-section h4 { color: #fff; margin-bottom: 1rem; font-size: 1.2rem; font-weight: 600; }
-.footer-section h4::after { content: ''; display: block; width: 40px; height: 3px; background-color: #ff6600; margin-top: 5px; }
-.footer-section p, .footer-section a { color: #b8b8b8; line-height: 1.6; margin-bottom: 0.5rem; text-decoration: none; }
-.footer-section a:hover { color: #ff6600; }
-.social-links { display: flex; gap: 1rem; margin-top: 1rem; }
-.social-links a { width: 40px; height: 40px; background-color: #333; border-radius: 50%; display: flex; justify-content: center; align-items: center; transition: background-color 0.3s; color: #fff; font-size: 1.2rem; }
-.social-links a:hover { background-color: #ff6600; color: #0c0e16; }
-.footer-bottom { grid-column: 1 / -1; text-align: center; padding-top: 2rem; border-top: 1px solid #333; color: #888; font-size: 0.9rem; }
+/* Services */
+.services h2, .clients h2, .contact h2 {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    margin-bottom: 3rem;
+    text-align: center;
+}
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: auto;
+}
+.service-card {
+    background-color: #2c2e35;
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+    min-height: 180px;
+    text-decoration: none;
+    display: block;
+    transition: 0.3s;
+}
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(255, 102, 0, 0.3);
+    background-color: #3c3e45;
+}
+.service-card h3 {
+    color: #ff6600;
+    margin-top: 0;
+}
+.service-card p {
+    color: #dcdcdc;
+}
+.service-card:hover h3 {
+    color: #fff;
+}
+.service-card .read-more {
+    color: #ff6600;
+    font-weight: 600;
+}
+.service-card .read-more:hover {
+    text-decoration: underline;
+}
 
-@media (max-width: 768px) { .hero h1 { font-size: 1.5rem; } footer { grid-template-columns: 1fr; } }
+/* Clients slider */
+.logo-slider {
+    overflow: hidden;
+    position: relative;
+    background-color: #0c0e16;
+    padding: 2rem 0;
+}
+.logo-track {
+    display: flex;
+    width: max-content;
+    animation: scroll 30s linear infinite;
+}
+.logo-track a {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 40px;
+}
+.logo-track img {
+    max-height: 60px;
+    width: auto;
+    filter: brightness(0.8);
+    transition: filter 0.3s;
+}
+.logo-track a:hover img {
+    filter: brightness(1);
+}
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Contact */
+.contact form {
+    width: 100%;
+    max-width: 600px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-inline: 1rem;
+}
+form input, 
+form textarea {
+    padding: 0.8rem;
+    background-color: #1a1c26;
+    border: 1px solid #333;
+    border-radius: 5px;
+    color: #fff;
+    width: 100%;
+    box-sizing: border-box;
+}
+form button {
+    padding: 0.8rem 2rem;
+    background-color: #ff6600;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+form button:hover {
+    background-color: #e65c00;
+}
+
+/* Footer */
+footer {
+    background: #1a1c26;
+    padding: 3rem 5% 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 3rem;
+}
+.footer-section {
+    display: flex;
+    flex-direction: column;
+}
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.footer-logo img {
+    height: 60px;
+}
+.footer-section h4 {
+    color: #fff;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.footer-section h4::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 3px;
+    background-color: #ff6600;
+    margin-top: 5px;
+}
+.footer-section p, .footer-section a {
+    color: #b8b8b8;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+    text-decoration: none;
+}
+.footer-section a:hover {
+    color: #ff6600;
+}
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.social-links a {
+    width: 40px;
+    height: 40px;
+    background-color: #333;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+    color: #fff;
+    font-size: 1.2rem;
+}
+.social-links a:hover {
+    background-color: #ff6600;
+    color: #0c0e16;
+}
+.footer-bottom {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid #333;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+    .hamburger { display: block; }
+    nav {
+        position: absolute;
+        top: 70px;
+        right: 0;
+        background-color: #0c0e16;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        max-height: 0;
+        overflow: hidden;
+    }
+    nav.active {
+        max-height: 500px;
+        padding: 1rem 3%;
+    }
+    nav a {
+        margin: 0.5rem 0;
+    }
+    .dropdown-content {
+        position: static;
+        box-shadow: none;
+        background: transparent;
+        padding-left: 1rem;
+    }
+    .dropdown:hover .dropdown-content {
+        display: none;
+    }
+    .dropdown.open .dropdown-content {
+        display: block;
+    }
+}
+@media (max-width: 480px) {
+    .logo img { height: 45px; }
+    .logo h2 { font-size: 1rem; }
+    .hero { padding-top: 60px; }
+    footer { grid-template-columns: 1fr; padding: 2rem 3%; }
+}
 </style>
 </head>
 <body>
@@ -85,6 +384,7 @@ footer { background: #1a1c26; padding: 3rem 5% 2rem; display: grid; grid-templat
         <img src="logo.png" alt="ACS Logo" />
         <h2>AJHA CONSULTANCY SERVICES</h2>
     </div>
+    <button class="hamburger"><i class="fas fa-bars"></i></button>
     <nav>
         <a href="#home">Home</a>
         <a href="about-us.html">About Us</a>
@@ -120,7 +420,6 @@ footer { background: #1a1c26; padding: 3rem 5% 2rem; display: grid; grid-templat
 <section class="services" id="services" data-aos="fade-up">
     <h2>Our Services</h2>
     <div class="services-grid">
-        <!-- Removed Advanced Enterprise App Services -->
         <a href="our-services.html#digital-transformation" class="service-card">
             <h3>Digital Transformation</h3>
             <p>S4HANA, SAP Analytics Cloud, BTP, AI/ML/IoT, migrations.</p>
@@ -149,17 +448,17 @@ footer { background: #1a1c26; padding: 3rem 5% 2rem; display: grid; grid-templat
             <a href="https://www.appizion.com" target="_blank"><img src="appizion.png" alt="Appizion"></a>
             <a href="https://www.tecnics.com" target="_blank"><img src="tecnics.png" alt="Tecnics"></a>
             <a href="https://www.3rg3global.com/" target="_blank"><img src="3rg3g.png" alt="3rg3gglobal"></a>
-            <a href="#" target="https://www.shriramproperties.com/"><img src="SPL.png" alt="SPL"></a>
-            <a href="#" target="https://nbl.in/"><img src="NBL.png" alt="NBL"></a>
-            <!-- duplicate for smooth loop -->
+            <a href="#"><img src="SPL.png" alt="SPL"></a>
+            <a href="#"><img src="NBL.png" alt="NBL"></a>
+            <!-- repeat for smooth loop -->
             <a href="https://www.danfoss.com" target="_blank"><img src="danfoss.png" alt="Danfoss"></a>
             <a href="https://www2.deloitte.com" target="_blank"><img src="deloitte.png" alt="Deloitte"></a>
             <a href="https://www.kelltontech.com" target="_blank"><img src="kellton.png" alt="Kellton"></a>
             <a href="https://www.appizion.com" target="_blank"><img src="appizion.png" alt="Appizion"></a>
             <a href="https://www.tecnics.com" target="_blank"><img src="tecnics.png" alt="Tecnics"></a>
             <a href="https://www.3rg3global.com/" target="_blank"><img src="3rg3g.png" alt="3rg3gglobal"></a>
-            <a href="#" target="_blank"><img src="SPL.png" alt="SPL"></a>
-            <a href="#" target="_blank"><img src="NBL.png" alt="NBL"></a>
+            <a href="#"><img src="SPL.png" alt="SPL"></a>
+            <a href="#"><img src="NBL.png" alt="NBL"></a>
         </div>
     </div>
 </section>
@@ -235,6 +534,8 @@ footer { background: #1a1c26; padding: 3rem 5% 2rem; display: grid; grid-templat
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 AOS.init({ duration: 1000, once: true });
+
+// Typing animation
 const message = "Innovating ERP.Empowering Businesses";
 const typedTextSpan = document.querySelector(".typed-text");
 let index = 0;
@@ -246,6 +547,33 @@ function type() {
     }
 }
 window.addEventListener("DOMContentLoaded", type);
+
+// Hamburger toggle
+const hamburger = document.querySelector('.hamburger');
+const navMenu = document.querySelector('nav');
+hamburger.addEventListener('click', () => {
+    navMenu.classList.toggle('active');
+});
+
+// Mobile dropdown toggle
+document.querySelectorAll('.dropdown > .dropbtn').forEach(btn => {
+    btn.addEventListener('click', e => {
+        if (window.innerWidth <= 768) {
+            e.preventDefault();
+            btn.parentElement.classList.toggle('open');
+        }
+    });
+});
+
+// Auto-close nav on link click in mobile
+document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+            navMenu.classList.remove('active');
+            document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('open'));
+        }
+    });
+});
 </script>
 </body>
 </html>
