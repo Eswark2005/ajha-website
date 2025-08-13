@@ -8,571 +8,441 @@
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 <style>
-/* Reset & Base */
-body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-    background-color: #0c0e16;
-    color: #fff;
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:'Poppins',sans-serif;
+  background:#0c0e16;
+  color:#fff;
+  overflow-x:hidden;
 }
-header, section, footer {
-    width: 100%;
-    box-sizing: border-box;
+header,section,footer{width:100%}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:1rem 3%;
+  background:#0c0e16;
+  position:fixed;
+  top:0;left:0;
+  z-index:1000;
 }
-
-/* Header */
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 3%;
-    background-color: #0c0e16;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
+.logo{display:flex;align-items:center;gap:1rem;}
+.logo img{height:60px;}
+.logo h2{font-size:1.5rem;margin:0;font-weight:600;}
+nav{
+  display:flex;
+  align-items:center;
+  transition:max-height 0.3s ease;
 }
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+nav a{
+  margin-left:1rem;
+  text-decoration:none;
+  color:#fff;
+  transition:color 0.3s;
 }
-.logo img {
-    height: 60px;
+nav a:hover{color:#ff6600;}
+.dropdown{position:relative;}
+.dropdown-content{
+  display:none;
+  position:absolute;
+  background-color:#1a1c26;
+  min-width:250px;
+  box-shadow:0 8px 16px rgba(0,0,0,0.2);
+  z-index:1;
+  padding:10px 0;
+  border-radius:5px;
 }
-.logo h2 {
-    font-size: 1.5rem;
-    margin: 0;
-    font-weight: 600;
+.dropdown-content a{
+  color:#fff;
+  padding:12px 16px;
+  display:block;
+  text-decoration:none;
 }
-
-nav {
-    display: flex;
-    align-items: center;
-    transition: max-height 0.3s ease;
+.dropdown-content a:hover{background-color:#2a2c36;color:#ff6600;}
+.dropdown:hover .dropdown-content{display:block;}
+.hamburger{
+  display:none;
+  font-size:1.6rem;
+  background:none;
+  border:none;
+  color:white;
+  cursor:pointer;
 }
-nav a {
-    margin-left: 1rem;
-    text-decoration: none;
-    color: #fff;
-    transition: color 0.3s;
+.hero{
+  position:relative;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding-top:80px;
+  text-align:center;
 }
-nav a:hover {
-    color: #ff6600;
+.hero video{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  object-fit:cover;
+  z-index:-1;
 }
-.dropdown {
-    position: relative;
+.hero h1{
+  font-size:clamp(1.5rem,4vw + 0.5rem,3rem);
+  border-right:3px solid #fff;
+  font-family:'Courier New',monospace;
+  white-space:nowrap;
+  overflow:hidden;
 }
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: #1a1c26;
-    min-width: 250px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-    z-index: 1;
-    padding: 10px 0;
-    border-radius: 5px;
+.typed-text{display:inline;}
+.clients,.services,.contact,.who-we-are{padding:4rem 5%;}
+.who-we-are{background:#1a1c26;text-align:center;}
+.who-we-are h2{
+  font-size:clamp(1.75rem,3.5vw,2.5rem);
+  margin-bottom:3rem;
 }
-.dropdown-content a {
-    color: #fff;
-    padding: 12px 16px;
-    display: block;
-    text-decoration: none;
+.who-we-are p{
+  font-size:1.1rem;
+  line-height:1.8;
+  max-width:800px;
+  margin:auto;
+  color:#dcdcdc;
 }
-.dropdown-content a:hover {
-    background-color: #2a2c36;
-    color: #ff6600;
+.services h2,.clients h2,.contact h2{
+  font-size:clamp(1.75rem,3.5vw,2.5rem);
+  margin-bottom:3rem;
+  text-align:center;
 }
-.dropdown:hover .dropdown-content {
-    display: block;
+.services-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  gap:2rem;
+  max-width:1200px;
+  margin:auto;
 }
-
-/* Hamburger Button */
-.hamburger {
-    display: none;
-    font-size: 1.6rem;
-    cursor: pointer;
-    background: none;
-    border: none;
-    color: white;
+.service-card{
+  background:#2c2e35;
+  border-radius:10px;
+  padding:2rem;
+  box-shadow:0 0 20px rgba(0,0,0,0.4);
+  min-height:180px;
+  text-decoration:none;
+  display:block;
+  transition:0.3s;
 }
-
-/* Hero */
-.hero {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-top: 80px;
-    text-align: center;
+.service-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 30px rgba(255,102,0,0.3);
+  background:#3c3e45;
 }
-.hero video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
+.service-card h3{color:#ff6600;margin-top:0;}
+.service-card p{color:#dcdcdc;}
+.service-card:hover h3{color:#fff;}
+.service-card .read-more{color:#ff6600;font-weight:600;}
+.logo-slider{overflow:hidden;position:relative;background:#0c0e16;padding:2rem 0;}
+.logo-track{
+  display:flex;
+  width:max-content;
+  animation:scroll 30s linear infinite;
 }
-.hero h1 {
-    font-size: clamp(1.5rem, 4vw + 0.5rem, 3rem);
-    border-right: 3px solid #fff;
-    font-family: 'Courier New', monospace;
-    white-space: nowrap;
-    overflow: hidden;
+.logo-track a{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:0 40px;
 }
-.typed-text {
-    display: inline;
+.logo-track img{
+  max-height:60px;
+  filter:brightness(0.8);
+  transition:filter 0.3s;
 }
-
-/* Sections */
-.clients, .about, .services, .contact, .who-we-are {
-    padding: 4rem 5%;
+.logo-track a:hover img{filter:brightness(1);}
+@keyframes scroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
 }
-
-/* Who We Are */
-.who-we-are {
-    background: #1a1c26;
-    text-align: center;
+.contact form{
+  width:100%;
+  max-width:600px;
+  margin-inline:auto;
+  display:flex;
+  flex-direction:column;
+  gap:1rem;
+  padding-inline:1rem;
 }
-.who-we-are h2 {
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    margin-bottom: 3rem;
+form input,form textarea{
+  padding:0.8rem;
+  background:#1a1c26;
+  border:1px solid #333;
+  border-radius:5px;
+  color:#fff;
 }
-.who-we-are p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    max-width: 800px;
-    margin: auto;
-    color: #dcdcdc;
+form button{
+  padding:0.8rem 2rem;
+  background:#ff6600;
+  border:none;
+  border-radius:5px;
+  font-weight:600;
+  cursor:pointer;
 }
-
-/* Services */
-.services h2, .clients h2, .contact h2 {
-    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
-    margin-bottom: 3rem;
-    text-align: center;
+form button:hover{background:#e65c00;}
+footer{
+  background:#1a1c26;
+  padding:3rem 5% 2rem;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:3rem;
 }
-.services-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    max-width: 1200px;
-    margin: auto;
+.footer-section{display:flex;flex-direction:column;}
+.footer-logo{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
+.footer-logo img{height:60px;}
+.footer-section h4{
+  color:#fff;
+  margin-bottom:1rem;
+  font-size:1.2rem;
+  font-weight:600;
 }
-.service-card {
-    background-color: #2c2e35;
-    border-radius: 10px;
-    padding: 2rem;
-    box-shadow: 0 0 20px rgba(0,0,0,0.4);
-    min-height: 180px;
-    text-decoration: none;
-    display: block;
-    transition: 0.3s;
+.footer-section h4::after{
+  content:'';
+  display:block;
+  width:40px;
+  height:3px;
+  background:#ff6600;
+  margin-top:5px;
 }
-.service-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(255, 102, 0, 0.3);
-    background-color: #3c3e45;
+.footer-section p,.footer-section a{
+  color:#b8b8b8;
+  line-height:1.6;
+  margin-bottom:0.5rem;
+  text-decoration:none;
 }
-.service-card h3 {
-    color: #ff6600;
-    margin-top: 0;
+.footer-section a:hover{color:#ff6600;}
+.social-links{display:flex;gap:1rem;margin-top:1rem;}
+.social-links a{
+  width:40px;
+  height:40px;
+  background:#333;
+  border-radius:50%;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  transition:background-color 0.3s;
+  color:#fff;
+  font-size:1.2rem;
 }
-.service-card p {
-    color: #dcdcdc;
+.social-links a:hover{background:#ff6600;color:#0c0e16;}
+.footer-bottom{
+  grid-column:1/-1;
+  text-align:center;
+  padding-top:2rem;
+  border-top:1px solid #333;
+  color:#888;
+  font-size:0.9rem;
 }
-.service-card:hover h3 {
-    color: #fff;
+/* mobile */
+@media (max-width:768px){
+  .hamburger{display:block;position:relative;z-index:1600;}
+  nav{
+    position:fixed;
+    top:70px;
+    right:0;
+    background:#0c0e16;
+    flex-direction:column;
+    align-items:flex-start;
+    width:100vw;
+    max-height:0;
+    overflow:hidden;
+    padding-inline:0;
+    z-index:1500;
+  }
+  nav.active{max-height:500px;padding:1rem 1.5rem;}
+  nav a{margin:0.5rem 0;width:100%;}
+  .dropdown-content{
+    position:static!important;
+    display:none;
+    background:transparent!important;
+    padding-left:1rem;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height 0.3s ease;
+  }
+  .dropdown.open .dropdown-content{display:block;max-height:500px;}
+  .dropdown:hover .dropdown-content{display:none!important;}
 }
-.service-card .read-more {
-    color: #ff6600;
-    font-weight: 600;
-}
-.service-card .read-more:hover {
-    text-decoration: underline;
-}
-
-/* Clients slider */
-.logo-slider {
-    overflow: hidden;
-    position: relative;
-    background-color: #0c0e16;
-    padding: 2rem 0;
-}
-.logo-track {
-    display: flex;
-    width: max-content;
-    animation: scroll 30s linear infinite;
-}
-.logo-track a {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 40px;
-}
-.logo-track img {
-    max-height: 60px;
-    width: auto;
-    filter: brightness(0.8);
-    transition: filter 0.3s;
-}
-.logo-track a:hover img {
-    filter: brightness(1);
-}
-@keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-/* Contact */
-.contact form {
-    width: 100%;
-    max-width: 600px;
-    margin-inline: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-inline: 1rem;
-}
-form input, 
-form textarea {
-    padding: 0.8rem;
-    background-color: #1a1c26;
-    border: 1px solid #333;
-    border-radius: 5px;
-    color: #fff;
-    width: 100%;
-    box-sizing: border-box;
-}
-form button {
-    padding: 0.8rem 2rem;
-    background-color: #ff6600;
-    border: none;
-    border-radius: 5px;
-    font-weight: 600;
-    cursor: pointer;
-}
-form button:hover {
-    background-color: #e65c00;
-}
-
-/* Footer */
-footer {
-    background: #1a1c26;
-    padding: 3rem 5% 2rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 3rem;
-}
-.footer-section {
-    display: flex;
-    flex-direction: column;
-}
-.footer-logo {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-.footer-logo img {
-    height: 60px;
-}
-.footer-section h4 {
-    color: #fff;
-    margin-bottom: 1rem;
-    font-size: 1.2rem;
-    font-weight: 600;
-}
-.footer-section h4::after {
-    content: '';
-    display: block;
-    width: 40px;
-    height: 3px;
-    background-color: #ff6600;
-    margin-top: 5px;
-}
-.footer-section p, .footer-section a {
-    color: #b8b8b8;
-    line-height: 1.6;
-    margin-bottom: 0.5rem;
-    text-decoration: none;
-}
-.footer-section a:hover {
-    color: #ff6600;
-}
-.social-links {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-}
-.social-links a {
-    width: 40px;
-    height: 40px;
-    background-color: #333;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-color 0.3s;
-    color: #fff;
-    font-size: 1.2rem;
-}
-.social-links a:hover {
-    background-color: #ff6600;
-    color: #0c0e16;
-}
-.footer-bottom {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding-top: 2rem;
-    border-top: 1px solid #333;
-    color: #888;
-    font-size: 0.9rem;
-}
-
-/* Responsive Breakpoints */
-@media (max-width: 768px) {
-    .hamburger { display: block; }
-    nav {
-        position: absolute;
-        top: 70px;
-        right: 0;
-        background-color: #0c0e16;
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-        max-height: 0;
-        overflow: hidden;
-    }
-    nav.active {
-        max-height: 500px;
-        padding: 1rem 3%;
-    }
-    nav a {
-        margin: 0.5rem 0;
-    }
-    .dropdown-content {
-        position: static;
-        box-shadow: none;
-        background: transparent;
-        padding-left: 1rem;
-    }
-    .dropdown:hover .dropdown-content {
-        display: none;
-    }
-    .dropdown.open .dropdown-content {
-        display: block;
-    }
-}
-@media (max-width: 480px) {
-    .logo img { height: 45px; }
-    .logo h2 { font-size: 1rem; }
-    .hero { padding-top: 60px; }
-    footer { grid-template-columns: 1fr; padding: 2rem 3%; }
+@media (max-width:480px){
+  .logo img{height:45px;}
+  .logo h2{font-size:1rem;}
+  .hero{padding-top:60px;}
+  footer{grid-template-columns:1fr;padding:2rem 3%;}
 }
 </style>
 </head>
 <body>
-
 <header>
-    <div class="logo">
-        <img src="logo.png" alt="ACS Logo" />
-        <h2>AJHA CONSULTANCY SERVICES</h2>
+  <div class="logo">
+    <img src="logo.png" alt="ACS Logo" />
+    <h2>AJHA CONSULTANCY SERVICES</h2>
+  </div>
+  <button class="hamburger"><i class="fas fa-bars"></i></button>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="about-us.html">About Us</a>
+    <a href="our-services.html">Services</a>
+    <div class="dropdown">
+      <a href="#industries" class="dropbtn">Industries <i class="fas fa-caret-down"></i></a>
+      <div class="dropdown-content">
+        <a href="industries.html#palm-oil">Palm Oil</a>
+        <a href="industries.html#service">Service</a>
+        <a href="industries.html#semiconductors">Semiconductors</a>
+        <a href="industries.html#small-scale">Small Scale</a>
+      </div>
     </div>
-    <button class="hamburger"><i class="fas fa-bars"></i></button>
-    <nav>
-        <a href="#home">Home</a>
-        <a href="about-us.html">About Us</a>
-        <a href="our-services.html">Services</a>
-        <div class="dropdown">
-            <a href="#industries" class="dropbtn">Industries <i class="fas fa-caret-down"></i></a>
-            <div class="dropdown-content">
-                <a href="industries.html#palm-oil">Palm Oil</a>
-                <a href="industries.html#service">Service</a>
-                <a href="industries.html#semiconductors">Semiconductors</a>
-                <a href="industries.html#small-scale">Small Scale</a>
-            </div>
-        </div>
-        <a href="executive-board.html">Executive Board</a>
-        <a href="careers.html">Careers</a>
-        <a href="#clients">Clients</a>
-        <a href="#contact">Contact</a>
-    </nav>
+    <a href="executive-board.html">Executive Board</a>
+    <a href="careers.html">Careers</a>
+    <a href="#clients">Clients</a>
+    <a href="#contact">Contact</a>
+  </nav>
 </header>
 
 <section class="hero" id="home">
-    <video autoplay muted loop playsinline>
-        <source src="transmission-lines.mp4" type="video/mp4">
-    </video>
-    <h1><span class="typed-text"></span></h1>
+  <video autoplay muted loop playsinline>
+    <source src="transmission-lines.mp4" type="video/mp4">
+  </video>
+  <h1><span class="typed-text"></span></h1>
 </section>
 
 <section class="who-we-are" data-aos="fade-up">
-    <h2>Who We Are</h2>
-    <p>AJHA Consultancy Services Pvt Ltd is a dynamic startup founded in 2023 by a team of seasoned SAP consultants, united by a passion to deliver cutting-edge technology services for ERP implementations and maintenance. Headquartered in Bangalore, India, with a registered presence in Texas, USA, we proudly serve clients across the globe.</p>
+  <h2>Who We Are</h2>
+  <p>AJHA Consultancy Services Pvt Ltd is a dynamic startup founded in 2023 by a team of seasoned SAP consultants...</p>
 </section>
 
 <section class="services" id="services" data-aos="fade-up">
-    <h2>Our Services</h2>
-    <div class="services-grid">
-        <a href="our-services.html#digital-transformation" class="service-card">
-            <h3>Digital Transformation</h3>
-            <p>S4HANA, SAP Analytics Cloud, BTP, AI/ML/IoT, migrations.</p>
-            <span class="read-more">Learn More</span>
-        </a>
-        <a href="our-services.html#application-maintenance" class="service-card">
-            <h3>Application Maintenance</h3>
-            <p>Onsite, offsite, hybrid support for smooth system upkeep.</p>
-            <span class="read-more">Learn More</span>
-        </a>
-        <a href="our-services.html#hr-consultancy" class="service-card">
-            <h3>HR Consultancy</h3>
-            <p>Staffing, augmentation, managed services across geographies.</p>
-            <span class="read-more">Learn More</span>
-        </a>
-    </div>
+  <h2>Our Services</h2>
+  <div class="services-grid">
+    <a href="our-services.html#digital-transformation" class="service-card">
+      <h3>Digital Transformation</h3>
+      <p>S4HANA, SAP Analytics Cloud, BTP, AI/ML/IoT, migrations.</p>
+      <span class="read-more">Learn More</span>
+    </a>
+    <a href="our-services.html#application-maintenance" class="service-card">
+      <h3>Application Maintenance</h3>
+      <p>Onsite, offsite, hybrid support for smooth system upkeep.</p>
+      <span class="read-more">Learn More</span>
+    </a>
+    <a href="our-services.html#hr-consultancy" class="service-card">
+      <h3>HR Consultancy</h3>
+      <p>Staffing, augmentation, managed services across geographies.</p>
+      <span class="read-more">Learn More</span>
+    </a>
+  </div>
 </section>
 
 <section class="clients" id="clients" data-aos="fade-up">
-    <h2>Our Clients</h2>
-    <div class="logo-slider">
-        <div class="logo-track">
-            <a href="https://www.danfoss.com" target="_blank"><img src="danfoss.png" alt="Danfoss"></a>
-            <a href="https://www2.deloitte.com" target="_blank"><img src="deloitte.png" alt="Deloitte"></a>
-            <a href="https://www.kelltontech.com" target="_blank"><img src="kellton.png" alt="Kellton"></a>
-            <a href="https://www.appizion.com" target="_blank"><img src="appizion.png" alt="Appizion"></a>
-            <a href="https://www.tecnics.com" target="_blank"><img src="tecnics.png" alt="Tecnics"></a>
-            <a href="https://www.3rg3global.com/" target="_blank"><img src="3rg3g.png" alt="3rg3gglobal"></a>
-            <a href="#"><img src="SPL.png" alt="SPL"></a>
-            <a href="#"><img src="NBL.png" alt="NBL"></a>
-            <!-- repeat for smooth loop -->
-            <a href="https://www.danfoss.com" target="_blank"><img src="danfoss.png" alt="Danfoss"></a>
-            <a href="https://www2.deloitte.com" target="_blank"><img src="deloitte.png" alt="Deloitte"></a>
-            <a href="https://www.kelltontech.com" target="_blank"><img src="kellton.png" alt="Kellton"></a>
-            <a href="https://www.appizion.com" target="_blank"><img src="appizion.png" alt="Appizion"></a>
-            <a href="https://www.tecnics.com" target="_blank"><img src="tecnics.png" alt="Tecnics"></a>
-            <a href="https://www.3rg3global.com/" target="_blank"><img src="3rg3g.png" alt="3rg3gglobal"></a>
-            <a href="#"><img src="SPL.png" alt="SPL"></a>
-            <a href="#"><img src="NBL.png" alt="NBL"></a>
-        </div>
+  <h2>Our Clients</h2>
+  <div class="logo-slider">
+    <div class="logo-track">
+      <!-- duplicate logos for scrolling -->
+      <a href="#"><img src="danfoss.png" alt="Danfoss"></a>
+      <a href="#"><img src="deloitte.png" alt="Deloitte"></a>
+      <a href="#"><img src="kellton.png" alt="Kellton"></a>
+      <a href="#"><img src="appizion.png" alt="Appizion"></a>
+      <a href="#"><img src="tecnics.png" alt="Tecnics"></a>
+      <a href="#"><img src="3rg3g.png" alt="3rg3gglobal"></a>
+      <a href="#"><img src="SPL.png" alt="SPL"></a>
+      <a href="#"><img src="NBL.png" alt="NBL"></a>
+      <!-- repeat -->
     </div>
+  </div>
 </section>
 
 <section class="contact" id="contact" data-aos="fade-up">
-    <h2>We would love to hear from you</h2>
-    <form>
-        <input type="text" placeholder="Your Name" required />
-        <input type="email" placeholder="Your Email" required />
-        <input type="text" placeholder="Subject" />
-        <textarea placeholder="Message" rows="5"></textarea>
-        <button type="submit">Send Message</button>
-    </form>
+  <h2>We would love to hear from you</h2>
+  <form>
+    <input type="text" placeholder="Your Name" required />
+    <input type="email" placeholder="Your Email" required />
+    <input type="text" placeholder="Subject" />
+    <textarea placeholder="Message" rows="5"></textarea>
+    <button type="submit">Send Message</button>
+  </form>
 </section>
 
 <footer>
-    <div class="footer-section">
-        <div class="footer-logo">
-            <img src="logo.png" alt="ACS Logo" />
-            <h3>AJHA CONSULTANCY SERVICES</h3>
-        </div>
-        <p>Your partner in Enterprise Application Solutions, Digital Transformation, and Strategic Staffing.</p>
-        <div class="social-links">
-            <a href="https://www.instagram.com/ajhaconsultancy/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://www.facebook.com/ajha.consultancy.services?_rdr" target="_blank"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://x.com/AjhaServices" target="_blank"><i class="fab fa-x-twitter"></i></a>
-        </div>
+  <div class="footer-section">
+    <div class="footer-logo">
+      <img src="logo.png" alt="ACS Logo" />
+      <h3>AJHA CONSULTANCY SERVICES</h3>
     </div>
-
-    <div class="footer-section">
-        <h4>Quick Links</h4>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="about-us.html">About Us</a></li>
-            <li><a href="our-services.html">Services</a></li>
-            <li><a href="industries.html">Industries</a></li>
-            <li><a href="executive-board.html">Executive Board</a></li>
-            <li><a href="careers.html">Careers</a></li>
-            <li><a href="#clients">Clients</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
+    <p>Your partner in Enterprise Application Solutions, Digital Transformation, and Strategic Staffing.</p>
+    <div class="social-links">
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-x-twitter"></i></a>
     </div>
-    
-    <div class="footer-section">
-        <h4>Contact Us</h4>
-        <div class="contact-info">
-            <h5>India Office</h5>
-            <address>
-                HD-066, We work Cinnabar Hills, Challaghatta Road,<br>
-                Bengaluru, Karnataka, 560071.
-            </address>
-            <p>Phone: <a href="tel:+918904178430">+91 8904178430</a></p>
-        </div>
-        <div class="contact-info">
-            <h5>USA Office</h5>
-            <address>
-                2716 Baron Ln Irving,<br>
-                TX, 75063, USA
-            </address>
-            <p>Phone: <a href="tel:+19806177933">+1 980-617-7933</a></p>
-        </div>
-        <div class="contact-info">
-            <h5>Email</h5>
-            <p><a href="mailto:marketing@ajhacs.com">marketing@ajhacs.com</a></p>
-        </div>
+  </div>
+  <div class="footer-section">
+    <h4>Quick Links</h4>
+    <ul>
+      <li><a href="#home">Home</a></li>
+      <li><a href="about-us.html">About Us</a></li>
+      <li><a href="our-services.html">Services</a></li>
+      <li><a href="industries.html">Industries</a></li>
+      <li><a href="executive-board.html">Executive Board</a></li>
+      <li><a href="careers.html">Careers</a></li>
+      <li><a href="#clients">Clients</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-section">
+    <h4>Contact Us</h4>
+    <div class="contact-info">
+      <h5>India Office</h5>
+      <address>HD-066, We work Cinnabar Hills, Challaghatta Road,<br>Bengaluru, Karnataka, 560071.</address>
+      <p>Phone: <a href="tel:+918904178430">+91 8904178430</a></p>
     </div>
-
-    <div class="footer-bottom">
-        <p>© 2019 Ajha Consultancy Services, Inc. All rights reserved.</p>
+    <div class="contact-info">
+      <h5>USA Office</h5>
+      <address>2716 Baron Ln Irving,<br>TX, 75063, USA</address>
+      <p>Phone: <a href="tel:+19806177933">+1 980-617-7933</a></p>
     </div>
+    <div class="contact-info">
+      <h5>Email</h5>
+      <p><a href="mailto:marketing@ajhacs.com">marketing@ajhacs.com</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2019 Ajha Consultancy Services, Inc. All rights reserved.</p>
+  </div>
 </footer>
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
-AOS.init({ duration: 1000, once: true });
-
-// Typing animation
-const message = "Innovating ERP.Empowering Businesses";
-const typedTextSpan = document.querySelector(".typed-text");
-let index = 0;
-function type() {
-    if (index < message.length) {
-        typedTextSpan.textContent += message.charAt(index);
-        index++;
-        setTimeout(type, 50);
-    }
+AOS.init({duration:1000,once:true});
+const message="Innovating ERP.Empowering Businesses";
+const typedTextSpan=document.querySelector(".typed-text");
+let index=0;
+function type(){
+  if(index<message.length){
+    typedTextSpan.textContent+=message.charAt(index++);
+    setTimeout(type,50);
+  }
 }
-window.addEventListener("DOMContentLoaded", type);
-
-// Hamburger toggle
-const hamburger = document.querySelector('.hamburger');
-const navMenu = document.querySelector('nav');
-hamburger.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
+window.addEventListener("DOMContentLoaded",type);
+const hamburger=document.querySelector('.hamburger');
+const navMenu=document.querySelector('nav');
+hamburger.addEventListener('click',()=>navMenu.classList.toggle('active'));
+document.querySelectorAll('.dropdown > .dropbtn').forEach(btn=>{
+  btn.addEventListener('click',e=>{
+    if(window.innerWidth<=768){
+      e.preventDefault();
+      btn.parentElement.classList.toggle('open');
+    }
+  });
 });
-
-// Mobile dropdown toggle
-document.querySelectorAll('.dropdown > .dropbtn').forEach(btn => {
-    btn.addEventListener('click', e => {
-        if (window.innerWidth <= 768) {
-            e.preventDefault();
-            btn.parentElement.classList.toggle('open');
-        }
-    });
-});
-
-// Auto-close nav on link click in mobile
-document.querySelectorAll('nav a').forEach(link => {
-    link.addEventListener('click', () => {
-        if (window.innerWidth <= 768) {
-            navMenu.classList.remove('active');
-            document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('open'));
-        }
-    });
+document.querySelectorAll('nav a').forEach(link=>{
+  link.addEventListener('click',()=>{
+    if(window.innerWidth<=768){
+      navMenu.classList.remove('active');
+      document.querySelectorAll('.dropdown').forEach(dd=>dd.classList.remove('open'));
+    }
+  });
 });
 </script>
 </body>
