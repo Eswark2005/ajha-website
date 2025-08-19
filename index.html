@@ -24,7 +24,6 @@ nav a:hover{color:#ff6600;}
 .dropdown-content a:hover{background:#2a2c36;color:#ff6600;}
 .dropdown:hover .dropdown-content{display:block;}
 .hamburger{display:none;font-size:1.6rem;background:none;border:none;color:white;cursor:pointer;}
-
 /* Hero */
 .hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding-top:80px;text-align:center;}
 .hero video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;}
@@ -34,12 +33,11 @@ nav a:hover{color:#ff6600;}
 @media (max-width:600px){
   .hero h1{white-space:normal;word-break:break-word;border-right:none;text-align:center;}
 }
-
-.clients,.services,.contact,.who-we-are{padding:4rem 5%;}
+.clients,.services,.contact,.who-we-are,.resources{padding:4rem 5%;}
 .who-we-are{background:#1a1c26;text-align:center;}
 .who-we-are h2{font-size:clamp(1.75rem,3.5vw,2.5rem);margin-bottom:3rem;}
 .who-we-are p{font-size:1.1rem;line-height:1.8;max-width:800px;margin:auto;color:#dcdcdc;}
-.services h2,.clients h2,.contact h2{font-size:clamp(1.75rem,3.5vw,2.5rem);margin-bottom:3rem;text-align:center;}
+.services h2,.clients h2,.contact h2,.resources h2{font-size:clamp(1.75rem,3.5vw,2.5rem);margin-bottom:3rem;text-align:center;}
 .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;max-width:1200px;margin:auto;}
 .service-card{background:#2c2e35;border-radius:10px;padding:2rem;box-shadow:0 0 20px rgba(0,0,0,0.4);min-height:180px;text-decoration:none;display:block;transition:0.3s;}
 .service-card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(255,102,0,0.3);background:#3c3e45;}
@@ -69,6 +67,11 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
 .social-links a{width:40px;height:40px;background:#333;border-radius:50%;display:flex;justify-content:center;align-items:center;transition:background-color 0.3s;color:#fff;font-size:1.2rem;}
 .social-links a:hover{background:#ff6600;color:#0c0e16;}
 .footer-bottom{grid-column:1/-1;text-align:center;padding-top:2rem;border-top:1px solid #333;color:#888;font-size:0.9rem;}
+/* Resource section */
+.resources{background:#0c0e16;text-align:center;}
+.resources p{font-size:1.1rem;color:#dcdcdc;max-width:800px;margin:0 auto 2rem;}
+.resources a.resource-btn{display:inline-block;padding:0.8rem 2rem;background:#ff6600;color:white;font-weight:600;border-radius:5px;text-decoration:none;transition:background .3s;}
+.resources a.resource-btn:hover{background:#e65c00;}
 @media (max-width:768px){
   .hamburger{display:block;position:relative;z-index:1600;}
   nav{position:fixed;top:70px;right:0;background:#0c0e16;flex-direction:column;align-items:flex-start;width:100vw;max-height:0;overflow:hidden;padding-inline:0;z-index:1500;}
@@ -87,7 +90,6 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">
     <img src="logo.png" alt="ACS Logo" />
@@ -110,6 +112,7 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
     <a href="executive-board.html">Executive Board</a>
     <a href="careers.html">Careers</a>
     <a href="#clients">Clients</a>
+    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U">Resources</a>
     <a href="#contact">Contact</a>
   </nav>
 </header>
@@ -157,15 +160,6 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
       <a href="https://www.appizion.com" target="_blank"><img src="appizion.png" alt="Appizion"></a>
       <a href="https://www.tecnics.com" target="_blank"><img src="tecnics.png" alt="Tecnics"></a>
       <a href="https://www.3rg3global.com/" target="_blank"><img src="3rg3g.png" alt="3rg3gglobal"></a>
-      <a href="#" target="https://www.shriramproperties.com/"><img src="SPL.png" alt="SPL"></a>
-      <a href="#" target="https://nbl.in/"><img src="NBL.png" alt="NBL"></a>
-      <!-- duplicate for smooth loop -->
-      <a href="https://www.danfoss.com" target="_blank"><img src="danfoss.png" alt="Danfoss"></a>
-      <a href="https://www2.deloitte.com" target="_blank"><img src="deloitte.png" alt="Deloitte"></a>
-      <a href="https://www.kelltontech.com" target="_blank"><img src="kellton.png" alt="Kellton"></a>
-      <a href="https://www.appizion.com" target="_blank"><img src="appizion.png" alt="Appizion"></a>
-      <a href="https://www.tecnics.com" target="_blank"><img src="tecnics.png" alt="Tecnics"></a>
-      <a href="https://www.3rg3global.com/" target="_blank"><img src="3rg3g.png" alt="3rg3gglobal"></a>
       <a href="#" target="_blank"><img src="SPL.png" alt="SPL"></a>
       <a href="#" target="_blank"><img src="NBL.png" alt="NBL"></a>
     </div>
@@ -196,7 +190,6 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
       <a href="https://x.com/AjhaServices" target="_blank"><i class="fab fa-x-twitter"></i></a>
     </div>
   </div>
-
   <div class="footer-section">
     <h4>Quick Links</h4>
     <ul>
@@ -207,10 +200,10 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
       <li><a href="executive-board.html">Executive Board</a></li>
       <li><a href="careers.html">Careers</a></li>
       <li><a href="#clients">Clients</a></li>
+      <li><a href="#resources">Resources</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </div>
-  
   <div class="footer-section">
     <h4>Contact Us</h4>
     <div class="contact-info">
@@ -234,7 +227,6 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
       <p><a href="mailto:marketing@ajhacs.com">marketing@ajhacs.com</a></p>
     </div>
   </div>
-
   <div class="footer-bottom">
     <p>© 2019 Ajha Consultancy Services, Inc. All rights reserved.</p>
   </div>
@@ -275,4 +267,3 @@ document.querySelectorAll('nav a').forEach(link=>{
 </script>
 </body>
 </html>
-
