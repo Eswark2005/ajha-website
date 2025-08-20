@@ -11,37 +11,67 @@
         crossorigin="anonymous"/>
   <style>
     body { font-family: 'Inter', sans-serif; }
+    .mobile-nav { display:none; }
+    @media(max-width:768px){
+      .mobile-nav { display:flex; flex-direction:column; background:#0c0e16; padding:1rem; }
+      .mobile-nav a { padding:0.5rem 0; }
+      .mobile-dropdown { display:none; flex-direction:column; padding-left:1rem; }
+      .mobile-dropdown.show { display:flex; }
+    }
   </style>
 </head>
 <body class="bg-slate-900 text-slate-200">
 
 <header class="bg-slate-900 shadow-lg sticky top-0 z-50">
   <div class="container mx-auto flex items-center justify-between p-4">
-    <div class="flex items-center space-x-2">
+    <!-- Logo + Title links to Resources -->
+    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="flex items-center space-x-2">
       <img src="logo.png" alt="AJHA Consultancy Services Logo" class="h-10"/>
-      <span class="text-xl font-semibold uppercase tracking-wider text-white">AJHA CONSULTANCY SERVICES</span>
-    </div>
+      <span class="text-xl font-semibold uppercase tracking-wider text-orange-500 hover:text-orange-400">AJHA CONSULTANCY SERVICES</span>
+    </a>
+    <!-- Desktop nav -->
     <nav class="hidden md:flex items-center space-x-6">
       <a href="index.html" class="text-slate-300 hover:text-orange-500">Home</a>
       <a href="about-us.html" class="text-slate-300 hover:text-orange-500">About Us</a>
       <div class="relative group">
-        <button id="services-dropdown-btn" class="text-slate-300 hover:text-orange-500">
-          Services <i class="fas fa-caret-down ml-1"></i>
-        </button>
-        <div id="services-dropdown" class="absolute hidden group-hover:block bg-slate-800 rounded-md shadow-lg min-w-[200px] mt-2">
-          <a href="our-services.html#advanced-enterprise" class="block px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-orange-500">Advanced Enterprise</a>
-          <a href="our-services.html#digital-transformation" class="block px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-orange-500">Digital Transformation</a>
-          <a href="our-services.html#application-maintenance" class="block px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-orange-500">Application Maintenance</a>
-          <a href="our-services.html#hr-consultancy" class="block px-4 py-2 text-slate-300 hover:bg-slate-700 hover:text-orange-500">HR Consultancy</a>
+        <button id="services-dropdown-btn" class="text-slate-300 hover:text-orange-500">Services <i class="fas fa-caret-down ml-1"></i></button>
+        <div id="services-dropdown" class="absolute hidden bg-slate-800 rounded-md shadow-lg min-w-[200px] mt-2">
+          <a href="our-services.html#advanced-enterprise" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Advanced Enterprise</a>
+          <a href="our-services.html#digital-transformation" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Digital Transformation</a>
+          <a href="our-services.html#application-maintenance" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Application Maintenance</a>
+          <a href="our-services.html#hr-consultancy" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">HR Consultancy</a>
         </div>
       </div>
       <a href="industries.html" class="text-slate-300 hover:text-orange-500">Industries</a>
       <a href="executive-board.html" class="text-slate-300 hover:text-orange-500">Executive Board</a>
       <a href="careers.html" class="text-orange-500 font-bold">Careers</a>
+      <a href="index.html#clients" class="text-slate-300 hover:text-orange-500">Clients</a>
+      <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="text-slate-300 hover:text-orange-500">Resources</a>
       <a href="index.html#contact" class="text-slate-300 hover:text-orange-500">Contact</a>
     </nav>
-    <button class="md:hidden text-slate-300"><i class="fas fa-bars text-xl"></i></button>
+    <!-- Hamburger -->
+    <button id="hamburger-btn" class="md:hidden text-slate-300"><i class="fas fa-bars text-xl"></i></button>
   </div>
+  <!-- Mobile nav -->
+  <nav id="mobile-nav" class="mobile-nav hidden flex-col bg-slate-900 p-4 md:hidden space-y-2">
+    <a href="index.html" class="block text-slate-300 hover:text-orange-500">Home</a>
+    <a href="about-us.html" class="block text-slate-300 hover:text-orange-500">About Us</a>
+    <button id="mobile-services-btn" class="flex justify-between items-center text-slate-300 w-full">
+      Services <i class="fas fa-caret-down ml-2"></i>
+    </button>
+    <div id="mobile-services-dropdown" class="mobile-dropdown hidden flex-col pl-4 space-y-2">
+      <a href="our-services.html#advanced-enterprise" class="block hover:text-orange-500">Advanced Enterprise</a>
+      <a href="our-services.html#digital-transformation" class="block hover:text-orange-500">Digital Transformation</a>
+      <a href="our-services.html#application-maintenance" class="block hover:text-orange-500">Application Maintenance</a>
+      <a href="our-services.html#hr-consultancy" class="block hover:text-orange-500">HR Consultancy</a>
+    </div>
+    <a href="industries.html" class="block text-slate-300 hover:text-orange-500">Industries</a>
+    <a href="executive-board.html" class="block text-slate-300 hover:text-orange-500">Executive Board</a>
+    <a href="careers.html" class="block text-orange-500 font-bold">Careers</a>
+    <a href="index.html#clients" class="block text-slate-300 hover:text-orange-500">Clients</a>
+    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="block text-slate-300 hover:text-orange-500">Resources</a>
+    <a href="index.html#contact" class="block text-slate-300 hover:text-orange-500">Contact</a>
+  </nav>
 </header>
 
 <main>
@@ -55,6 +85,7 @@
     </div>
   </section>
 
+  <!-- What We Expect -->
   <div class="container mx-auto px-4 py-16">
     <section class="text-center max-w-3xl mx-auto mb-16">
       <h2 class="text-3xl font-bold text-orange-500 mb-4">What We Expect</h2>
@@ -70,7 +101,7 @@
         <h3 class="text-2xl font-bold text-orange-500">S4HANA Senior FICO Consultants</h3>
         <p class="text-slate-400 text-sm mb-4">Experience: 5 to 8 years relevant experience</p>
         <h4 class="text-xl font-semibold text-slate-300 mt-6 mb-2">Responsibilities:</h4>
-        <ul class="space-y-2 text-slate-300">
+        <ul class="space-y-2 text-slate-300 list-disc list-inside">
           <li>Provide business process and functional support for the SAP FI module, including its sub-ledgers (AP, AR, and AA).</li>
           <li>Must have experience on S4 Implementation on a private cloud or public cloud, Support engagement.</li>
           <li>Facilitate requirements gathering workshops/discussions and assess, challenge, and document the business requirements.</li>
@@ -82,17 +113,16 @@
           <li>Good knowledge of integration aspects between FICO, SD, MM and all other core modules.</li>
         </ul>
         <h4 class="text-xl font-semibold text-slate-300 mt-6 mb-2">Qualifications:</h4>
-        <ul class="space-y-2 text-slate-300">
+        <ul class="space-y-2 text-slate-300 list-disc list-inside">
           <li>Preferable S4HANA certifications.</li>
         </ul>
       </div>
-
       <!-- Job 2 -->
       <div class="bg-slate-800 p-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition">
         <h3 class="text-2xl font-bold text-orange-500">S4HANA Junior Consultants</h3>
         <p class="text-slate-400 text-sm mb-4">Experience: 1 to 4 years relevant experience</p>
         <h4 class="text-xl font-semibold text-slate-300 mt-6 mb-2">Responsibilities:</h4>
-        <ul class="space-y-2 text-slate-300">
+        <ul class="space-y-2 text-slate-300 list-disc list-inside">
           <li>Must have experience on S4 Implementation on a private cloud or public cloud, Support engagement.</li>
           <li>Develop functional specifications for customizations and enhancements, which include reports, data processing, load programs, and adjustment tools.</li>
           <li>Develop test strategies, test plans and test scripts.</li>
@@ -100,28 +130,26 @@
           <li>Good knowledge of integration aspects between FICO, SD, MM and all other core modules.</li>
         </ul>
         <h4 class="text-xl font-semibold text-slate-300 mt-6 mb-2">Qualifications:</h4>
-        <ul class="space-y-2 text-slate-300">
+        <ul class="space-y-2 text-slate-300 list-disc list-inside">
           <li>Preferable S4HANA certifications.</li>
         </ul>
       </div>
-
       <!-- Job 3 -->
       <div class="bg-slate-800 p-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition">
         <h3 class="text-2xl font-bold text-orange-500">S4HANA Junior and Senior Developers</h3>
         <p class="text-slate-400 text-sm mb-4">Experience: 1 to 10 years relevant experience</p>
         <h4 class="text-xl font-semibold text-slate-300 mt-6 mb-2">Responsibilities:</h4>
-        <ul class="space-y-2 text-slate-300">
+        <ul class="space-y-2 text-slate-300 list-disc list-inside">
           <li>Must have experience on S4 Implementation on a private cloud or public cloud, Support engagement.</li>
           <li>Develop functional specifications for customizations and enhancements, which include reports, data processing, load programs, and adjustment tools.</li>
           <li>BTP integrations - outbound /Inbound, AI core and machine.</li>
         </ul>
         <h4 class="text-xl font-semibold text-slate-300 mt-6 mb-2">Qualifications:</h4>
-        <ul class="space-y-2 text-slate-300">
+        <ul class="space-y-2 text-slate-300 list-disc list-inside">
           <li>Preferable S4HANA certifications.</li>
         </ul>
       </div>
     </section>
-
     <!-- Application -->
     <section class="text-center bg-slate-800 rounded-xl p-10 mt-16 shadow-lg">
       <h4 class="text-2xl font-bold text-slate-300 mb-4">Ready to join our team?</h4>
@@ -174,6 +202,8 @@
         <li><a href="industries.html" class="hover:text-white">Industries</a></li>
         <li><a href="executive-board.html" class="hover:text-white">Executive Board</a></li>
         <li><a href="careers.html" class="hover:text-white">Careers</a></li>
+        <li><a href="index.html#clients" class="hover:text-white">Clients</a></li>
+        <li><a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" class="hover:text-white" target="_blank">Resources</a></li>
         <li><a href="index.html#contact" class="hover:text-white">Contact</a></li>
       </ul>
     </div>
@@ -187,7 +217,7 @@
         </div>
         <div>
           <h5 class="font-bold text-white">USA Office</h5>
-          <address>2716 Baron Ln Irving,<br/>TX, 75063-75063, USA</address>
+          <address>2716 Baron Ln Irving,<br/>TX, 75063, USA</address>
           <p>Phone: <a href="tel:+19806177933" class="hover:text-white">+1 980-617-7933</a></p>
         </div>
         <div>
@@ -203,12 +233,23 @@
 </footer>
 
 <script>
-document.getElementById('services-dropdown-btn').addEventListener('click', function(e){
-  e.stopPropagation();
+// Hamburger toggle for mobile menu
+const hamburgerBtn = document.getElementById('hamburger-btn');
+const mobileNav = document.getElementById('mobile-nav');
+hamburgerBtn.addEventListener('click', () => mobileNav.classList.toggle('hidden'));
+
+// Mobile dropdown toggle
+const mobileServicesBtn = document.getElementById('mobile-services-btn');
+const mobileServicesDropdown = document.getElementById('mobile-services-dropdown');
+mobileServicesBtn.addEventListener('click', () => mobileServicesDropdown.classList.toggle('show'));
+
+// Desktop dropdown toggle by click
+document.getElementById('services-dropdown-btn').addEventListener('click', (e) => {
+  e.preventDefault();
   document.getElementById('services-dropdown').classList.toggle('hidden');
 });
-document.addEventListener('click', function(e){
-  if(!document.getElementById('services-dropdown').contains(e.target) && !document.getElementById('services-dropdown-btn').contains(e.target)){
+document.addEventListener('click', (e) => {
+  if (!document.getElementById('services-dropdown').contains(e.target) && !document.getElementById('services-dropdown-btn').contains(e.target)) {
     document.getElementById('services-dropdown').classList.add('hidden');
   }
 });
@@ -216,3 +257,4 @@ document.addEventListener('click', function(e){
 
 </body>
 </html>
+
