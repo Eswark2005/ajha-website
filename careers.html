@@ -21,13 +21,12 @@
   </style>
 </head>
 <body class="bg-slate-900 text-slate-200">
-
 <header class="bg-slate-900 shadow-lg sticky top-0 z-50">
   <div class="container mx-auto flex items-center justify-between p-4">
-    <!-- Logo + Title links to Resources -->
-    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="flex items-center space-x-2">
+    <!-- Logo + Title links to index.html, and company name shown in white -->
+    <a href="index.html" class="flex items-center space-x-2">
       <img src="logo.png" alt="AJHA Consultancy Services Logo" class="h-10"/>
-      <span class="text-xl font-semibold uppercase tracking-wider text-orange-500 hover:text-orange-400">AJHA CONSULTANCY SERVICES</span>
+      <span class="text-xl font-semibold uppercase tracking-wider text-white">AJHA CONSULTANCY SERVICES</span>
     </a>
     <!-- Desktop nav -->
     <nav class="hidden md:flex items-center space-x-6">
@@ -73,7 +72,6 @@
     <a href="index.html#contact" class="block text-slate-300 hover:text-orange-500">Contact</a>
   </nav>
 </header>
-
 <main>
   <!-- Banner -->
   <section class="relative flex items-center justify-center text-center h-80"
@@ -84,7 +82,6 @@
       <p class="text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto">Innovate with us. Shape the future.</p>
     </div>
   </section>
-
   <!-- What We Expect -->
   <div class="container mx-auto px-4 py-16">
     <section class="text-center max-w-3xl mx-auto mb-16">
@@ -93,7 +90,6 @@
         We’re looking for passionate, proactive, adaptable team players who work with integrity and are driven to deliver results.
       </p>
     </section>
-
     <!-- Job Listings -->
     <section class="space-y-8">
       <!-- Job 1 -->
@@ -162,7 +158,6 @@
     </section>
   </div>
 </main>
-
 <!-- LinkedIn CTA -->
 <section class="text-center bg-slate-800 rounded-xl p-10 mx-4 mb-16 shadow-lg max-w-4xl md:mx-auto">
   <h2 class="text-2xl md:text-3xl font-bold text-orange-500 mb-4">Connect with Us on LinkedIn</h2>
@@ -176,7 +171,6 @@
     <i class="fab fa-linkedin text-lg mr-2"></i> Connect on LinkedIn
   </a>
 </section>
-
 <!-- Footer -->
 <footer class="bg-slate-800 text-slate-400 p-8">
   <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -231,18 +225,15 @@
     <p>© 2019 Ajha Consultancy Services, Inc. All rights reserved.</p>
   </div>
 </footer>
-
 <script>
 // Hamburger toggle for mobile menu
 const hamburgerBtn = document.getElementById('hamburger-btn');
 const mobileNav = document.getElementById('mobile-nav');
 hamburgerBtn.addEventListener('click', () => mobileNav.classList.toggle('hidden'));
-
 // Mobile dropdown toggle
 const mobileServicesBtn = document.getElementById('mobile-services-btn');
 const mobileServicesDropdown = document.getElementById('mobile-services-dropdown');
 mobileServicesBtn.addEventListener('click', () => mobileServicesDropdown.classList.toggle('show'));
-
 // Desktop dropdown toggle by click
 document.getElementById('services-dropdown-btn').addEventListener('click', (e) => {
   e.preventDefault();
@@ -254,7 +245,6 @@ document.addEventListener('click', (e) => {
   }
 });
 </script>
-
 </body>
 </html>
 
