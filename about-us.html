@@ -20,8 +20,8 @@
 body { font-family: 'Poppins', sans-serif; background-color: var(--primary-bg); color: var(--text-color-light); margin: 0; scroll-behavior: smooth; line-height: 1.6; }
 header { display: flex; align-items: center; padding: 1rem 5%; background-color: var(--primary-bg); position: sticky; top: 0; z-index: 10000; justify-content: space-between; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
 .header-logo-container { display: flex; align-items: center; gap: 1rem; }
-.header-logo { height: 50px; width: auto; }
-.company-name { font-weight: 600; text-transform: uppercase; font-size: clamp(1rem, 4vw, 1.5 rem); color: #ffffff; } /* Changed color to white */
+.header-logo { height: 50px; width: auto; margin: 0; display: inline-block; vertical-align: middle; }
+.company-name { font-weight: 600; text-transform: uppercase; font-size: clamp(1rem, 4vw, 1.5rem); color: #fff; margin: 0; display: flex; align-items: center; }
 nav { display: flex; align-items: center; gap: 1.5rem; transition: max-height 0.3s ease; }
 nav a, .dropbtn { text-decoration: none; color: var(--text-color-light); font-weight: 400; background: none; border: none; cursor: pointer; font: inherit; }
 nav a.active, .dropbtn.active { color: var(--accent-color); font-weight: 600; }
@@ -71,7 +71,7 @@ footer { background: var(--secondary-bg); padding: 2.5rem 5% 2rem; display:grid;
 <body>
 <header>
   <div class="header-logo-container">
-    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="flex items-center gap-2">
+    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" style="display: flex; align-items: center; gap: 1rem;">
       <img src="logo.png" alt="AJHA Logo" class="header-logo"/>
       <span class="company-name">AJHA CONSULTANCY SERVICES</span>
     </a>
@@ -206,4 +206,5 @@ document.querySelectorAll('nav a').forEach(link=>{
 </script>
 </body>
 </html>
+
 
