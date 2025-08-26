@@ -24,15 +24,17 @@
     scroll-behavior: smooth;
   }
   header {
-    display: flex;
-    align-items: center;
-    padding: 1rem 2rem;
     background-color: var(--primary-bg);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
     position: sticky;
     top: 0;
     z-index: 10000;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
     justify-content: space-between;
+    padding: 1rem 2rem;
   }
   .header-logo-container {
     display: flex;
@@ -49,10 +51,9 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
     font-size: 1.25rem;
-    color: #ffffff; /* White color instead of yellow */
+    color: #ffffff;
   }
   nav {
-    margin-left: auto;
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -62,13 +63,13 @@
     text-decoration: none;
     color: var(--text-color-light);
     font-weight: 400;
-    transition: color 0.2s;
     background: none;
     border: none;
     cursor: pointer;
     font: inherit;
     outline: none;
     display: inline-block;
+    transition: color 0.2s;
   }
   nav a.active, .dropbtn.active {
     color: var(--accent-color);
@@ -111,48 +112,62 @@
       display: block;
     }
   }
-  /* Mobile nav styles */
-  #mobile-nav {
+  
+  /* Mobile nav */
+  .hamburger {
     display: none;
-    flex-direction: column;
-    background-color: var(--primary-bg);
-    padding: 1rem 2rem;
-    position: fixed;
-    top: 70px;
-    right: 0;
-    width: 100%;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    z-index: 9999;
-  }
-  #mobile-nav.show {
-    max-height: 500px;
-  }
-  #mobile-nav a, #mobile-nav button {
-    color: var(--text-color-light);
-    padding: 0.75rem 0;
-    text-align: left;
-    font-size: 1rem;
-    border: none;
     background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-color-light);
     cursor: pointer;
-    display: block;
-    width: 100%;
+    margin-left: 1rem;
   }
-  #mobile-nav button {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  @media (max-width: 900px) {
+    .header-inner {
+      flex-direction: row;
+      padding: 0.8rem 1rem;
+    }
+    nav {
+      flex-direction: column;
+      background: var(--primary-bg);
+      position: fixed;
+      top: 70px;
+      left: 0;
+      width: 100vw;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      z-index: 9999;
+    }
+    nav.show {
+      max-height: 600px;
+      padding: 1.4rem 0;
+    }
+    nav a, .dropbtn {
+      margin: 0.5rem 1.5rem;
+      font-size: 1.18rem;
+      display: block;
+      text-align: left;
+    }
+    .dropdown {
+      width: 100%;
+    }
+    .dropdown-content {
+      position: static;
+      min-width: 0;
+      box-shadow: none;
+      background: transparent;
+      padding-left: 1.5rem;
+    }
+    .dropdown.open .dropdown-content {
+      display: block;
+    }
+    .hamburger {
+      display: block;
+    }
   }
-  #mobile-services-dropdown {
-    display: none;
-    flex-direction: column;
-    padding-left: 1rem;
-  }
-  #mobile-services-dropdown.show {
-    display: flex;
-  }
+
   /* Hero section & content */
   .executive-board-hero {
     position: relative;
@@ -175,6 +190,11 @@
     text-shadow: 0 2px 6px rgba(0,0,0,0.7);
     z-index: 2;
   }
+  @media (max-width: 768px) {
+    .executive-board-hero h1 {
+      font-size: 2.5rem;
+    }
+  }
   .board-members-section {
     padding: 4rem 5%;
     text-align: center;
@@ -188,12 +208,27 @@
     border-bottom: 2px solid var(--secondary-bg);
     padding-bottom: 1rem;
   }
+  @media (max-width: 768px) {
+    .board-category-heading {
+      text-align: center;
+    }
+  }
   .board-grid {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
     gap: 3rem;
+  }
+  @media (max-width: 1024px) {
+    .board-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 768px) {
+    .board-grid {
+      grid-template-columns: 1fr;
+    }
   }
   .board-member-card {
     background-color: var(--secondary-bg);
@@ -381,15 +416,6 @@
     }
   }
   @media (max-width: 768px) {
-    .executive-board-hero h1 {
-      font-size: 2.5rem;
-    }
-    .board-grid {
-      grid-template-columns: 1fr;
-    }
-    .board-category-heading {
-      text-align: center;
-    }
     nav {
       flex-wrap: wrap;
       justify-content: flex-end;
@@ -404,66 +430,67 @@
 </head>
 <body>
 <header>
-  <div class="header-logo-container">
-    <a href="index.html" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none;">
-      <img src="logo.png" alt="AJHA Consultancy Services Logo" class="header-logo" />
-      <span class="company-name">AJHA CONSULTANCY SERVICES</span>
-    </a>
-  </div>
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="about-us.html">About Us</a>
-    <div class="dropdown">
-      <a href="#" class="dropbtn" tabindex="0">Services <i class="fas fa-caret-down"></i></a>
-      <div class="dropdown-content">
-        <a href="our-services.html#digital-transformation">Digital Transformation</a>
-        <a href="our-services.html#application-maintenance">Application Maintenance</a>
-        <a href="our-services.html#hr-consultancy">HR Consultancy</a>
-      </div>
+  <div class="header-inner">
+    <div class="header-logo-container">
+      <a href="index.html" style="display: flex; align-items: center; gap: 0.7rem; text-decoration: none;">
+        <img src="logo.png" alt="AJHA Consultancy Services Logo" class="header-logo" />
+        <span class="company-name">AJHA CONSULTANCY SERVICES</span>
+      </a>
     </div>
-    <a href="industries.html">Industries</a>
-    <a href="executive-board.html" class="active">Executive Board</a>
-    <a href="careers.html">Careers</a>
-    <a href="index.html#clients">Clients</a>
-    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank">Resources</a>
-    <a href="index.html#contact">Contact</a>
-  </nav>
+    <button class="hamburger" aria-label="Toggle menu"><i class="fas fa-bars"></i></button>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about-us.html">About Us</a>
+      <div class="dropdown">
+        <a href="#" class="dropbtn" tabindex="0" aria-haspopup="true" aria-expanded="false">Services <i class="fas fa-caret-down"></i></a>
+        <div class="dropdown-content" role="menu" aria-label="Services submenu">
+          <a href="our-services.html#digital-transformation">Digital Transformation</a>
+          <a href="our-services.html#application-maintenance">Application Maintenance</a>
+          <a href="our-services.html#hr-consultancy">HR Consultancy</a>
+        </div>
+      </div>
+      <a href="industries.html">Industries</a>
+      <a href="executive-board.html" class="active">Executive Board</a>
+      <a href="careers.html">Careers</a>
+      <a href="index.html#clients">Clients</a>
+      <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" rel="noopener noreferrer">Resources</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </div>
 </header>
 
-<!-- Hero section with background video and overlay -->
-<section class="executive-board-hero" style="background-image: url('executive_banner.jpg');">
-  <div class="video-overlay"></div>
+<section class="executive-board-hero" style="background-image: url('executive_banner.jpg');" aria-label="Executive board hero section">
   <h1>Our Executive Board</h1>
 </section>
 
-<section class="board-members-section">
+<section class="board-members-section" aria-label="Executive board members">
   <h2 class="board-category-heading">Leadership</h2>
   <div class="board-grid">
-    <div class="board-member-card" data-aos="fade-up">
+    <article class="board-member-card" data-aos="fade-up" tabindex="0" aria-labelledby="ram-annadanam-name" aria-describedby="ram-annadanam-bio">
       <img src="placeholder-male1.jpg" alt="Ram Annadanam" />
       <div class="linkedin-overlay">
-        <a href="https://www.linkedin.com/in/ram-annadanam-7a860267/" target="_blank" aria-label="LinkedIn profile of Ram Annadanam">
+        <a href="https://www.linkedin.com/in/ram-annadanam-7a860267/" target="_blank" aria-label="LinkedIn profile of Ram Annadanam" rel="noopener noreferrer">
           <i class="fab fa-linkedin-in"></i>
         </a>
       </div>
-      <h3>Ram Annadanam</h3>
+      <h3 id="ram-annadanam-name">Ram Annadanam</h3>
       <p><strong>Chief Executive Officer</strong></p>
-      <p class="bio">Ram Annadanam is a visionary leader with over two decades of experience as an SAP S/4HANA Solution Architect. He specializes in business process integration and design across multiple industries. With a strong track record of steering successful projects for Fortune 500 companies and top consulting firms, his passion for leveraging automation and intelligent ERP cloud solutions is the driving force behind Ajha's commitment to delivering cutting-edge, cost-effective solutions.</p>
-    </div>
+      <p id="ram-annadanam-bio" class="bio">Ram Annadanam is a visionary leader with over two decades of experience as an SAP S/4HANA Solution Architect. He specializes in business process integration and design across multiple industries. With a strong track record of steering successful projects for Fortune 500 companies and top consulting firms, his passion for leveraging automation and intelligent ERP cloud solutions is the driving force behind Ajha's commitment to delivering cutting-edge, cost-effective solutions.</p>
+    </article>
   </div>
   <h2 class="board-category-heading">Advisory Board</h2>
   <div class="board-grid">
-    <div class="board-member-card" data-aos="fade-up" data-aos-delay="200">
+    <article class="board-member-card" data-aos="fade-up" data-aos-delay="200" tabindex="0" aria-labelledby="prasad-kompalli-name" aria-describedby="prasad-kompalli-bio">
       <img src="placeholder-male.jpg" alt="Prasad Kompalli" />
       <div class="linkedin-overlay">
-        <a href="https://www.linkedin.com/in/prasadkompalli/" target="_blank" aria-label="LinkedIn profile of Prasad Kompalli">
+        <a href="https://www.linkedin.com/in/prasadkompalli/" target="_blank" aria-label="LinkedIn profile of Prasad Kompalli" rel="noopener noreferrer">
           <i class="fab fa-linkedin-in"></i>
         </a>
       </div>
-      <h3>Prasad Kompalli</h3>
+      <h3 id="prasad-kompalli-name">Prasad Kompalli</h3>
       <p><strong>Advisor - Technology</strong></p>
-      <p class="bio">Prasad Kompalli is a seasoned entrepreneur and technology executive with a long tenure at SAP, where he served as Senior Vice President. He led technology development teams at both SAP Labs India and Germany, building the core technology platform. Post-SAP, he co-founded successful tech ventures in e-commerce (Myntra), healthcare (Mfine), and ed-tech (OnCourse). His extensive experience in building and scaling technology companies provides us with invaluable strategic and technical mentorship, helping us innovate for our clients.</p>
-    </div>
+      <p id="prasad-kompalli-bio" class="bio">Prasad Kompalli is a seasoned entrepreneur and technology executive with a long tenure at SAP, where he served as Senior Vice President. He led technology development teams at both SAP Labs India and Germany, building the core technology platform. Post-SAP, he co-founded successful tech ventures in e-commerce (Myntra), healthcare (Mfine), and ed-tech (OnCourse). His extensive experience in building and scaling technology companies provides us with invaluable strategic and technical mentorship, helping us innovate for our clients.</p>
+    </article>
   </div>
 </section>
 
@@ -475,9 +502,9 @@
     </div>
     <p>Your partner in Enterprise Application Solutions, Digital Transformation, and Strategic Staffing.</p>
     <div class="social-links">
-      <a href="https://www.instagram.com/ajhaconsultancy/" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.facebook.com/ajha.consultancy.services?_rdr" target="_blank"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://x.com/AjhaServices" target="_blank"><i class="fab fa-x-twitter"></i></a>
+      <a href="https://www.instagram.com/ajhaconsultancy/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.facebook.com/ajha.consultancy.services?_rdr" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+      <a href="https://x.com/AjhaServices" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter"></i></a>
     </div>
   </div>
   <div class="footer-section">
@@ -490,7 +517,7 @@
       <li><a href="executive-board.html">Executive Board</a></li>
       <li><a href="careers.html">Careers</a></li>
       <li><a href="index.html#clients">Clients</a></li>
-      <li><a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank">Resources</a></li>
+      <li><a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" rel="noopener noreferrer">Resources</a></li>
       <li><a href="index.html#contact">Contact</a></li>
     </ul>
   </div>
@@ -519,9 +546,34 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 AOS.init({ duration: 1000, once: true });
+
+const hamburger = document.querySelector('.hamburger');
+const nav = document.querySelector('nav');
+hamburger.addEventListener('click', () => nav.classList.toggle('show'));
+
+// Mobile dropdown toggle for Services menu
+document.querySelectorAll('.dropbtn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    if (window.innerWidth <= 900) {
+      e.preventDefault();
+      btn.parentElement.classList.toggle('open');
+    }
+  });
+});
+
+// Close menu when clicking navigation links on mobile
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', () => {
+    if (window.innerWidth <= 900) {
+      nav.classList.remove('show');
+      document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('open'));
+    }
+  });
+});
 </script>
 </body>
 </html>
+
 
 
 
