@@ -29,7 +29,6 @@ nav a:hover{color:#ff6600;}
 .hero video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;}
 .hero h1{font-size:clamp(1.5rem,4vw + 0.5rem,3rem);border-right:3px solid #fff;font-family:'Courier New',monospace;white-space:nowrap;overflow:hidden;}
 .typed-text{display:inline;}
-/* Wrap fix */
 @media (max-width:600px){
   .hero h1{white-space:normal;word-break:break-word;border-right:none;text-align:center;}
 }
@@ -67,7 +66,6 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
 .social-links a{width:40px;height:40px;background:#333;border-radius:50%;display:flex;justify-content:center;align-items:center;transition:background-color 0.3s;color:#fff;font-size:1.2rem;}
 .social-links a:hover{background:#ff6600;color:#0c0e16;}
 .footer-bottom{grid-column:1/-1;text-align:center;padding-top:2rem;border-top:1px solid #333;color:#888;font-size:0.9rem;}
-/* Resource section */
 .resources{background:#0c0e16;text-align:center;}
 .resources p{font-size:1.1rem;color:#dcdcdc;max-width:800px;margin:0 auto 2rem;}
 .resources a.resource-btn{display:inline-block;padding:0.8rem 2rem;background:#ff6600;color:white;font-weight:600;border-radius:5px;text-decoration:none;transition:background .3s;}
@@ -166,6 +164,12 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
   </div>
 </section>
 
+<section class="resources" id="resources" data-aos="fade-up">
+  <h2>Resources</h2>
+  <p>Access presentations, documentation, and reference material from our team of experts.</p>
+  <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="resource-btn">Go to Resource Drive</a>
+</section>
+
 <section class="contact" id="contact" data-aos="fade-up">
   <h2>We would love to hear from you</h2>
   <form>
@@ -235,6 +239,7 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 AOS.init({duration:1000,once:true});
+// Typed hero animation
 const message = "Innovating ERP. Empowering Businesses";
 const typedTextSpan = document.querySelector(".typed-text");
 let index=0;
@@ -245,6 +250,7 @@ function type(){
   }
 }
 window.addEventListener("DOMContentLoaded",type);
+// Mobile navigation
 const hamburger=document.querySelector('.hamburger');
 const navMenu=document.querySelector('nav');
 hamburger.addEventListener('click',()=>navMenu.classList.toggle('active'));
@@ -267,3 +273,4 @@ document.querySelectorAll('nav a').forEach(link=>{
 </script>
 </body>
 </html>
+
