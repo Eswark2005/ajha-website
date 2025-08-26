@@ -50,7 +50,7 @@ header {
     text-transform: uppercase;
     font-size: 1.25rem;
 }
-nav { margin-left: auto; }
+nav { margin-left: auto; display: flex; align-items: center; }
 nav a, .dropbtn {
     margin-left: 1.25rem;
     text-decoration: none;
@@ -92,9 +92,56 @@ nav a:hover, .dropbtn:hover { color: var(--accent-color); }
 }
 .dropdown:hover .dropdown-content { display: block; }
 
+/* Mobile menu */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-color-light);
+    cursor: pointer;
+    margin-left: 1rem;
+}
+@media (max-width: 900px) {
+    header { flex-direction: column; align-items: stretch; padding: 1rem 1.2rem; }
+    .header-logo-container { justify-content: space-between; }
+    nav { 
+        width: 100%;
+        flex-direction: column;
+        background: var(--primary-bg);
+        position: fixed;
+        top: 70px;
+        left: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        z-index: 9999;
+    }
+    nav.show { max-height: 600px; padding: 1.5rem 0; }
+    nav a, .dropbtn {
+        margin: 0.5rem 1.5rem;
+        font-size: 1.1rem;
+        display: block;
+        text-align: left;
+    }
+    .dropdown-content {
+        position: static;
+        min-width: 0;
+        box-shadow: none;
+        background: transparent;
+        padding-left: 1.5rem;
+    }
+    .dropdown.open .dropdown-content {
+        display: block;
+    }
+    .hamburger { display: block; }
+}
+
+/* Main & Hero */
 .industries-hero {
     position: relative;
-    height: 50vh;
+    height: 45vh;
+    min-height: 180px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -113,7 +160,7 @@ nav a:hover, .dropbtn:hover { color: var(--accent-color); }
     z-index: 0;
 }
 .industries-hero h1 {
-    font-size: 3.5rem;
+    font-size: 2.1rem;
     font-weight: 600;
     color: var(--heading-color);
     margin: 0;
@@ -121,13 +168,15 @@ nav a:hover, .dropbtn:hover { color: var(--accent-color); }
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
     position: relative;
 }
+
+/* Main content */
 .industries-page-content {
-    padding: 4rem 5%;
+    padding: 2.5rem 4vw;
     background-color: var(--primary-bg);
 }
 .industry-section {
     max-width: 1200px;
-    margin: 0 auto 3rem auto;
+    margin: 0 auto 2.6rem auto;
     background-color: var(--secondary-bg);
     border-radius: 15px;
     overflow: hidden;
@@ -141,8 +190,8 @@ nav a:hover, .dropbtn:hover { color: var(--accent-color); }
 .industry-content {
     display: flex;
     flex-direction: row;
-    padding: 2.5rem;
-    gap: 2.5rem;
+    padding: 2.2rem;
+    gap: 2rem;
     align-items: center;
 }
 .industry-text { flex: 2; }
@@ -155,20 +204,20 @@ nav a:hover, .dropbtn:hover { color: var(--accent-color); }
 }
 .industry-title {
     color: var(--accent-color);
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
+    font-size: 1.55rem;
+    margin-bottom: 0.68rem;
     font-weight: 600;
 }
 .industry-info {
     color: var(--text-color-light);
-    line-height: 1.7;
+    line-height: 1.65;
     margin-bottom: 1rem;
 }
 .industry-solutions-title {
     color: var(--heading-color);
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.48rem;
 }
 /* Hover reveal styles */
 .full-details {
@@ -178,7 +227,7 @@ nav a:hover, .dropbtn:hover { color: var(--accent-color); }
     transition: all 0.6s ease;
 }
 .industry-section:hover .full-details {
-    max-height: 4000px;
+    max-height: 3000px;
     opacity: 1;
     margin-top: 1rem;
 }
@@ -186,39 +235,52 @@ nav a:hover, .dropbtn:hover { color: var(--accent-color); }
 /* Footer */
 footer {
     background-color: var(--secondary-bg);
-    padding: 3rem 5% 2rem;
+    padding: 2.2rem 4vw 1.4rem;
     display: grid;
-    grid-template-columns: 1fr 1fr 1.5fr;
-    gap: 2rem;
+    grid-template-columns: 1fr 1fr 1.3fr;
+    gap: 1.2rem;
 }
 .footer-section { display: flex; flex-direction: column; align-items: flex-start; }
 .footer-logo { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-.footer-logo img { height: 60px; }
-.footer-logo h3 { margin: 0; font-size: 1.5rem; color: #fff; font-weight: 600; }
-.footer-section h4 { color: #fff; font-size: 1.2rem; margin-bottom: 1rem; font-weight: 600;}
-.footer-section h4::after { content: ''; display: block; width: 40px; height: 3px; background-color: var(--accent-color); margin-top: 5px; }
+.footer-logo img { height: 44px; }
+.footer-logo h3 { margin: 0; font-size: 1.21rem; color: #fff; font-weight: 600; }
+.footer-section h4 { color: #fff; font-size: 1.1rem; margin-bottom: 1rem; font-weight: 600;}
+.footer-section h4::after { content: ''; display: block; width: 36px; height: 3px; background-color: var(--accent-color); margin-top: 5px; }
 .footer-section p, .footer-section a, .footer-section address {
     color: var(--text-color-muted);
-    line-height: 1.6;
-    margin-bottom: 0.5rem;
+    line-height: 1.42;
+    margin-bottom: 0.45rem;
     text-decoration: none; font-style: normal;
 }
 .footer-section a:hover { color: var(--accent-color); }
 .social-links { display: flex; gap: 1rem; margin-top: 1rem; }
 .social-links a {
-    width: 40px; height: 40px; background-color: #333; border-radius: 50%;
-    display: flex; justify-content: center; align-items: center; color: #fff; font-size: 1.2rem;
+    width: 38px; height: 38px; background-color: #333; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center; color: #fff; font-size: 1.11rem;
 }
 .social-links a:hover { background-color: var(--accent-color); color: var(--primary-bg); }
-.footer-bottom { grid-column: 1 / -1; text-align: center; padding-top: 2rem; border-top: 1px solid #333; color: #888; font-size: 0.9rem; }
+.footer-bottom { grid-column: 1 / -1; text-align: center; padding-top: 1.6rem; border-top: 1px solid #333; color: #888; font-size: 0.88rem; }
 
-@media (max-width: 1024px) {
-    footer { grid-template-columns: 1fr; text-align: center; }
+/* Responsive: Phones and Tablets */
+@media (max-width: 900px) {
+    .industry-content { flex-direction: column; text-align: center; padding: 1.2rem; }
+    .industry-image-container { order: -1; margin-bottom: 1rem; }
+    .industry-title { font-size: 1.29rem; }
+    .industry-image { max-width: 75vw; }
+    .industries-page-content { padding: 1.5rem 2vw; }
+    footer { grid-template-columns: 1fr; text-align: center; padding: 2.1rem 2vw 1.1rem; }
     .footer-section { align-items: center; }
+    .footer-logo img { height: 36px; }
+    .footer-logo h3 { font-size: 1.05rem; }
 }
-@media (max-width: 768px) {
-    .industry-content { flex-direction: column; text-align: center; }
-    .industry-image-container { order: -1; }
+@media (max-width: 600px) {
+    header { padding: 0.7rem 0.7rem; }
+    .header-logo { height: 34px; }
+    .company-name { font-size: 0.91rem; }
+    .industry-section { margin-bottom: 1.4rem; }
+    .industries-hero h1 { font-size: 1.1rem; }
+    .industry-content { padding: 0.4rem; }
+    footer { padding: 1.2rem 1vw 0.6rem; }
 }
 </style>
 </head>
@@ -228,6 +290,7 @@ footer {
         <img src="logo.png" alt="AJHA Consultancy Services Logo" class="header-logo">
         <span class="company-name">AJHA CONSULTANCY SERVICES</span>
     </div>
+    <button class="hamburger"><i class="fas fa-bars"></i></button>
     <nav>
         <a href="index.html">Home</a>
         <a href="about-us.html">About Us</a>
@@ -243,6 +306,7 @@ footer {
         <a href="executive-board.html">Executive Board</a>
         <a href="careers.html">Careers</a>
         <a href="index.html#clients">Clients</a>
+        <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank">Resources</a>
         <a href="index.html#contact">Contact</a>
     </nav>
 </header>
@@ -349,7 +413,7 @@ footer {
 <footer>
     <div class="footer-section">
         <div class="footer-logo">
-            <img src="logo.png" alt="ACS Logo" height="60">
+            <img src="logo.png" alt="ACS Logo" height="44">
             <h3>AJHA CONSULTANCY SERVICES</h3>
         </div>
         <p>Your partner in Enterprise Application Solutions, Digital Transformation, and Strategic Staffing.</p>
@@ -369,6 +433,7 @@ footer {
             <li><a href="executive-board.html">Executive Board</a></li>
             <li><a href="careers.html">Careers</a></li>
             <li><a href="index.html#clients">Clients</a></li>
+            <li><a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank">Resources</a></li>
             <li><a href="index.html#contact">Contact</a></li>
         </ul>
     </div>
@@ -397,6 +462,31 @@ footer {
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 AOS.init({ duration: 1000, once: true });
+
+// Hamburger mobile menu
+const hamburger = document.querySelector('.hamburger');
+const nav = document.querySelector('nav');
+hamburger.addEventListener('click', () => nav.classList.toggle('show'));
+
+// Mobile dropdown toggle
+document.querySelectorAll('.dropbtn').forEach(btn => {
+    btn.addEventListener('click', e => {
+        if (window.innerWidth <= 900) {
+            e.preventDefault();
+            btn.parentElement.classList.toggle('open');
+        }
+    });
+});
+
+// Close menu on nav link click (mobile)
+document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', () => {
+        if (window.innerWidth <= 900) {
+            nav.classList.remove('show');
+            document.querySelectorAll('.dropdown').forEach(dd => dd.classList.remove('open'));
+        }
+    });
+});
 </script>
 </body>
-</html>
+</html
