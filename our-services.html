@@ -9,21 +9,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-  <style>body{font-family:'Poppins',sans-serif}</style>
   <style>
+    body{font-family:'Poppins',sans-serif}
     @media(max-width:768px) {
-      nav.desktop-nav { display: none; }
       section.relative.h-80 { height: 14rem; }
       main.container { padding-left: 1rem; padding-right: 1rem; }
       main.container > section > h2 {
-        font-size: 1.75rem !important;
+        font-size: 1.5rem !important;
       }
       main.container > section > ul > li > h3 {
-        font-size: 1.25rem !important;
+        font-size: 1.1rem !important;
       }
       main.container > section > ul > li > p,
       main.container > section > p {
-        font-size: 1rem !important;
+        font-size: 0.95rem !important;
       }
     }
   </style>
@@ -34,12 +33,13 @@
   <div class="container mx-auto flex items-center justify-between p-4">
     <div class="flex items-center space-x-2">
       <img src="logo.png" alt="AJHA Consultancy Services Logo" class="h-10">
-      <span class="text-xl font-semibold uppercase tracking-wider text-white">AJHA CONSULTANCY SERVICES</span>
+      <span class="text-lg sm:text-xl font-semibold uppercase tracking-wider text-white">AJHA CONSULTANCY SERVICES</span>
     </div>
+    <button class="md:hidden text-slate-300" id="hamburger-btn"><i class="fas fa-bars text-xl"></i></button>
     <nav class="hidden md:flex items-center space-x-6 desktop-nav">
       <a href="index.html" class="text-slate-300 hover:text-orange-500 transition">Home</a>
       <a href="about-us.html" class="text-slate-300 hover:text-orange-500 transition">About Us</a>
-      <div class="relative group">
+      <div class="relative group" tabindex="0">
         <button id="services-dropdown-btn" class="text-orange-500 font-bold" aria-haspopup="true" aria-expanded="false">
           Services <i class="fas fa-caret-down ml-1"></i>
         </button>
@@ -55,13 +55,12 @@
       <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="text-slate-300 hover:text-orange-500 transition">Resources</a>
       <a href="index.html#contact" class="text-slate-300 hover:text-orange-500 transition">Contact</a>
     </nav>
-    <button class="md:hidden text-slate-300" id="hamburger-btn"><i class="fas fa-bars text-xl"></i></button>
   </div>
   <!-- Mobile nav -->
-  <nav id="mobile-nav" class="mobile-nav hidden bg-slate-900 p-4 md:hidden flex-col space-y-4 max-h-0 overflow-hidden transition-all">
+  <nav id="mobile-nav" class="mobile-nav hidden bg-slate-900 p-4 md:hidden flex-col space-y-2 transition-all">
     <a href="index.html" class="block text-slate-300 hover:text-orange-500">Home</a>
     <a href="about-us.html" class="block text-slate-300 hover:text-orange-500">About Us</a>
-    <button id="mobile-services-btn" class="flex justify-between items-center text-slate-300 w-full bg-transparent border-none cursor-pointer">
+    <button id="mobile-services-btn" class="flex justify-between items-center text-slate-300 w-full bg-transparent border-none cursor-pointer py-2">
       Services<i class="fas fa-caret-down ml-2"></i>
     </button>
     <div id="mobile-services-dropdown" class="mobile-dropdown hidden flex-col pl-4 space-y-2">
@@ -82,82 +81,82 @@
     <source src="transmission-lines2.mp4" type="video/mp4">
     <source src="transmission-lines2.webm" type="video/webm">
   </video>
-  <h1 class="relative z-10 text-5xl font-bold text-white">Our Services</h1>
+  <h1 class="relative z-10 text-4xl sm:text-5xl font-bold text-white">Our Services</h1>
 </section>
 <!-- Content -->
-<main class="container mx-auto px-4 py-16 space-y-16">
+<main class="container mx-auto px-4 py-10 sm:py-16 space-y-12 sm:space-y-16">
   <!-- Digital Transformation -->
   <section id="digital-transformation" class="space-y-6" data-aos="fade-up">
-    <h2 class="text-3xl font-bold text-orange-500">Digital Transformation Services</h2>
-    <p class="text-lg text-slate-300">
+    <h2 class="text-2xl sm:text-3xl font-bold text-orange-500">Digital Transformation Services</h2>
+    <p class="text-md sm:text-lg text-slate-300">
       ACS strives towards transforming Enterprise business solutions using the latest SAP technologies to gain a significant competitive advantage in the dynamic digital market.
     </p>
     <ul class="space-y-4">
       <li>
-        <h3 class="text-xl font-semibold text-white">Application Development and Integrations</h3>
-        <p class="text-lg text-slate-300">Specializing in implementing S4HANA on Public/Private Cloud, we build robust applications and integrate them seamlessly with your existing systems for enhanced efficiency.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Application Development and Integrations</h3>
+        <p class="text-md sm:text-lg text-slate-300">Specializing in implementing S4HANA on Public/Private Cloud, we build robust applications and integrate them seamlessly with your existing systems for enhanced efficiency.</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">Mobile Development</h3>
-        <p class="text-lg text-slate-300">Empower your workforce and customers with easy application access through intuitive Mobile Apps, ensuring productivity and engagement on the go.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Mobile Development</h3>
+        <p class="text-md sm:text-lg text-slate-300">Empower your workforce and customers with easy application access through intuitive Mobile Apps, ensuring productivity and engagement on the go.</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">Business Technology Platform</h3>
-        <p class="text-lg text-slate-300">Harness the power of "Platform as a Service" (PaaS) with our Business Technology Platform solutions, providing a flexible and scalable foundation for your digital initiatives.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Business Technology Platform</h3>
+        <p class="text-md sm:text-lg text-slate-300">Harness the power of "Platform as a Service" (PaaS) with our Business Technology Platform solutions, providing a flexible and scalable foundation for your digital initiatives.</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">SAP Analytics Cloud</h3>
-        <p class="text-lg text-slate-300">Gain comprehensive insights through powerful analytical reports, interactive dashboards, and advanced planning capabilities with our SAP Analytics Cloud expertise.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">SAP Analytics Cloud</h3>
+        <p class="text-md sm:text-lg text-slate-300">Gain comprehensive insights through powerful analytical reports, interactive dashboards, and advanced planning capabilities with our SAP Analytics Cloud expertise.</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">Intelligent Technologies</h3>
-        <p class="text-lg text-slate-300">Drive innovation and efficiency through automation using cutting-edge Intelligent Technologies such as Artificial Intelligence (AI), Machine Learning (ML), and the Internet of Things (IoT).</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Intelligent Technologies</h3>
+        <p class="text-md sm:text-lg text-slate-300">Drive innovation and efficiency through automation using cutting-edge Intelligent Technologies such as Artificial Intelligence (AI), Machine Learning (ML), and the Internet of Things (IoT).</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">SAP Migrations</h3>
-        <p class="text-lg text-slate-300">Smoothly transition and transform your legacy SAP systems to the advanced S4HANA platform, ensuring minimal disruption and maximum benefit from modern capabilities.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">SAP Migrations</h3>
+        <p class="text-md sm:text-lg text-slate-300">Smoothly transition and transform your legacy SAP systems to the advanced S4HANA platform, ensuring minimal disruption and maximum benefit from modern capabilities.</p>
       </li>
     </ul>
   </section>
   <!-- Application Maintenance -->
   <section id="application-maintenance" class="space-y-6" data-aos="fade-up">
-    <h2 class="text-3xl font-bold text-orange-500">Application Maintenance Services</h2>
-    <p class="text-lg text-slate-300">ACS features a skilled team committed to providing superior SAP AMS support for optimal SAP system performance and stability.</p>
+    <h2 class="text-2xl sm:text-3xl font-bold text-orange-500">Application Maintenance Services</h2>
+    <p class="text-md sm:text-lg text-slate-300">ACS features a skilled team committed to providing superior SAP AMS support for optimal SAP system performance and stability.</p>
     <ul class="space-y-4">
       <li>
-        <h3 class="text-xl font-semibold text-white">Onsite Model</h3>
-        <p class="text-lg text-slate-300">Benefit from dedicated resources physically present at your client site, providing direct and immediate support tailored to your specific needs.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Onsite Model</h3>
+        <p class="text-md sm:text-lg text-slate-300">Benefit from dedicated resources physically present at your client site, providing direct and immediate support tailored to your specific needs.</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">Offsite Model</h3>
-        <p class="text-lg text-slate-300">Utilize dedicated resources working from an offsite location, offering cost-effective and efficient support while maintaining close communication and collaboration.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Offsite Model</h3>
+        <p class="text-md sm:text-lg text-slate-300">Utilize dedicated resources working from an offsite location, offering cost-effective and efficient support while maintaining close communication and collaboration.</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">Offsite Shared Model</h3>
-        <p class="text-lg text-slate-300">Experience flexible and scalable support based on key business processes, with shared offsite resources optimizing cost and expertise across various clients.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Offsite Shared Model</h3>
+        <p class="text-md sm:text-lg text-slate-300">Experience flexible and scalable support based on key business processes, with shared offsite resources optimizing cost and expertise across various clients.</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">Hybrid Support Model</h3>
-        <p class="text-lg text-slate-300">Combine the best of both worlds with an onsite lead managing a seamless offsite delivery team, ensuring effective communication and efficient execution.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Hybrid Support Model</h3>
+        <p class="text-md sm:text-lg text-slate-300">Combine the best of both worlds with an onsite lead managing a seamless offsite delivery team, ensuring effective communication and efficient execution.</p>
       </li>
     </ul>
   </section>
   <!-- HR Consultancy -->
   <section id="hr-consultancy" class="space-y-6" data-aos="fade-up">
-    <h2 class="text-3xl font-bold text-orange-500">Human Resources Consultancy Services</h2>
-    <p class="text-lg text-slate-300">As AJHA Consultancy Services works with a large talent pool, we also offer comprehensive Human Resources Consultancy services to meet your staffing needs.</p>
+    <h2 class="text-2xl sm:text-3xl font-bold text-orange-500">Human Resources Consultancy Services</h2>
+    <p class="text-md sm:text-lg text-slate-300">As AJHA Consultancy Services works with a large talent pool, we also offer comprehensive Human Resources Consultancy services to meet your staffing needs.</p>
     <ul class="space-y-4">
       <li>
-        <h3 class="text-xl font-semibold text-white">Staff Augmentation</h3>
-        <p class="text-lg text-slate-300">With a strong presence in various geographies, we support clients in onshore, nearshore, and offshore placements, providing skilled professionals to augment your existing teams.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Staff Augmentation</h3>
+        <p class="text-md sm:text-lg text-slate-300">With a strong presence in various geographies, we support clients in onshore, nearshore, and offshore placements, providing skilled professionals to augment your existing teams.</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">Staffing</h3>
-        <p class="text-lg text-slate-300">We excel at meeting your precise client staffing needs with a strong focus on customer satisfaction, ensuring you find the right talent for your organization.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Staffing</h3>
+        <p class="text-md sm:text-lg text-slate-300">We excel at meeting your precise client staffing needs with a strong focus on customer satisfaction, ensuring you find the right talent for your organization.</p>
       </li>
       <li>
-        <h3 class="text-xl font-semibold text-white">Managed Services</h3>
-        <p class="text-lg text-slate-300">We offer specialized managed services, leveraging our deep expertise in key skills to manage specific functions or projects, allowing you to focus on your core business.</p>
+        <h3 class="text-lg sm:text-xl font-semibold text-white">Managed Services</h3>
+        <p class="text-md sm:text-lg text-slate-300">We offer specialized managed services, leveraging our deep expertise in key skills to manage specific functions or projects, allowing you to focus on your core business.</p>
       </li>
     </ul>
   </section>
@@ -167,18 +166,18 @@
   <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
     <div>
       <div class="flex items-center space-x-4 mb-4">
-        <img src="logo.png" class="h-12" alt="AJHA Consultancy Services Logo">
-        <h3 class="text-2xl font-bold text-white">AJHA CONSULTANCY SERVICES</h3>
+        <img src="logo.png" class="h-10 sm:h-12" alt="AJHA Consultancy Services Logo">
+        <h3 class="text-xl sm:text-2xl font-bold text-white">AJHA CONSULTANCY SERVICES</h3>
       </div>
       <p>Your partner in Enterprise Application Solutions, Digital Transformation, and Strategic Staffing.</p>
       <div class="flex space-x-4 mt-4">
-        <a href="https://www.instagram.com/ajhaconsultancy/" target="_blank" class="w-10 h-10 flex items-center justify-center bg-slate-700 rounded-full hover:bg-orange-500 text-white text-xl"><i class="fab fa-instagram"></i></a>
-        <a href="https://www.facebook.com/ajha.consultancy.services?_rdr" target="_blank" class="w-10 h-10 flex items-center justify-center bg-slate-700 rounded-full hover:bg-orange-500 text-white text-xl"><i class="fab fa-facebook-f"></i></a>
-        <a href="https://x.com/AjhaServices" target="_blank" class="w-10 h-10 flex items-center justify-center bg-slate-700 rounded-full hover:bg-orange-500 text-white text-xl"><i class="fab fa-x-twitter"></i></a>
+        <a href="https://www.instagram.com/ajhaconsultancy/" target="_blank" class="w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center bg-slate-700 rounded-full hover:bg-orange-500 text-white text-xl"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.facebook.com/ajha.consultancy.services?_rdr" target="_blank" class="w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center bg-slate-700 rounded-full hover:bg-orange-500 text-white text-xl"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://x.com/AjhaServices" target="_blank" class="w-9 sm:w-10 h-9 sm:h-10 flex items-center justify-center bg-slate-700 rounded-full hover:bg-orange-500 text-white text-xl"><i class="fab fa-x-twitter"></i></a>
       </div>
     </div>
     <div>
-      <h4 class="text-xl font-bold text-white mb-4 relative after:w-10 after:h-1 after:bg-orange-500 after:absolute after:bottom-0">Quick Links</h4>
+      <h4 class="text-lg sm:text-xl font-bold text-white mb-4 relative after:w-10 after:h-1 after:bg-orange-500 after:absolute after:bottom-0">Quick Links</h4>
       <ul class="space-y-2">
         <li><a href="index.html" class="hover:text-white">Home</a></li>
         <li><a href="about-us.html" class="hover:text-white">About Us</a></li>
@@ -190,20 +189,20 @@
       </ul>
     </div>
     <div>
-      <h4 class="text-xl font-bold text-white mb-4 relative after:w-10 after:h-1 after:bg-orange-500 after:absolute after:bottom-0">Contact Us</h4>
+      <h4 class="text-lg sm:text-xl font-bold text-white mb-4 relative after:w-10 after:h-1 after:bg-orange-500 after:absolute after:bottom-0">Contact Us</h4>
       <div class="space-y-4">
         <div>
-          <h5 class="text-lg font-bold text-white">India Office</h5>
+          <h5 class="text-base sm:text-lg font-bold text-white">India Office</h5>
           <address class="not-italic">HD-066, We work Cinnabar Hills, Challaghatta Road,<br>Bengaluru, Karnataka, 560071.</address>
           <p>Phone: <a href="tel:+918904178430" class="hover:text-white">+91 8904178430</a></p>
         </div>
         <div>
-          <h5 class="text-lg font-bold text-white">USA Office</h5>
+          <h5 class="text-base sm:text-lg font-bold text-white">USA Office</h5>
           <address class="not-italic">2716 Baron Ln Irving,<br>TX, 75063-75063, USA</address>
           <p>Phone: <a href="tel:+19806177933" class="hover:text-white">+1 980-617-7933</a></p>
         </div>
         <div>
-          <h5 class="text-lg font-bold text-white">Email</h5>
+          <h5 class="text-base sm:text-lg font-bold text-white">Email</h5>
           <p><a href="mailto:marketing@ajhacs.com" class="hover:text-white">marketing@ajhacs.com</a></p>
         </div>
       </div>
@@ -214,6 +213,18 @@
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script>
 AOS.init({ duration: 1000, once: true });
+
+// Mobile nav toggle
+const hamburger = document.getElementById('hamburger-btn');
+const mobileNav = document.getElementById('mobile-nav');
+const mobileServicesBtn = document.getElementById('mobile-services-btn');
+const mobileServicesDropdown = document.getElementById('mobile-services-dropdown');
+hamburger.addEventListener('click', () => {
+  mobileNav.classList.toggle('hidden');
+});
+mobileServicesBtn.addEventListener('click', () => {
+  mobileServicesDropdown.classList.toggle('hidden');
+});
 </script>
 </body>
 </html>
