@@ -27,15 +27,15 @@
     }
   </style>
 </head>
-<body class="bg-slate-900 text-slate-200">
+<body class="bg-slate-900 text-slate-200 overflow-x-hidden w-full">
 <!-- Header -->
 <header class="bg-slate-900 shadow-lg sticky top-0 z-50">
-  <div class="container mx-auto flex items-center justify-between p-4">
-    <div class="flex items-center space-x-2">
-      <img src="logo.png" alt="AJHA Consultancy Services Logo" class="h-10">
-      <span class="text-lg sm:text-xl font-semibold uppercase tracking-wider text-white">AJHA CONSULTANCY SERVICES</span>
+  <div class="container mx-auto flex items-center justify-between p-3 sm:p-4">
+    <div class="flex items-center space-x-2 min-w-0 pr-2">
+      <img src="logo.png" alt="AJHA Consultancy Services Logo" class="h-9 sm:h-10 flex-shrink-0">
+      <span class="text-sm sm:text-base md:text-xl font-semibold uppercase tracking-wider text-white truncate">AJHA CONSULTANCY SERVICES</span>
     </div>
-    <button class="md:hidden text-slate-300" id="hamburger-btn"><i class="fas fa-bars text-xl"></i></button>
+    <button class="md:hidden text-slate-300 w-11 h-11 flex items-center justify-center flex-shrink-0 text-xl" id="hamburger-btn"><i class="fas fa-bars"></i></button>
     <nav class="hidden md:flex items-center space-x-6 desktop-nav">
       <a href="index.html" class="text-slate-300 hover:text-orange-500 transition">Home</a>
       <a href="about-us.html" class="text-slate-300 hover:text-orange-500 transition">About Us</a>
@@ -57,22 +57,22 @@
     </nav>
   </div>
   <!-- Mobile nav -->
-  <nav id="mobile-nav" class="mobile-nav hidden bg-slate-900 p-4 md:hidden flex-col space-y-2 transition-all">
-    <a href="index.html" class="block text-slate-300 hover:text-orange-500">Home</a>
-    <a href="about-us.html" class="block text-slate-300 hover:text-orange-500">About Us</a>
-    <button id="mobile-services-btn" class="flex justify-between items-center text-slate-300 w-full bg-transparent border-none cursor-pointer py-2">
+  <nav id="mobile-nav" class="mobile-nav hidden bg-slate-900 p-4 md:hidden flex-col space-y-1 transition-all max-h-[calc(100vh-65px)] max-h-[calc(100dvh-65px)] overflow-y-auto border-t border-slate-800">
+    <a href="index.html" class="block text-slate-300 hover:text-orange-500 py-2 border-b border-slate-800">Home</a>
+    <a href="about-us.html" class="block text-slate-300 hover:text-orange-500 py-2 border-b border-slate-800">About Us</a>
+    <button id="mobile-services-btn" class="flex justify-between items-center text-slate-300 w-full bg-transparent border-none cursor-pointer py-2 border-b border-slate-800">
       Services<i class="fas fa-caret-down ml-2"></i>
     </button>
-    <div id="mobile-services-dropdown" class="mobile-dropdown hidden flex-col pl-4 space-y-2">
-      <a href="#digital-transformation" class="block hover:text-orange-500">Digital Transformation</a>
-      <a href="#application-maintenance" class="block hover:text-orange-500">Application Maintenance</a>
-      <a href="#hr-consultancy" class="block hover:text-orange-500">HR Consultancy</a>
+    <div id="mobile-services-dropdown" class="mobile-dropdown hidden flex-col pl-4 space-y-1 bg-slate-800/60 rounded-md my-1 p-2">
+      <a href="#digital-transformation" class="block hover:text-orange-500 py-1.5 border-b border-slate-700/50">Digital Transformation</a>
+      <a href="#application-maintenance" class="block hover:text-orange-500 py-1.5 border-b border-slate-700/50">Application Maintenance</a>
+      <a href="#hr-consultancy" class="block hover:text-orange-500 py-1.5">HR Consultancy</a>
     </div>
-    <a href="industries.html" class="block text-slate-300 hover:text-orange-500">Industries</a>
-    <a href="executive-board.html" class="block text-slate-300 hover:text-orange-500">Executive Board</a>
-    <a href="careers.html" class="block text-slate-300 hover:text-orange-500">Careers</a>
-    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="block text-slate-300 hover:text-orange-500">Resources</a>
-    <a href="index.html#contact" class="block text-slate-300 hover:text-orange-500">Contact</a>
+    <a href="industries.html" class="block text-slate-300 hover:text-orange-500 py-2 border-b border-slate-800">Industries</a>
+    <a href="executive-board.html" class="block text-slate-300 hover:text-orange-500 py-2 border-b border-slate-800">Executive Board</a>
+    <a href="careers.html" class="block text-slate-300 hover:text-orange-500 py-2 border-b border-slate-800">Careers</a>
+    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="block text-slate-300 hover:text-orange-500 py-2 border-b border-slate-800">Resources</a>
+    <a href="index.html#contact" class="block text-slate-300 hover:text-orange-500 py-2">Contact</a>
   </nav>
 </header>
 <!-- Hero -->
@@ -219,10 +219,16 @@ const hamburger = document.getElementById('hamburger-btn');
 const mobileNav = document.getElementById('mobile-nav');
 const mobileServicesBtn = document.getElementById('mobile-services-btn');
 const mobileServicesDropdown = document.getElementById('mobile-services-dropdown');
+
 hamburger.addEventListener('click', () => {
-  mobileNav.classList.toggle('hidden');
+  const isHidden = mobileNav.classList.toggle('hidden');
+  const icon = hamburger.querySelector('i');
+  if (icon) icon.className = isHidden ? 'fas fa-bars' : 'fas fa-times';
 });
-mobileServicesBtn.addEventListener('click', () => {
+
+mobileServicesBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  e.stopPropagation();
   mobileServicesDropdown.classList.toggle('hidden');
 });
 </script>

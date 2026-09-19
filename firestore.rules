@@ -1,0 +1,15 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /contacts/{contactId} {
+      // Allow public creation of contact inquiries
+      allow create: if request.resource.data.name is string
+                    && request.resource.data.email is string
+                    && request.resource.data.message is string;
+
+      // Restrict read/update/delete to authenticated admins
+      allow read, update, delete: if request.auth != null;
+    }
+  }
+}

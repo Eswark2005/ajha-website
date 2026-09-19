@@ -9,81 +9,162 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
 <style>
 *{box-sizing:border-box;}
-body{margin:0;font-family:'Poppins',sans-serif;background:#0c0e16;color:#fff;overflow-x:hidden;}
-header,section,footer{width:100%;}
-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 3%;background:#0c0e16;position:fixed;top:0;left:0;z-index:1000;}
-.logo{display:flex;align-items:center;gap:1rem;}
-.logo img{height:60px;}
-.logo h2{font-size:1.5rem;margin:0;font-weight:600;}
-nav{display:flex;align-items:center;transition:max-height 0.3s ease;}
-nav a{margin-left:1rem;text-decoration:none;color:#fff;transition:color 0.3s;}
+body{margin:0;font-family:'Poppins',sans-serif;background:#0c0e16;color:#fff;overflow-x:hidden;width:100%;}
+header,section,footer{width:100%;box-sizing:border-box;}
+header{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 4%;background:#0c0e16;position:fixed;top:0;left:0;right:0;z-index:1000;height:68px;box-shadow:0 2px 10px rgba(0,0,0,0.3);}
+.logo{display:flex;align-items:center;gap:0.75rem;text-decoration:none;min-width:0;}
+.logo img{height:46px;width:auto;flex-shrink:0;}
+.logo h2{font-size:clamp(0.9rem, 3.6vw, 1.4rem);margin:0;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+nav{display:flex;align-items:center;}
+nav a{margin-left:1rem;text-decoration:none;color:#fff;transition:color 0.3s;font-size:0.95rem;}
 nav a:hover{color:#ff6600;}
 .dropdown{position:relative;}
-.dropdown-content{display:none;position:absolute;background:#1a1c26;min-width:250px;box-shadow:0 8px 16px rgba(0,0,0,0.2);z-index:1;padding:10px 0;border-radius:5px;}
-.dropdown-content a{color:#fff;padding:12px 16px;display:block;text-decoration:none;}
+.dropdown-content{display:none;position:absolute;background:#1a1c26;min-width:230px;box-shadow:0 8px 16px rgba(0,0,0,0.3);z-index:10;padding:8px 0;border-radius:6px;}
+.dropdown-content a{color:#fff;padding:10px 16px;display:block;text-decoration:none;margin-left:0;}
 .dropdown-content a:hover{background:#2a2c36;color:#ff6600;}
 .dropdown:hover .dropdown-content{display:block;}
-.hamburger{display:none;font-size:1.6rem;background:none;border:none;color:white;cursor:pointer;}
+.hamburger{display:none;align-items:center;justify-content:center;width:44px;height:44px;font-size:1.4rem;background:none;border:none;color:white;cursor:pointer;border-radius:6px;}
+.hamburger:hover{color:#ff6600;}
+
 /* Hero */
-.hero{position:relative;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding-top:80px;text-align:center;}
+.hero{position:relative;min-height:90vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding-top:80px;padding-bottom:3rem;text-align:center;}
 .hero video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;}
-.hero h1{font-size:clamp(1.5rem,4vw + 0.5rem,3rem);border-right:3px solid #fff;font-family:'Courier New',monospace;white-space:nowrap;overflow:hidden;}
+.hero h1{font-size:clamp(1.5rem,4vw + 0.5rem,3rem);border-right:3px solid #fff;font-family:'Courier New',monospace;white-space:nowrap;overflow:hidden;padding:0 1rem;line-height:1.3;}
 .typed-text{display:inline;}
-@media (max-width:600px){
-  .hero h1{white-space:normal;word-break:break-word;border-right:none;text-align:center;}
-}
-.clients,.services,.contact,.who-we-are,.resources{padding:4rem 5%;}
+
+.clients,.services,.contact,.who-we-are,.resources{padding:4.5rem 5%;}
 .who-we-are{background:#1a1c26;text-align:center;}
-.who-we-are h2{font-size:clamp(1.75rem,3.5vw,2.5rem);margin-bottom:3rem;}
-.who-we-are p{font-size:1.1rem;line-height:1.8;max-width:800px;margin:auto;color:#dcdcdc;}
-.services h2,.clients h2,.contact h2,.resources h2{font-size:clamp(1.75rem,3.5vw,2.5rem);margin-bottom:3rem;text-align:center;}
-.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:2rem;max-width:1200px;margin:auto;}
+.who-we-are h2{font-size:clamp(1.6rem,3.5vw,2.4rem);margin-bottom:2rem;}
+.who-we-are p{font-size:1.05rem;line-height:1.8;max-width:800px;margin:auto;color:#dcdcdc;}
+.services h2,.clients h2,.contact h2,.resources h2{font-size:clamp(1.6rem,3.5vw,2.4rem);margin-bottom:2.5rem;text-align:center;}
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.75rem;max-width:1200px;margin:auto;}
 .service-card{background:#2c2e35;border-radius:10px;padding:2rem;box-shadow:0 0 20px rgba(0,0,0,0.4);min-height:180px;text-decoration:none;display:block;transition:0.3s;}
 .service-card:hover{transform:translateY(-5px);box-shadow:0 10px 30px rgba(255,102,0,0.3);background:#3c3e45;}
-.service-card h3{color:#ff6600;margin-top:0;}
-.service-card p{color:#dcdcdc;}
+.service-card h3{color:#ff6600;margin-top:0;font-size:1.25rem;}
+.service-card p{color:#dcdcdc;font-size:0.95rem;line-height:1.6;}
 .service-card:hover h3{color:#fff;}
 .service-card .read-more{color:#ff6600;font-weight:600;}
-.logo-slider{overflow:hidden;position:relative;background:#0c0e16;padding:2rem 0;}
+
+.logo-slider{overflow:hidden;position:relative;background:#0c0e16;padding:2rem 0;max-width:100vw;}
 .logo-track{display:flex;width:max-content;animation:scroll 30s linear infinite;}
-.logo-track a{flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:0 40px;}
-.logo-track img{max-height:60px;filter:brightness(0.8);transition:filter 0.3s;}
+.logo-track a{flex:0 0 auto;display:flex;align-items:center;justify-content:center;padding:0 35px;}
+.logo-track img{max-height:55px;filter:brightness(0.8);transition:filter 0.3s;}
 .logo-track a:hover img{filter:brightness(1);}
 @keyframes scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
 .contact form{width:100%;max-width:600px;margin-inline:auto;display:flex;flex-direction:column;gap:1rem;padding-inline:1rem;}
-form input,form textarea{padding:0.8rem;background:#1a1c26;border:1px solid #333;border-radius:5px;color:#fff;}
-form button{padding:0.8rem 2rem;background:#ff6600;border:none;border-radius:5px;font-weight:600;cursor:pointer;}
-form button:hover{background:#e65c00;}
-footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:3rem;}
+form input,form textarea{padding:0.85rem;background:#1a1c26;border:1px solid #333;border-radius:6px;color:#fff;font-family:inherit;font-size:16px;transition:border-color 0.3s;width:100%;box-sizing:border-box;}
+form input:focus,form textarea:focus{outline:none;border-color:#ff6600;}
+form button{padding:0.9rem 2rem;background:#ff6600;color:#fff;border:none;border-radius:6px;font-weight:600;font-size:1rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;transition:background 0.3s,opacity 0.3s;min-height:48px;}
+form button:hover:not(:disabled){background:#e65c00;}
+form button:disabled{opacity:0.65;cursor:not-allowed;}
+.form-status{padding:1rem;border-radius:6px;font-size:0.95rem;line-height:1.5;display:none;margin-bottom:0.5rem;}
+.form-status.status-success{background:rgba(46,125,50,0.25);border:1px solid #2e7d32;color:#81c784;}
+.form-status.status-error{background:rgba(211,47,47,0.25);border:1px solid #d32f2f;color:#ef9a9a;}
+.form-status.status-loading{background:rgba(255,102,0,0.2);border:1px solid #ff6600;color:#ffb74d;}
+
+footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:2.5rem;}
 .footer-section{display:flex;flex-direction:column;}
-.footer-logo{display:flex;align-items:center;gap:1rem;margin-bottom:1rem;}
-.footer-logo img{height:60px;}
-.footer-section h4{color:#fff;margin-bottom:1rem;font-size:1.2rem;font-weight:600;}
-.footer-section h4::after{content:'';display:block;width:40px;height:3px;background:#ff6600;margin-top:5px;}
-.footer-section p,.footer-section a{color:#b8b8b8;line-height:1.6;margin-bottom:0.5rem;text-decoration:none;}
+.footer-logo{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem;}
+.footer-logo img{height:50px;}
+.footer-logo h3{font-size:1.15rem;margin:0;}
+.footer-section h4{color:#fff;margin-bottom:1rem;font-size:1.15rem;font-weight:600;}
+.footer-section h4::after{content:'';display:block;width:35px;height:3px;background:#ff6600;margin-top:5px;}
+.footer-section p,.footer-section a{color:#b8b8b8;line-height:1.6;margin-bottom:0.5rem;text-decoration:none;font-size:0.95rem;}
 .footer-section a:hover{color:#ff6600;}
-.social-links{display:flex;gap:1rem;margin-top:1rem;}
-.social-links a{width:40px;height:40px;background:#333;border-radius:50%;display:flex;justify-content:center;align-items:center;transition:background-color 0.3s;color:#fff;font-size:1.2rem;}
+.social-links{display:flex;gap:0.75rem;margin-top:1rem;}
+.social-links a{width:42px;height:42px;background:#333;border-radius:50%;display:flex;justify-content:center;align-items:center;transition:background-color 0.3s;color:#fff;font-size:1.2rem;}
 .social-links a:hover{background:#ff6600;color:#0c0e16;}
-.footer-bottom{grid-column:1/-1;text-align:center;padding-top:2rem;border-top:1px solid #333;color:#888;font-size:0.9rem;}
+.footer-bottom{grid-column:1/-1;text-align:center;padding-top:1.5rem;border-top:1px solid #333;color:#888;font-size:0.85rem;}
+
 .resources{background:#0c0e16;text-align:center;}
-.resources p{font-size:1.1rem;color:#dcdcdc;max-width:800px;margin:0 auto 2rem;}
-.resources a.resource-btn{display:inline-block;padding:0.8rem 2rem;background:#ff6600;color:white;font-weight:600;border-radius:5px;text-decoration:none;transition:background .3s;}
+.resources p{font-size:1.05rem;color:#dcdcdc;max-width:800px;margin:0 auto 1.5rem;line-height:1.7;}
+.resources a.resource-btn{display:inline-block;padding:0.85rem 2rem;background:#ff6600;color:white;font-weight:600;border-radius:6px;text-decoration:none;transition:background .3s;}
 .resources a.resource-btn:hover{background:#e65c00;}
-@media (max-width:768px){
-  .hamburger{display:block;position:relative;z-index:1600;}
-  nav{position:fixed;top:70px;right:0;background:#0c0e16;flex-direction:column;align-items:flex-start;width:100vw;max-height:0;overflow:hidden;padding-inline:0;z-index:1500;}
-  nav.active{max-height:500px;padding:1rem 1.5rem;}
-  nav a{margin:0.5rem 0;width:100%;}
-  .dropdown-content{position:static!important;display:none;background:transparent!important;padding-left:1rem;max-height:0;overflow:hidden;transition:max-height 0.3s ease;}
-  .dropdown.open .dropdown-content{display:block;max-height:500px;}
-  .dropdown:hover .dropdown-content{display:none!important;}
+
+/* Mobile & Tablet Optimizations */
+@media (max-width: 768px){
+  header{height:62px;padding:0.5rem 4%;}
+  .hamburger{display:flex;}
+  nav{
+    position:fixed;
+    top:62px;
+    left:0;
+    right:0;
+    width:100vw;
+    height:calc(100vh - 62px);
+    height:calc(100dvh - 62px);
+    background:rgba(12,14,22,0.98);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    flex-direction:column;
+    align-items:flex-start;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    padding:1rem 1.5rem 3rem;
+    transform:translateY(-120%);
+    opacity:0;
+    visibility:hidden;
+    transition:transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, visibility 0.3s ease;
+    z-index:999;
+    border-top:1px solid rgba(255,255,255,0.08);
+  }
+  nav.active{
+    transform:translateY(0);
+    opacity:1;
+    visibility:visible;
+  }
+  nav a{
+    margin:0;
+    padding:0.85rem 0;
+    font-size:1.05rem;
+    width:100%;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .dropdown{width:100%;}
+  .dropdown > .dropbtn{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    width:100%;
+    padding:0.85rem 0;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    font-size:1.05rem;
+  }
+  .dropdown-content{
+    position:static!important;
+    display:none;
+    background:rgba(26,28,38,0.7)!important;
+    border-radius:6px;
+    margin:0.4rem 0;
+    padding:0.2rem 0.5rem!important;
+    box-shadow:none!important;
+  }
+  .dropdown.open .dropdown-content{display:block!important;}
+  .dropdown:hover .dropdown-content{display:none;}
+  .dropdown-content a{
+    padding:0.75rem 1rem;
+    font-size:0.95rem;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+  }
+
+  .clients,.services,.contact,.who-we-are,.resources{padding:3rem 1.25rem;}
+  .hero{padding-top:70px;min-height:85svh;height:auto;padding-bottom:2.5rem;}
+  .hero h1{font-size:clamp(1.2rem, 5.5vw, 1.8rem);white-space:normal;word-break:break-word;border-right:none;line-height:1.4;}
+  .services-grid{grid-template-columns:1fr;gap:1.25rem;}
+  .service-card{padding:1.4rem;}
+  .contact form{padding-inline:0;}
+  form button{width:100%;}
+  footer{grid-template-columns:1fr;padding:2.5rem 1.25rem 1.5rem;gap:2rem;}
+  .logo-slider{padding:1.25rem 0;}
+  .logo-track img{max-height:42px;}
+  .logo-track a{padding:0 20px;}
 }
-@media (max-width:480px){
-  .logo img{height:45px;}
-  .logo h2{font-size:1rem;}
-  .hero{padding-top:60px;}
-  footer{grid-template-columns:1fr;padding:2rem 3%;}
+@media (max-width: 480px){
+  .logo img{height:36px;}
+  .logo h2{font-size:0.92rem;}
+  .hero h1{font-size:1.3rem;}
+  .who-we-are p, .resources p{font-size:0.95rem;}
 }
 </style>
 </head>
@@ -172,12 +253,16 @@ footer{background:#1a1c26;padding:3rem 5% 2rem;display:grid;grid-template-column
 
 <section class="contact" id="contact" data-aos="fade-up">
   <h2>We would love to hear from you</h2>
-  <form>
-    <input type="text" placeholder="Your Name" required />
-    <input type="email" placeholder="Your Email" required />
-    <input type="text" placeholder="Subject" />
-    <textarea placeholder="Message" rows="5"></textarea>
-    <button type="submit">Send Message</button>
+  <form id="contact-form" novalidate>
+    <div id="form-status" class="form-status" role="alert"></div>
+    <input type="text" id="contact-name" name="name" placeholder="Your Name" required maxlength="200" />
+    <input type="email" id="contact-email" name="email" placeholder="Your Email" required maxlength="200" />
+    <input type="text" id="contact-subject" name="subject" placeholder="Subject" required maxlength="200" />
+    <textarea id="contact-message" name="message" placeholder="Message" rows="5" required maxlength="5000"></textarea>
+    <button type="submit" id="contact-submit-btn">
+      <span class="btn-text"><i class="fas fa-paper-plane" style="margin-right:6px;"></i> Send Message</span>
+      <span class="btn-spinner" style="display:none;"><i class="fas fa-spinner fa-spin" style="margin-right:6px;"></i> Sending...</span>
+    </button>
   </form>
 </section>
 
@@ -253,23 +338,163 @@ window.addEventListener("DOMContentLoaded",type);
 // Mobile navigation
 const hamburger=document.querySelector('.hamburger');
 const navMenu=document.querySelector('nav');
-hamburger.addEventListener('click',()=>navMenu.classList.toggle('active'));
+hamburger.addEventListener('click',()=>{
+  const isOpen = navMenu.classList.toggle('active');
+  const icon = hamburger.querySelector('i');
+  if(icon){
+    icon.className = isOpen ? 'fas fa-times' : 'fas fa-bars';
+  }
+});
 document.querySelectorAll('.dropdown > .dropbtn').forEach(btn=>{
   btn.addEventListener('click',e=>{
     if(window.innerWidth<=768){
       e.preventDefault();
+      e.stopPropagation();
       btn.parentElement.classList.toggle('open');
     }
   });
 });
-document.querySelectorAll('nav a').forEach(link=>{
+document.querySelectorAll('nav a:not(.dropbtn)').forEach(link=>{
   link.addEventListener('click',()=>{
     if(window.innerWidth<=768){
       navMenu.classList.remove('active');
+      const icon = hamburger.querySelector('i');
+      if(icon) icon.className = 'fas fa-bars';
       document.querySelectorAll('.dropdown').forEach(dd=>dd.classList.remove('open'));
     }
   });
 });
+</script>
+
+<!-- Firebase Contact Form Handler -->
+<script type="module">
+  import { db, collection, addDoc, serverTimestamp, firebaseConfig } from './firebase-config.js';
+
+  const contactForm = document.getElementById('contact-form');
+  const submitBtn = document.getElementById('contact-submit-btn');
+  const btnText = submitBtn.querySelector('.btn-text');
+  const btnSpinner = submitBtn.querySelector('.btn-spinner');
+  const statusBox = document.getElementById('form-status');
+
+  function showStatus(message, type = 'info') {
+    statusBox.textContent = message;
+    statusBox.className = `form-status status-${type}`;
+    statusBox.style.display = 'block';
+  }
+
+  function hideStatus() {
+    statusBox.style.display = 'none';
+    statusBox.textContent = '';
+  }
+
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  contactForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideStatus();
+
+    // Check if configuration placeholder is still present
+    if (firebaseConfig.apiKey === 'YOUR_API_KEY') {
+      showStatus('⚠️ Firebase is not configured yet. Please enter your Firebase credentials in firebase-config.js (see FIREBASE_SETUP.md).', 'error');
+      return;
+    }
+
+    const nameInput = document.getElementById('contact-name');
+    const emailInput = document.getElementById('contact-email');
+    const subjectInput = document.getElementById('contact-subject');
+    const messageInput = document.getElementById('contact-message');
+
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const subject = subjectInput.value.trim();
+    const message = messageInput.value.trim();
+
+    // Client-side validation
+    if (!name) {
+      showStatus('Please enter your name.', 'error');
+      nameInput.focus();
+      return;
+    }
+    if (!email || !validateEmail(email)) {
+      showStatus('Please enter a valid email address.', 'error');
+      emailInput.focus();
+      return;
+    }
+    if (!subject) {
+      showStatus('Please enter a subject.', 'error');
+      subjectInput.focus();
+      return;
+    }
+    if (!message) {
+      showStatus('Please enter your message.', 'error');
+      messageInput.focus();
+      return;
+    }
+
+    // Set loading state
+    submitBtn.disabled = true;
+    btnText.style.display = 'none';
+    btnSpinner.style.display = 'inline-flex';
+    showStatus('Sending your message...', 'loading');
+
+    try {
+      // 1. Save submission to Firebase Cloud Firestore 'contacts' collection
+      const docRef = await addDoc(collection(db, 'contacts'), {
+        name: name,
+        email: email,
+        subject: subject,
+        message: message,
+        recipient: 'ram.annadanam@gmail.com',
+        status: 'unread',
+        createdAt: serverTimestamp(),
+        source: 'contact_form'
+      });
+
+      console.log('Inquiry recorded in Firestore with ID:', docRef.id);
+
+      // 2. Dispatch email directly to ram.annadanam@gmail.com (Free tier, no Blaze plan needed)
+      try {
+        await fetch('https://formsubmit.co/ajax/ram.annadanam@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            'Full Name': name,
+            'Email': email,
+            'Subject': subject,
+            'Message': message,
+            '_replyto': email,
+            '_subject': `[AJHA Inquiry] ${subject} - from ${name}`,
+            '_template': 'table',
+            '_autoresponse': 'Thank you for contacting AJHA Consultancy Services. We have received your query and will respond shortly.',
+            'Firestore Record ID': docRef.id
+          })
+        });
+      } catch (mailErr) {
+        console.warn('Direct email dispatch note:', mailErr);
+      }
+
+      showStatus('Thank you! Your message has been sent successfully. We will be in touch shortly.', 'success');
+      contactForm.reset();
+    } catch (error) {
+      console.error('Error submitting contact inquiry:', error);
+      let errorMsg = 'Failed to send message. Please check your internet connection and try again.';
+      if (error.code === 'permission-denied') {
+        errorMsg = 'Permission denied: Please ensure your Firestore Security Rules allow document creation (see FIREBASE_SETUP.md).';
+      } else if (error.message) {
+        errorMsg = `Error: ${error.message}`;
+      }
+      showStatus(errorMsg, 'error');
+    } finally {
+      submitBtn.disabled = false;
+      btnText.style.display = 'inline-flex';
+      btnSpinner.style.display = 'none';
+    }
+  });
 </script>
 </body>
 </html>
