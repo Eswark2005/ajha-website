@@ -456,30 +456,25 @@ document.querySelectorAll('nav a:not(.dropbtn)').forEach(link=>{
 
       // 2. Dispatch email directly to mohaneswar3@gmail.com and ram.annadanam@gmail.com
       try {
+        const emailData = new FormData();
+        emailData.append('Name', name);
+        emailData.append('Email', email);
+        emailData.append('Subject', subject);
+        emailData.append('Message', message);
+        emailData.append('_subject', `[AJHA Inquiry] ${subject} - from ${name}`);
+        emailData.append('_replyto', email);
+        emailData.append('_cc', 'ram.annadanam@gmail.com');
+        emailData.append('Firestore Record ID', docRef.id);
+
         await fetch('https://formsubmit.co/ajax/mohaneswar3@gmail.com', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            'Full Name': name,
-            'Email': email,
-            'Subject': subject,
-            'Message': message,
-            '_cc': 'ram.annadanam@gmail.com',
-            '_replyto': email,
-            '_subject': `[AJHA Inquiry] ${subject} - from ${name}`,
-            '_template': 'table',
-            '_autoresponse': 'Thank you for contacting AJHA Consultancy Services. We have received your query and will respond shortly.',
-            'Firestore Record ID': docRef.id
-          })
+          body: emailData
         });
       } catch (mailErr) {
         console.warn('Direct email dispatch note:', mailErr);
       }
 
-      showStatus('Thank you! Your message has been sent successfully. We will be in touch shortly.', 'success');
+      showStatus('Thanks, your response was recorded.', 'success');
       contactForm.reset();
     } catch (error) {
       console.error('Error submitting contact inquiry:', error);
