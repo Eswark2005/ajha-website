@@ -53,7 +53,7 @@ When a visitor submits the "Contact Us" form:
 5. Firebase will display your `firebaseConfig` object, looking like this:
    ```javascript
    const firebaseConfig = {
-     apiKey: "AIzaSy...",
+     apiKey: "YOUR_API_KEY",
      authDomain: "ajha-consultancy-web.firebaseapp.com",
      projectId: "ajha-consultancy-web",
      storageBucket: "ajha-consultancy-web.firebasestorage.app",

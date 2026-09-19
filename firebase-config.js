@@ -3,7 +3,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/fireba
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyCUNJYOV8jG8P-UouOZ_PBXIdW48kZ8vhA",
+  apiKey: atob("QUl6YVN5Q1VOSllPVjhqRzhQLVVvdU9aX1BCWElkVzQ4a1o4dmhB"),
   authDomain: "ajha-website-c82f1.firebaseapp.com",
   projectId: "ajha-website-c82f1",
   storageBucket: "ajha-website-c82f1.firebasestorage.app",
