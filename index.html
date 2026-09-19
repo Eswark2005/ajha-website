@@ -446,7 +446,7 @@ document.querySelectorAll('nav a:not(.dropbtn)').forEach(link=>{
         email: email,
         subject: subject,
         message: message,
-        recipient: 'ram.annadanam@gmail.com',
+        recipient: 'mohaneswar3@gmail.com, ram.annadanam@gmail.com',
         status: 'unread',
         createdAt: serverTimestamp(),
         source: 'contact_form'
@@ -454,9 +454,9 @@ document.querySelectorAll('nav a:not(.dropbtn)').forEach(link=>{
 
       console.log('Inquiry recorded in Firestore with ID:', docRef.id);
 
-      // 2. Dispatch email directly to ram.annadanam@gmail.com (Free tier, no Blaze plan needed)
+      // 2. Dispatch email directly to mohaneswar3@gmail.com and ram.annadanam@gmail.com
       try {
-        await fetch('https://formsubmit.co/ajax/ram.annadanam@gmail.com', {
+        await fetch('https://formsubmit.co/ajax/mohaneswar3@gmail.com', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -467,6 +467,7 @@ document.querySelectorAll('nav a:not(.dropbtn)').forEach(link=>{
             'Email': email,
             'Subject': subject,
             'Message': message,
+            '_cc': 'ram.annadanam@gmail.com',
             '_replyto': email,
             '_subject': `[AJHA Inquiry] ${subject} - from ${name}`,
             '_template': 'table',

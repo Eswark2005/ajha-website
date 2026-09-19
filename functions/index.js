@@ -148,7 +148,7 @@ exports.sendContactEmail = onDocumentCreated("contacts/{docId}", async (event) =
   const email = data.email || "noreply@ajhaconsultancy.com";
   const subject = data.subject || "Inquiry via AJHA Website";
   const message = data.message || "No message content";
-  const recipientEmail = process.env.TO_EMAIL || "ram.annadanam@gmail.com";
+  const recipientEmail = process.env.TO_EMAIL || "mohaneswar3@gmail.com, ram.annadanam@gmail.com";
   const fromEmail = process.env.FROM_EMAIL || `"AJHA Website Contact" <${process.env.SMTP_USER || "noreply@ajhaconsultancy.com"}>`;
 
   let submissionTime = new Date().toLocaleString("en-US", {
@@ -226,7 +226,7 @@ exports.submitContactHttp = onRequest({ cors: true }, async (req, res) => {
       email: String(email).trim(),
       subject: subject ? String(subject).trim() : "No Subject",
       message: String(message).trim(),
-      recipient: "ram.annadanam@gmail.com",
+      recipient: "mohaneswar3@gmail.com, ram.annadanam@gmail.com",
       status: "unread",
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
       source: "http_api",
