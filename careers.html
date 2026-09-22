@@ -104,6 +104,10 @@
     </section>
     <!-- Job Listings -->
     <section class="space-y-8">
+      <!-- Dynamic Job Listings from Firestore -->
+      <div id="dynamic-jobs-container" class="space-y-8"></div>
+
+      <!-- Baseline Job Openings -->
       <!-- Job 1 -->
       <div class="bg-slate-800 p-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition">
         <h3 class="text-2xl font-bold text-orange-500">S4HANA Senior FICO Consultants</h3>
@@ -211,6 +215,7 @@
         <li><a href="index.html#clients" class="hover:text-white">Clients</a></li>
         <li><a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" class="hover:text-white" target="_blank">Resources</a></li>
         <li><a href="index.html#contact" class="hover:text-white">Contact</a></li>
+        <li><a href="dashboard.html" class="text-orange-400 hover:text-orange-300 font-semibold flex items-center pt-2"><i class="fas fa-lock text-xs mr-1.5"></i>Admin Portal</a></li>
       </ul>
     </div>
     <div>
@@ -264,6 +269,100 @@ document.addEventListener('click', (e) => {
     document.getElementById('services-dropdown').classList.add('hidden');
   }
 });
+</script>
+<script type="module">
+  import { db, collection, getDocs, query, where } from "./firebase-config.js";
+
+  const dynamicContainer = document.getElementById('dynamic-jobs-container');
+
+  async function fetchLiveJobs() {
+    try {
+      const q = query(
+        collection(db, "jobs"),
+        where("status", "==", "active")
+      );
+      const snapshot = await getDocs(q);
+      
+      if (snapshot.empty) {
+        return;
+      }
+
+      const jobs = [];
+      snapshot.forEach(docSnap => {
+        jobs.push({ id: docSnap.id, ...docSnap.data() });
+      });
+
+      // Sort by createdAt descending client-side
+      jobs.sort((a, b) => {
+        const timeA = a.createdAt?.seconds || 0;
+        const timeB = b.createdAt?.seconds || 0;
+        return timeB - timeA;
+      });
+
+      const escapeHtml = (str) => {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      };
+
+      const jobsHtml = jobs.map(job => {
+        const responsibilities = Array.isArray(job.responsibilities) ? job.responsibilities : [];
+        const qualifications = Array.isArray(job.qualifications) ? job.qualifications : [];
+        const applyLink = job.applyUrl || "https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog";
+
+        return `
+          <div class="bg-slate-800 p-6 sm:p-8 rounded-xl shadow-lg hover:shadow-2xl transform hover:-translate-y-1 transition border border-slate-700/60 relative">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="bg-orange-500/20 text-orange-400 text-xs font-semibold px-3 py-1 rounded-full border border-orange-500/30">
+                  <i class="fas fa-star mr-1 text-[10px]"></i> New Opening
+                </span>
+                <span class="bg-slate-900/60 text-slate-300 text-xs px-3 py-1 rounded-full border border-slate-700/60">
+                  <i class="fas fa-tag text-[10px] mr-1 text-orange-400"></i> ${escapeHtml(job.department || 'Consulting')}
+                </span>
+                <span class="bg-slate-900/60 text-slate-300 text-xs px-3 py-1 rounded-full border border-slate-700/60">
+                  <i class="fas fa-map-marker-alt text-[10px] mr-1 text-orange-400"></i> ${escapeHtml(job.location || 'Flexible')}
+                </span>
+                <span class="bg-slate-900/60 text-slate-300 text-xs px-3 py-1 rounded-full border border-slate-700/60">
+                  <i class="fas fa-clock text-[10px] mr-1 text-orange-400"></i> ${escapeHtml(job.jobType || 'Full-Time')}
+                </span>
+              </div>
+              <a href="${escapeHtml(applyLink)}" target="_blank" class="inline-flex items-center justify-center bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm py-2 px-5 rounded-lg transition shadow-md flex-shrink-0">
+                Apply for Position <i class="fas fa-arrow-right ml-2 text-xs"></i>
+              </a>
+            </div>
+
+            <h3 class="text-2xl font-bold text-orange-500 mb-1">${escapeHtml(job.title)}</h3>
+            <p class="text-slate-400 text-sm mb-4">Experience: ${escapeHtml(job.experience || 'Relevant experience')}</p>
+
+            ${responsibilities.length > 0 ? `
+              <h4 class="text-lg font-semibold text-slate-300 mt-6 mb-2">Responsibilities:</h4>
+              <ul class="space-y-2 text-slate-300 list-disc list-inside text-sm sm:text-base">
+                ${responsibilities.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
+              </ul>
+            ` : ''}
+
+            ${qualifications.length > 0 ? `
+              <h4 class="text-lg font-semibold text-slate-300 mt-6 mb-2">Qualifications:</h4>
+              <ul class="space-y-2 text-slate-300 list-disc list-inside text-sm sm:text-base">
+                ${qualifications.map(q => `<li>${escapeHtml(q)}</li>`).join('')}
+              </ul>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      dynamicContainer.innerHTML = jobsHtml;
+    } catch (err) {
+      console.warn("Could not load dynamic jobs:", err);
+    }
+  }
+
+  fetchLiveJobs();
 </script>
 </body>
 </html>

@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - AJHA Consultancy Services</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        crossorigin="anonymous"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    [x-cloak] { display: none !important; }
+    .fade-in { animation: fadeIn 0.2s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="flex items-center space-x-2">
+          <img src="logo.png" alt="AJHA Logo" class="h-8 sm:h-9 w-auto"/>
+          <span class="font-bold text-white tracking-wide text-sm sm:text-base uppercase hidden sm:inline">AJHA CONSULTANCY</span>
+        </a>
+        <span class="bg-orange-500/20 text-orange-400 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-orange-500/30">
+          Admin Portal
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <a href="careers.html" target="_blank" class="text-xs sm:text-sm text-slate-400 hover:text-orange-400 flex items-center transition">
+          <i class="fas fa-external-link-alt mr-1.5"></i> View Careers Page
+        </a>
+        
+        <!-- Authenticated User Profile Pill -->
+        <div id="user-profile-pill" class="hidden items-center space-x-3 bg-slate-800/80 border border-slate-700/60 rounded-full py-1 px-3">
+          <div id="user-avatar" class="w-7 h-7 rounded-full bg-orange-500 text-slate-950 font-bold text-xs flex items-center justify-center uppercase overflow-hidden">
+            A
+          </div>
+          <div class="hidden md:block text-left text-xs leading-tight">
+            <div id="user-display-name" class="font-semibold text-white truncate max-w-[150px]">Admin</div>
+            <div id="user-email-text" class="text-slate-400 truncate max-w-[150px]">admin@ajhacs.com</div>
+          </div>
+          <button id="btn-signout" title="Sign Out" class="text-slate-400 hover:text-red-400 text-xs ml-1 transition">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- 1. LOADING STATE -->
+    <div id="state-loading" class="flex flex-col items-center justify-center py-24 text-center">
+      <div class="w-12 h-12 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin mb-4"></div>
+      <p class="text-slate-400 text-sm font-medium">Verifying authorization...</p>
+    </div>
+
+    <!-- 2. LOGIN / UNAUTHORIZED STATE -->
+    <div id="state-auth" class="hidden max-w-md mx-auto my-12 fade-in">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl text-center relative overflow-hidden">
+        <div class="absolute -top-12 -right-12 w-32 h-32 bg-orange-500/10 rounded-full blur-2xl"></div>
+        <div class="w-16 h-16 bg-slate-800 border border-slate-700 rounded-2xl mx-auto flex items-center justify-center text-2xl text-orange-500 mb-6 shadow-inner">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+
+        <h1 class="text-2xl font-bold text-white mb-2">Staff Portal Access</h1>
+        <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+          Sign in to post new job openings, manage existing career listings, and view inquiries.
+        </p>
+
+        <!-- Access Denied Banner -->
+        <div id="auth-error-banner" class="hidden mb-6 bg-red-950/60 border border-red-800/80 rounded-xl p-4 text-left text-xs text-red-200">
+          <div class="flex items-start space-x-2.5">
+            <i class="fas fa-exclamation-triangle text-red-400 mt-0.5 text-sm flex-shrink-0"></i>
+            <div>
+              <p class="font-semibold text-red-300">Access Restricted</p>
+              <p id="auth-error-message" class="mt-1 text-red-200 leading-normal">
+                This account is not authorized. Please sign in with an approved administrator email.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Sign-In Button -->
+        <button id="btn-google-login" class="w-full flex items-center justify-center space-x-3 bg-white hover:bg-slate-100 text-slate-900 font-semibold py-3 px-4 rounded-xl transition shadow-lg hover:shadow-xl transform active:scale-[0.99]">
+          <svg class="w-5 h-5" viewBox="0 0 24 24">
+            <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+            <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.2s.7 5.5 1.9 7.9l3.7-3z"/>
+            <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
+          </svg>
+          <span>Sign In with Google</span>
+        </button>
+
+        <div class="mt-6 text-xs text-slate-500">
+          Authorized for <span class="text-slate-400 font-medium">Ram Annadhanam</span> and designated team administrators.
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. AUTHORIZED DASHBOARD VIEW -->
+    <div id="state-dashboard" class="hidden space-y-6 fade-in">
+      
+      <!-- NAVIGATION TABS & ACTIONS HEADER -->
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-slate-800 pb-5">
+        <!-- Tab Switchers -->
+        <div class="flex space-x-2 bg-slate-900 p-1 rounded-xl border border-slate-800/80 w-fit">
+          <button id="tab-btn-jobs" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold bg-orange-500 text-white shadow-sm flex items-center space-x-2">
+            <i class="fas fa-briefcase text-xs"></i>
+            <span>Job Postings</span>
+            <span id="badge-total-jobs" class="ml-1.5 bg-slate-900/40 text-xs px-1.5 py-0.5 rounded-full">0</span>
+          </button>
+          <button id="tab-btn-admins" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-white transition flex items-center space-x-2">
+            <i class="fas fa-users-cog text-xs"></i>
+            <span>Access Control</span>
+          </button>
+          <button id="tab-btn-inquiries" class="tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-white transition flex items-center space-x-2">
+            <i class="fas fa-envelope-open-text text-xs"></i>
+            <span>Contact Leads</span>
+          </button>
+        </div>
+
+        <!-- Post New Job Quick Button -->
+        <div>
+          <button id="btn-open-new-job-modal" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg hover:shadow-orange-500/20 transition transform active:scale-95">
+            <i class="fas fa-plus text-xs"></i>
+            <span>Post New Job</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB CONTENT 1: JOBS MANAGEMENT -->
+      <!-- ============================================== -->
+      <div id="tab-content-jobs" class="space-y-6">
+        
+        <!-- STATS OVERVIEW CARDS -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Positions</p>
+                <h3 id="stat-total-jobs" class="text-2xl font-bold text-white mt-1">0</h3>
+              </div>
+              <div class="w-10 h-10 rounded-xl bg-slate-800 text-orange-400 flex items-center justify-center text-lg">
+                <i class="fas fa-layer-group"></i>
+              </div>
+            </div>
+          </div>
+          <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-medium text-emerald-400 uppercase tracking-wider">Active Openings</p>
+                <h3 id="stat-active-jobs" class="text-2xl font-bold text-emerald-400 mt-1">0</h3>
+              </div>
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+                <i class="fas fa-check-circle"></i>
+              </div>
+            </div>
+          </div>
+          <div class="bg-slate-900 border border-slate-800/80 rounded-2xl p-5 shadow-sm">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Draft / Paused</p>
+                <h3 id="stat-draft-jobs" class="text-2xl font-bold text-slate-300 mt-1">0</h3>
+              </div>
+              <div class="w-10 h-10 rounded-xl bg-slate-800 text-slate-400 flex items-center justify-center text-lg">
+                <i class="fas fa-pause-circle"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEARCH & FILTER BAR -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div class="relative w-full sm:w-80">
+            <i class="fas fa-search absolute left-3.5 top-3 text-slate-500 text-xs"></i>
+            <input type="text" id="job-search-input" placeholder="Search by title, department, skills..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+          </div>
+          <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
+            <label class="text-xs text-slate-400 whitespace-nowrap">Filter Status:</label>
+            <select id="job-status-filter" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-orange-500">
+              <option value="all">All Statuses</option>
+              <option value="active">Active Only</option>
+              <option value="draft">Drafts Only</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- JOBS LIST CONTAINER -->
+        <div id="jobs-list" class="space-y-4">
+          <!-- Populated by JavaScript -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+            <i class="fas fa-spinner fa-spin text-2xl text-orange-500 mb-3"></i>
+            <p class="text-slate-400 text-sm">Loading job openings...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB CONTENT 2: ACCESS CONTROL -->
+      <!-- ============================================== -->
+      <div id="tab-content-admins" class="hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8">
+          <div class="max-w-2xl">
+            <h2 class="text-xl font-bold text-white mb-2 flex items-center">
+              <i class="fas fa-user-shield text-orange-500 mr-2.5"></i>
+              Manage Administrator Access
+            </h2>
+            <p class="text-slate-400 text-sm mb-6 leading-relaxed">
+              Permanent administrators (<span class="text-orange-400 font-mono">ram.annadanam@gmail.com</span> and <span class="text-orange-400 font-mono">mohaneswar3@gmail.com</span>) have full permissions. You can grant access to any additional colleague or recruiter below.
+            </p>
+
+            <!-- Add Admin Form -->
+            <form id="form-add-admin" class="bg-slate-950 border border-slate-800/80 rounded-xl p-4 sm:p-5 mb-8">
+              <h3 class="text-sm font-semibold text-slate-200 mb-3">Grant Access to Another Account</h3>
+              <div class="flex flex-col sm:flex-row gap-3">
+                <input type="email" id="input-new-admin-email" required placeholder="name@example.com (Google email)" class="flex-grow bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+                <input type="text" id="input-new-admin-name" placeholder="Name or Title (Optional)" class="sm:w-48 bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+                <button type="submit" id="btn-submit-add-admin" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition flex items-center justify-center space-x-2 flex-shrink-0">
+                  <i class="fas fa-plus text-xs"></i>
+                  <span>Authorize</span>
+                </button>
+              </div>
+              <p id="add-admin-feedback" class="text-xs mt-2 hidden"></p>
+            </form>
+
+            <!-- Admin List Table -->
+            <div class="overflow-x-auto">
+              <h3 class="text-xs uppercase font-semibold text-slate-400 tracking-wider mb-3">Authorized Accounts</h3>
+              <div id="admins-list" class="divide-y divide-slate-800 border border-slate-800 rounded-xl overflow-hidden bg-slate-950">
+                <!-- Primary root admins -->
+                <div class="p-4 flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-xs">
+                      RA
+                    </div>
+                    <div>
+                      <div class="text-sm font-semibold text-white">Ram Annadhanam</div>
+                      <div class="text-xs text-slate-400 font-mono">ram.annadanam@gmail.com</div>
+                    </div>
+                  </div>
+                  <span class="bg-orange-500/20 text-orange-400 text-xs px-2.5 py-0.5 rounded-full border border-orange-500/30">Primary Admin</span>
+                </div>
+                <div class="p-4 flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-xs">
+                      EK
+                    </div>
+                    <div>
+                      <div class="text-sm font-semibold text-white">Eswar</div>
+                      <div class="text-xs text-slate-400 font-mono">mohaneswar3@gmail.com</div>
+                    </div>
+                  </div>
+                  <span class="bg-orange-500/20 text-orange-400 text-xs px-2.5 py-0.5 rounded-full border border-orange-500/30">Primary Admin</span>
+                </div>
+                <!-- Delegated admins rendered by JS -->
+                <div id="delegated-admins-container"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- TAB CONTENT 3: INQUIRIES & CONTACT LEADS -->
+      <!-- ============================================== -->
+      <div id="tab-content-inquiries" class="hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <h2 class="text-xl font-bold text-white flex items-center">
+                <i class="fas fa-inbox text-orange-500 mr-2.5"></i>
+                Website Contact Inquiries
+              </h2>
+              <p class="text-slate-400 text-sm mt-1">Queries submitted via the "Contact Us" form on the homepage.</p>
+            </div>
+            <button id="btn-refresh-inquiries" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg transition flex items-center space-x-1.5">
+              <i class="fas fa-sync-alt"></i>
+              <span>Refresh</span>
+            </button>
+          </div>
+
+          <div id="inquiries-list" class="space-y-3">
+            <div class="text-center py-8 text-slate-400 text-sm">
+              <i class="fas fa-spinner fa-spin mr-2"></i> Fetching contact inquiries...
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ============================================== -->
+  <!-- MODAL: CREATE / EDIT JOB -->
+  <!-- ============================================== -->
+  <div id="modal-job" class="fixed inset-0 z-50 hidden overflow-y-auto bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      
+      <!-- Close Button -->
+      <button id="btn-close-job-modal" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="mb-6">
+        <h2 id="modal-job-heading" class="text-xl font-bold text-white">Post New Job Opening</h2>
+        <p class="text-slate-400 text-xs mt-1">This position will appear live on the AJHA Careers page.</p>
+      </div>
+
+      <form id="form-job" class="space-y-4">
+        <input type="hidden" id="job-edit-id" value=""/>
+
+        <!-- Job Title -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Job Title *</label>
+          <input type="text" id="job-title" required placeholder="e.g. S4HANA Senior FICO Consultant" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+
+        <!-- Department & Experience (2 cols) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Department / Practice *</label>
+            <input type="text" id="job-department" required placeholder="e.g. SAP Solutions, Cloud, Digital" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Experience Required *</label>
+            <input type="text" id="job-experience" required placeholder="e.g. 5 to 8 years relevant experience" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+          </div>
+        </div>
+
+        <!-- Location & Type (2 cols) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Location / Work Mode *</label>
+            <input type="text" id="job-location" required placeholder="e.g. Bengaluru / Irving, TX / Remote" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Job Type *</label>
+            <select id="job-type" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 transition">
+              <option value="Full-Time">Full-Time</option>
+              <option value="Contract">Contract</option>
+              <option value="Part-Time">Part-Time</option>
+              <option value="Internship">Internship</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Key Responsibilities -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Responsibilities (One bullet per line) *</label>
+          <textarea id="job-responsibilities" required rows="4" placeholder="Provide business process support for SAP FI module&#10;Facilitate requirements gathering workshops&#10;Develop functional specifications for customizations" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"></textarea>
+        </div>
+
+        <!-- Qualifications -->
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Qualifications & Requirements (One per line) *</label>
+          <textarea id="job-qualifications" required rows="3" placeholder="Preferable S4HANA certifications&#10;Bachelor's degree in Computer Science or related field" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"></textarea>
+        </div>
+
+        <!-- Application Link & Status (2 cols) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Application Form URL</label>
+            <input type="url" id="job-apply-url" placeholder="https://docs.google.com/forms/..." value="https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">Publish Status *</label>
+            <select id="job-status" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 focus:outline-none focus:border-orange-500 transition">
+              <option value="active">Active (Visible on Website)</option>
+              <option value="draft">Draft (Hidden from Website)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Error Feedback -->
+        <div id="job-form-error" class="hidden text-xs text-red-400 font-medium"></div>
+
+        <!-- Buttons -->
+        <div class="pt-4 flex items-center justify-end space-x-3 border-t border-slate-800">
+          <button type="button" id="btn-cancel-job-modal" class="px-5 py-2.5 rounded-xl text-sm text-slate-400 hover:text-white transition">Cancel</button>
+          <button type="submit" id="btn-save-job" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold text-sm px-6 py-2.5 rounded-xl transition shadow-lg flex items-center space-x-2">
+            <span id="save-job-spinner" class="hidden"><i class="fas fa-spinner fa-spin"></i></span>
+            <span id="save-job-label">Save & Publish</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: DELETE CONFIRMATION -->
+  <!-- ============================================== -->
+  <div id="modal-delete" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 text-center shadow-2xl">
+      <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-2xl flex items-center justify-center mx-auto text-xl mb-4">
+        <i class="fas fa-trash-alt"></i>
+      </div>
+      <h3 class="text-lg font-bold text-white mb-2">Delete Job Opening?</h3>
+      <p id="delete-job-title" class="text-slate-400 text-xs mb-6">Are you sure you want to remove this position? This action cannot be undone.</p>
+      <input type="hidden" id="delete-job-id" value=""/>
+      <div class="flex space-x-3">
+        <button id="btn-cancel-delete" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-sm font-semibold py-2.5 rounded-xl transition">Cancel</button>
+        <button id="btn-confirm-delete" class="flex-1 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold py-2.5 rounded-xl transition">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- SCRIPT LOGIC (FIREBASE AUTH & FIRESTORE) -->
+  <!-- ============================================== -->
+  <script type="module">
+    import { 
+      auth, 
+      googleProvider, 
+      signInWithPopup, 
+      signOut, 
+      onAuthStateChanged,
+      db,
+      collection,
+      addDoc,
+      doc,
+      getDocs,
+      getDoc,
+      setDoc,
+      updateDoc,
+      deleteDoc,
+      query,
+      where,
+      orderBy,
+      serverTimestamp
+    } from "./firebase-config.js";
+
+    // ROOT ADMINS (hardcoded roots that always have full authorization)
+    const ROOT_ADMINS = [
+      "ram.annadanam@gmail.com",
+      "mohaneswar3@gmail.com"
+    ];
+
+    // State Variables
+    let currentUser = null;
+    let isAuthorized = false;
+    let jobsData = [];
+    let delegatedAdmins = [];
+
+    // DOM Elements
+    const stateLoading = document.getElementById('state-loading');
+    const stateAuth = document.getElementById('state-auth');
+    const stateDashboard = document.getElementById('state-dashboard');
+    const userProfilePill = document.getElementById('user-profile-pill');
+    const userAvatar = document.getElementById('user-avatar');
+    const userDisplayName = document.getElementById('user-display-name');
+    const userEmailText = document.getElementById('user-email-text');
+    const authErrorBanner = document.getElementById('auth-error-banner');
+    const authErrorMessage = document.getElementById('auth-error-message');
+
+    // Tabs
+    const tabBtnJobs = document.getElementById('tab-btn-jobs');
+    const tabBtnAdmins = document.getElementById('tab-btn-admins');
+    const tabBtnInquiries = document.getElementById('tab-btn-inquiries');
+    const tabContentJobs = document.getElementById('tab-content-jobs');
+    const tabContentAdmins = document.getElementById('tab-content-admins');
+    const tabContentInquiries = document.getElementById('tab-content-inquiries');
+
+    // Modals
+    const modalJob = document.getElementById('modal-job');
+    const formJob = document.getElementById('form-job');
+    const modalJobHeading = document.getElementById('modal-job-heading');
+    const jobEditId = document.getElementById('job-edit-id');
+    const modalDelete = document.getElementById('modal-delete');
+    const deleteJobId = document.getElementById('delete-job-id');
+    const deleteJobTitle = document.getElementById('delete-job-title');
+
+    // -----------------------------------------------------------------
+    // 1. AUTHENTICATION & ACCESS VERIFICATION
+    // -----------------------------------------------------------------
+    async function checkUserAuthorization(user) {
+      if (!user || !user.email) return false;
+      const emailLower = user.email.toLowerCase();
+
+      // Check root admins
+      if (ROOT_ADMINS.includes(emailLower)) {
+        return true;
+      }
+
+      // Check Firestore /admins/{email} document
+      try {
+        const adminDoc = await getDoc(doc(db, "admins", emailLower));
+        if (adminDoc.exists()) {
+          return true;
+        }
+      } catch (err) {
+        console.warn("Error checking admin delegation:", err);
+      }
+
+      return false;
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      stateLoading.classList.remove('hidden');
+      stateAuth.classList.add('hidden');
+      stateDashboard.classList.add('hidden');
+
+      if (!user) {
+        currentUser = null;
+        isAuthorized = false;
+        userProfilePill.classList.add('hidden');
+        stateLoading.classList.add('hidden');
+        stateAuth.classList.remove('hidden');
+        authErrorBanner.classList.add('hidden');
+        return;
+      }
+
+      currentUser = user;
+      const authorized = await checkUserAuthorization(user);
+      isAuthorized = authorized;
+
+      stateLoading.classList.add('hidden');
+
+      if (authorized) {
+        // Update User Pill
+        userProfilePill.classList.remove('hidden');
+        userProfilePill.classList.add('flex');
+        userDisplayName.textContent = user.displayName || user.email.split('@')[0];
+        userEmailText.textContent = user.email;
+        if (user.photoURL) {
+          userAvatar.innerHTML = `<img src="${user.photoURL}" class="w-full h-full object-cover" />`;
+        } else {
+          userAvatar.textContent = (user.displayName || user.email)[0].toUpperCase();
+        }
+
+        stateDashboard.classList.remove('hidden');
+        loadAllJobs();
+      } else {
+        // Unauthorized
+        userProfilePill.classList.add('hidden');
+        stateAuth.classList.remove('hidden');
+        authErrorBanner.classList.remove('hidden');
+        authErrorMessage.textContent = `The account (${user.email}) is not registered as an authorized administrator. Please sign in with an approved account or ask Ram Annadhanam to delegate access.`;
+      }
+    });
+
+    // Google Sign-In Action
+    document.getElementById('btn-google-login').addEventListener('click', async () => {
+      try {
+        authErrorBanner.classList.add('hidden');
+        await signInWithPopup(auth, googleProvider);
+      } catch (err) {
+        console.error("Sign-in error:", err);
+        authErrorBanner.classList.remove('hidden');
+        authErrorMessage.textContent = err.message || "Failed to sign in. Please try again.";
+      }
+    });
+
+    // Sign Out Action
+    document.getElementById('btn-signout').addEventListener('click', async () => {
+      await signOut(auth);
+    });
+
+    // -----------------------------------------------------------------
+    // 2. TAB SWITCHING LOGIC
+    // -----------------------------------------------------------------
+    function switchTab(activeTab) {
+      // Reset all buttons
+      [tabBtnJobs, tabBtnAdmins, tabBtnInquiries].forEach(btn => {
+        btn.className = "tab-btn px-4 py-2 rounded-lg text-sm font-semibold text-slate-400 hover:text-white transition flex items-center space-x-2";
+      });
+      // Hide all contents
+      tabContentJobs.classList.add('hidden');
+      tabContentAdmins.classList.add('hidden');
+      tabContentInquiries.classList.add('hidden');
+
+      if (activeTab === 'jobs') {
+        tabBtnJobs.className = "tab-btn px-4 py-2 rounded-lg text-sm font-semibold bg-orange-500 text-white shadow-sm flex items-center space-x-2";
+        tabContentJobs.classList.remove('hidden');
+      } else if (activeTab === 'admins') {
+        tabBtnAdmins.className = "tab-btn px-4 py-2 rounded-lg text-sm font-semibold bg-orange-500 text-white shadow-sm flex items-center space-x-2";
+        tabContentAdmins.classList.remove('hidden');
+        loadDelegatedAdmins();
+      } else if (activeTab === 'inquiries') {
+        tabBtnInquiries.className = "tab-btn px-4 py-2 rounded-lg text-sm font-semibold bg-orange-500 text-white shadow-sm flex items-center space-x-2";
+        tabContentInquiries.classList.remove('hidden');
+        loadInquiries();
+      }
+    }
+
+    tabBtnJobs.addEventListener('click', () => switchTab('jobs'));
+    tabBtnAdmins.addEventListener('click', () => switchTab('admins'));
+    tabBtnInquiries.addEventListener('click', () => switchTab('inquiries'));
+
+    // -----------------------------------------------------------------
+    // 3. JOBS MANAGEMENT (CRUD)
+    // -----------------------------------------------------------------
+    async function loadAllJobs() {
+      const jobsList = document.getElementById('jobs-list');
+      try {
+        const jobsQuery = query(collection(db, "jobs"), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(jobsQuery);
+        jobsData = [];
+
+        snapshot.forEach(docSnap => {
+          jobsData.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        renderJobs();
+      } catch (err) {
+        console.error("Error loading jobs:", err);
+        // If index order issue, fallback to un-ordered fetch
+        try {
+          const fallbackSnap = await getDocs(collection(db, "jobs"));
+          jobsData = [];
+          fallbackSnap.forEach(docSnap => {
+            jobsData.push({ id: docSnap.id, ...docSnap.data() });
+          });
+          renderJobs();
+        } catch (innerErr) {
+          jobsList.innerHTML = `
+            <div class="bg-red-950/40 border border-red-800 rounded-2xl p-6 text-center text-red-200 text-sm">
+              <i class="fas fa-exclamation-circle text-xl mb-2 text-red-400"></i>
+              <p>Failed to load jobs from Firestore: ${innerErr.message}</p>
+            </div>
+          `;
+        }
+      }
+    }
+
+    function renderJobs() {
+      const jobsList = document.getElementById('jobs-list');
+      const searchTerm = document.getElementById('job-search-input').value.toLowerCase();
+      const statusFilter = document.getElementById('job-status-filter').value;
+
+      // Update counters
+      const totalCount = jobsData.length;
+      const activeCount = jobsData.filter(j => j.status === 'active').length;
+      const draftCount = jobsData.filter(j => j.status !== 'active').length;
+
+      document.getElementById('badge-total-jobs').textContent = totalCount;
+      document.getElementById('stat-total-jobs').textContent = totalCount;
+      document.getElementById('stat-active-jobs').textContent = activeCount;
+      document.getElementById('stat-draft-jobs').textContent = draftCount;
+
+      const filtered = jobsData.filter(job => {
+        const matchesSearch = (
+          (job.title || '').toLowerCase().includes(searchTerm) ||
+          (job.department || '').toLowerCase().includes(searchTerm) ||
+          (job.location || '').toLowerCase().includes(searchTerm) ||
+          (job.experience || '').toLowerCase().includes(searchTerm)
+        );
+        const matchesStatus = (statusFilter === 'all') || (job.status === statusFilter);
+        return matchesSearch && matchesStatus;
+      });
+
+      if (filtered.length === 0) {
+        jobsList.innerHTML = `
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+            <div class="w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center mx-auto text-xl text-slate-500 mb-3">
+              <i class="fas fa-briefcase"></i>
+            </div>
+            <h3 class="text-base font-semibold text-white mb-1">No Job Openings Found</h3>
+            <p class="text-slate-400 text-xs max-w-sm mx-auto mb-4">
+              ${jobsData.length === 0 ? 'Get started by creating your first job opening to display on the careers portal.' : 'No positions matched your search filters.'}
+            </p>
+            ${jobsData.length === 0 ? `
+              <button onclick="document.getElementById('btn-open-new-job-modal').click()" class="bg-orange-500 hover:bg-orange-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition">
+                + Create Job Opening
+              </button>
+            ` : ''}
+          </div>
+        `;
+        return;
+      }
+
+      jobsList.innerHTML = filtered.map(job => {
+        const isActive = job.status === 'active';
+        const postedDate = job.createdAt && job.createdAt.toDate 
+          ? job.createdAt.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+          : 'Recently';
+
+        return `
+          <div class="bg-slate-900 border border-slate-800/90 hover:border-slate-700/80 rounded-2xl p-5 sm:p-6 transition shadow-sm">
+            <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              
+              <!-- Left Details -->
+              <div class="space-y-2 flex-grow">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="${isActive ? 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30' : 'bg-slate-800 text-slate-400 border-slate-700'} text-xs font-semibold px-2.5 py-0.5 rounded-full border">
+                    ${isActive ? 'Active' : 'Draft / Paused'}
+                  </span>
+                  <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">
+                    <i class="fas fa-tag text-[10px] mr-1 text-orange-400"></i> ${escapeHtml(job.department || 'General')}
+                  </span>
+                  <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">
+                    <i class="fas fa-map-marker-alt text-[10px] mr-1 text-orange-400"></i> ${escapeHtml(job.location || 'Flexible')}
+                  </span>
+                  <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">
+                    <i class="fas fa-clock text-[10px] mr-1 text-orange-400"></i> ${escapeHtml(job.jobType || 'Full-Time')}
+                  </span>
+                </div>
+
+                <h3 class="text-lg font-bold text-white">${escapeHtml(job.title)}</h3>
+                <p class="text-xs text-slate-400">
+                  <span class="font-medium text-slate-300">Experience:</span> ${escapeHtml(job.experience || 'Not specified')} 
+                  <span class="mx-2 text-slate-600">•</span>
+                  <span>Posted ${postedDate}</span>
+                  ${job.postedBy ? `<span class="mx-2 text-slate-600">•</span><span class="text-slate-500">by ${escapeHtml(job.postedBy)}</span>` : ''}
+                </p>
+              </div>
+
+              <!-- Right Actions -->
+              <div class="flex items-center space-x-2 flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-800">
+                <button onclick="window.editJob('${job.id}')" title="Edit Position" class="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center space-x-1">
+                  <i class="fas fa-edit"></i>
+                  <span>Edit</span>
+                </button>
+                <button onclick="window.toggleJobStatus('${job.id}', '${isActive ? 'draft' : 'active'}')" title="${isActive ? 'Pause / Hide' : 'Activate'}" class="${isActive ? 'text-amber-400 hover:bg-amber-500/10' : 'text-emerald-400 hover:bg-emerald-500/10'} bg-slate-800 px-3 py-1.5 rounded-lg text-xs font-medium transition">
+                  <i class="fas ${isActive ? 'fa-pause' : 'fa-play'} mr-1"></i>
+                  <span>${isActive ? 'Pause' : 'Publish'}</span>
+                </button>
+                <button onclick="window.promptDeleteJob('${job.id}', '${escapeAttr(job.title)}')" title="Delete Position" class="text-red-400 hover:bg-red-500/10 bg-slate-800 px-2.5 py-1.5 rounded-lg text-xs transition">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter and Search Listeners
+    document.getElementById('job-search-input').addEventListener('input', renderJobs);
+    document.getElementById('job-status-filter').addEventListener('change', renderJobs);
+
+    // Modal Control: New Job
+    document.getElementById('btn-open-new-job-modal').addEventListener('click', () => {
+      formJob.reset();
+      jobEditId.value = "";
+      modalJobHeading.textContent = "Post New Job Opening";
+      document.getElementById('save-job-label').textContent = "Save & Publish";
+      document.getElementById('job-form-error').classList.add('hidden');
+      modalJob.classList.remove('hidden');
+    });
+
+    // Close Modal
+    function closeJobModal() {
+      modalJob.classList.add('hidden');
+      formJob.reset();
+    }
+    document.getElementById('btn-close-job-modal').addEventListener('click', closeJobModal);
+    document.getElementById('btn-cancel-job-modal').addEventListener('click', closeJobModal);
+
+    // Save Job Form Submit
+    formJob.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const saveBtn = document.getElementById('btn-save-job');
+      const spinner = document.getElementById('save-job-spinner');
+      const label = document.getElementById('save-job-label');
+      const errBox = document.getElementById('job-form-error');
+
+      const editId = jobEditId.value;
+      const title = document.getElementById('job-title').value.trim();
+      const department = document.getElementById('job-department').value.trim();
+      const experience = document.getElementById('job-experience').value.trim();
+      const location = document.getElementById('job-location').value.trim();
+      const jobType = document.getElementById('job-type').value;
+      const responsibilitiesRaw = document.getElementById('job-responsibilities').value.trim();
+      const qualificationsRaw = document.getElementById('job-qualifications').value.trim();
+      const applyUrl = document.getElementById('job-apply-url').value.trim();
+      const status = document.getElementById('job-status').value;
+
+      const responsibilities = responsibilitiesRaw.split('\n').map(s => s.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+      const qualifications = qualificationsRaw.split('\n').map(s => s.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+
+      try {
+        saveBtn.disabled = true;
+        spinner.classList.remove('hidden');
+        label.textContent = "Saving...";
+        errBox.classList.add('hidden');
+
+        const jobPayload = {
+          title,
+          department,
+          experience,
+          location,
+          jobType,
+          responsibilities,
+          qualifications,
+          applyUrl: applyUrl || "https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog",
+          status,
+          updatedAt: serverTimestamp()
+        };
+
+        if (editId) {
+          // Update existing
+          await updateDoc(doc(db, "jobs", editId), jobPayload);
+        } else {
+          // Create new
+          jobPayload.createdAt = serverTimestamp();
+          jobPayload.postedBy = currentUser.email;
+          await addDoc(collection(db, "jobs"), jobPayload);
+        }
+
+        closeJobModal();
+        await loadAllJobs();
+      } catch (err) {
+        console.error("Error saving job:", err);
+        errBox.classList.remove('hidden');
+        errBox.textContent = `Error: ${err.message || 'Failed to save job.'}`;
+      } finally {
+        saveBtn.disabled = false;
+        spinner.classList.add('hidden');
+        label.textContent = editId ? "Update Job" : "Save & Publish";
+      }
+    });
+
+    // Edit Job Action
+    window.editJob = (id) => {
+      const job = jobsData.find(j => j.id === id);
+      if (!job) return;
+
+      jobEditId.value = job.id;
+      modalJobHeading.textContent = "Edit Job Opening";
+      document.getElementById('save-job-label').textContent = "Update Job";
+      document.getElementById('job-title').value = job.title || "";
+      document.getElementById('job-department').value = job.department || "";
+      document.getElementById('job-experience').value = job.experience || "";
+      document.getElementById('job-location').value = job.location || "";
+      document.getElementById('job-type').value = job.jobType || "Full-Time";
+      document.getElementById('job-responsibilities').value = (job.responsibilities || []).join('\n');
+      document.getElementById('job-qualifications').value = (job.qualifications || []).join('\n');
+      document.getElementById('job-apply-url').value = job.applyUrl || "";
+      document.getElementById('job-status').value = job.status || "active";
+
+      document.getElementById('job-form-error').classList.add('hidden');
+      modalJob.classList.remove('hidden');
+    };
+
+    // Toggle Job Status Action
+    window.toggleJobStatus = async (id, newStatus) => {
+      try {
+        await updateDoc(doc(db, "jobs", id), {
+          status: newStatus,
+          updatedAt: serverTimestamp()
+        });
+        await loadAllJobs();
+      } catch (err) {
+        alert("Failed to update status: " + err.message);
+      }
+    };
+
+    // Delete Job Confirmation
+    window.promptDeleteJob = (id, title) => {
+      deleteJobId.value = id;
+      deleteJobTitle.textContent = `Are you sure you want to delete "${title}"? This position will be removed permanently.`;
+      modalDelete.classList.remove('hidden');
+    };
+
+    document.getElementById('btn-cancel-delete').addEventListener('click', () => {
+      modalDelete.classList.add('hidden');
+    });
+
+    document.getElementById('btn-confirm-delete').addEventListener('click', async () => {
+      const id = deleteJobId.value;
+      if (!id) return;
+      try {
+        await deleteDoc(doc(db, "jobs", id));
+        modalDelete.classList.add('hidden');
+        await loadAllJobs();
+      } catch (err) {
+        alert("Failed to delete job: " + err.message);
+      }
+    });
+
+    // -----------------------------------------------------------------
+    // 4. ACCESS CONTROL (DELEGATED ADMINS)
+    // -----------------------------------------------------------------
+    async function loadDelegatedAdmins() {
+      const container = document.getElementById('delegated-admins-container');
+      try {
+        const snapshot = await getDocs(collection(db, "admins"));
+        delegatedAdmins = [];
+        snapshot.forEach(docSnap => {
+          delegatedAdmins.push({ email: docSnap.id, ...docSnap.data() });
+        });
+
+        if (delegatedAdmins.length === 0) {
+          container.innerHTML = `
+            <div class="p-4 text-center text-xs text-slate-500">
+              No additional delegated administrators. Add a colleague's Google email above to grant them access.
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = delegatedAdmins.map(admin => `
+          <div class="p-4 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center font-bold text-xs uppercase">
+                ${(admin.name || admin.email)[0]}
+              </div>
+              <div>
+                <div class="text-sm font-semibold text-white">${escapeHtml(admin.name || 'Delegated Admin')}</div>
+                <div class="text-xs text-slate-400 font-mono">${escapeHtml(admin.email)}</div>
+              </div>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">Delegated Admin</span>
+              <button onclick="window.revokeAdmin('${escapeAttr(admin.email)}')" class="text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10 px-2 py-1 rounded transition" title="Revoke Access">
+                <i class="fas fa-trash-alt"></i> Revoke
+              </button>
+            </div>
+          </div>
+        `).join('');
+
+      } catch (err) {
+        console.error("Error loading delegated admins:", err);
+        container.innerHTML = `<div class="p-4 text-xs text-red-400">Failed to load admins: ${err.message}</div>`;
+      }
+    }
+
+    // Add Admin Form Listener
+    document.getElementById('form-add-admin').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('input-new-admin-email');
+      const nameInput = document.getElementById('input-new-admin-name');
+      const feedback = document.getElementById('add-admin-feedback');
+      const email = emailInput.value.trim().toLowerCase();
+      const name = nameInput.value.trim();
+
+      if (!email) return;
+
+      if (ROOT_ADMINS.includes(email)) {
+        feedback.className = "text-xs mt-2 text-amber-400 block";
+        feedback.textContent = "This email is already a permanent root administrator.";
+        return;
+      }
+
+      try {
+        feedback.className = "text-xs mt-2 text-slate-400 block";
+        feedback.textContent = "Authorizing account...";
+
+        await setDoc(doc(db, "admins", email), {
+          email: email,
+          name: name || email.split('@')[0],
+          addedBy: currentUser.email,
+          createdAt: serverTimestamp()
+        });
+
+        emailInput.value = "";
+        nameInput.value = "";
+        feedback.className = "text-xs mt-2 text-emerald-400 block";
+        feedback.textContent = `Successfully granted administrator access to ${email}!`;
+        await loadDelegatedAdmins();
+      } catch (err) {
+        console.error("Error adding admin:", err);
+        feedback.className = "text-xs mt-2 text-red-400 block";
+        feedback.textContent = `Failed: ${err.message}`;
+      }
+    });
+
+    window.revokeAdmin = async (email) => {
+      if (!confirm(`Revoke administrator access for ${email}?`)) return;
+      try {
+        await deleteDoc(doc(db, "admins", email.toLowerCase()));
+        await loadDelegatedAdmins();
+      } catch (err) {
+        alert("Failed to revoke access: " + err.message);
+      }
+    };
+
+    // -----------------------------------------------------------------
+    // 5. INQUIRIES HUB
+    // -----------------------------------------------------------------
+    async function loadInquiries() {
+      const container = document.getElementById('inquiries-list');
+      try {
+        const inquiriesQuery = query(collection(db, "contacts"), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(inquiriesQuery);
+        const inquiries = [];
+        snapshot.forEach(docSnap => inquiries.push({ id: docSnap.id, ...docSnap.data() }));
+
+        if (inquiries.length === 0) {
+          container.innerHTML = `
+            <div class="text-center py-12 text-slate-500 text-xs">
+              No inquiries found in Firestore.
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = inquiries.map(inq => {
+          const dateStr = inq.createdAt && inq.createdAt.toDate 
+            ? inq.createdAt.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })
+            : 'Recent';
+
+          return `
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-2">
+              <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                <div class="flex items-center space-x-2">
+                  <span class="font-bold text-white text-sm">${escapeHtml(inq.name || 'Anonymous')}</span>
+                  <a href="mailto:${escapeAttr(inq.email || '')}" class="text-xs text-orange-400 hover:underline">(${escapeHtml(inq.email || '')})</a>
+                </div>
+                <span class="text-xs text-slate-500">${dateStr}</span>
+              </div>
+              <div class="text-xs font-semibold text-slate-300">
+                Subject: <span class="font-normal text-slate-200">${escapeHtml(inq.subject || 'Website Inquiry')}</span>
+              </div>
+              <div class="text-xs text-slate-300 bg-slate-900/60 p-3 rounded-lg whitespace-pre-wrap leading-relaxed">
+                ${escapeHtml(inq.message || '')}
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.warn("Error fetching inquiries (falling back):", err);
+        try {
+          const snap = await getDocs(collection(db, "contacts"));
+          const inquiries = [];
+          snap.forEach(docSnap => inquiries.push({ id: docSnap.id, ...docSnap.data() }));
+          if (inquiries.length === 0) {
+            container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">No contact inquiries recorded yet.</div>`;
+            return;
+          }
+          container.innerHTML = inquiries.map(inq => `
+            <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
+              <div class="flex justify-between text-xs">
+                <span class="font-bold text-white">${escapeHtml(inq.name)} (${escapeHtml(inq.email)})</span>
+              </div>
+              <div class="text-xs font-semibold text-slate-300">Subject: ${escapeHtml(inq.subject || '')}</div>
+              <div class="text-xs text-slate-300 bg-slate-900/60 p-3 rounded-lg whitespace-pre-wrap">${escapeHtml(inq.message || '')}</div>
+            </div>
+          `).join('');
+        } catch (innerErr) {
+          container.innerHTML = `<div class="text-xs text-red-400 py-4">Failed to load inquiries: ${innerErr.message}</div>`;
+        }
+      }
+    }
+    document.getElementById('btn-refresh-inquiries').addEventListener('click', loadInquiries);
+
+    // Helpers
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+    function escapeAttr(str) {
+      if (!str) return '';
+      return String(str).replace(/"/g, '&quot;');
+    }
+  </script>
+</body>
+</html>

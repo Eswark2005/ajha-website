@@ -2,14 +2,43 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.email.lower() == 'ram.annadanam@gmail.com' ||
+        request.auth.token.email.lower() == 'mohaneswar3@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email.lower()))
+      );
+    }
+
+    // Contact inquiries submitted from the website
     match /contacts/{contactId} {
-      // Allow public creation of contact inquiries
+      // Public visitors can submit contact inquiries
       allow create: if request.resource.data.name is string
                     && request.resource.data.email is string
                     && request.resource.data.message is string;
 
-      // Restrict read/update/delete to authenticated admins
-      allow read, update, delete: if request.auth != null;
+      // Restrict view/manage to authorized administrators
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Job listings managed via the Admin Dashboard
+    match /jobs/{jobId} {
+      // Anyone can view open jobs on the careers page
+      allow read: if true;
+
+      // Only authorized administrators can create, edit, or remove jobs
+      allow create, update, delete: if isAdmin();
+    }
+
+    // Admin access delegation
+    match /admins/{adminEmail} {
+      // Only authorized administrators can view or delegate admin access
+      allow read, write: if isAdmin();
     }
   }
 }
