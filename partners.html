@@ -1104,47 +1104,7 @@
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
-  // Generates official Candidate Profile & CV Dossier PDF for any submission record
-  function generateCandidateProfilePdf(sub) {
-    const clean = (s) => (s || '').replace(/[()\\\r\n]/g, ' ').substring(0, 75).trim();
-    const name = clean(sub.candidateName) || "Candidate";
-    const jd = clean(sub.jdTitle) || "Enterprise Consultant";
-    const email = clean(sub.candidateEmail) || "N/A";
-    const phone = clean(sub.candidatePhone) || "N/A";
-    const exp = clean(sub.candidateExperience) || "N/A";
-    const notice = clean(sub.candidateNotice) || "N/A";
-    const link = clean(sub.candidateLink) || "None";
-    const partner = clean(sub.partnerName || sub.partnerEmail) || "Authorized Partner";
-    const notes = clean(sub.partnerNotes) || "Submitted via AJHA Partner Network";
-
-    const content = 
-      `BT /F1 18 Tf 50 760 Td (${name} - Candidate CV & Dossier) Tj ET ` +
-      `BT /F1 12 Tf 50 730 Td (Target Requirement: ${jd}) Tj ET ` +
-      `BT /F1 10 Tf 50 705 Td (AJHA Consultancy Services - Partner Talent Fulfillment) Tj ET ` +
-      `BT /F1 11 Tf 50 665 Td (Contact Information:) Tj ET ` +
-      `BT /F1 10 Tf 50 645 Td (Email: ${email}  |  Phone: ${phone}) Tj ET ` +
-      `BT /F1 11 Tf 50 610 Td (Professional Qualifications:) Tj ET ` +
-      `BT /F1 10 Tf 50 590 Td (Relevant Experience: ${exp}) Tj ET ` +
-      `BT /F1 10 Tf 50 570 Td (Notice Period / Availability: ${notice}) Tj ET ` +
-      `BT /F1 10 Tf 50 550 Td (Online Portfolio / Link: ${link}) Tj ET ` +
-      `BT /F1 11 Tf 50 515 Td (Partner Verification & Remarks:) Tj ET ` +
-      `BT /F1 10 Tf 50 495 Td (Submitted By: ${partner}) Tj ET ` +
-      `BT /F1 10 Tf 50 475 Td (Partner Remarks: ${notes}) Tj ET ` +
-      `BT /F1 9 Tf 50 420 Td (Official Candidate Record - AJHA Consultancy Services Inc.) Tj ET`;
-
-    const streamLen = content.length;
-    const pdfStr = `%PDF-1.4\n` +
-      `1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n` +
-      `2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n` +
-      `3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n` +
-      `4 0 obj\n<< /Length ${streamLen} >>\nstream\n${content}\nendstream\nendobj\n` +
-      `5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n` +
-      `xref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000244 00000 n \n0000000300 00000 n \n` +
-      `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n360\n%%EOF`;
-    return 'data:application/pdf;base64,' + btoa(pdfStr);
-  }
-
-  // Assembles full base64 data whether stored inline, across chunks, or generates candidate dossier
+  // Assembles full base64 data whether stored inline or across subcollection chunks
   async function getCompleteSubmissionFileData(sub) {
     if (!sub) return null;
     if (sub.fileData) return sub.fileData;
@@ -1163,12 +1123,6 @@
       } catch (err) {
         console.warn("Error reassembling chunked file:", err);
       }
-    }
-    // If not stored in cloud (e.g. from an early test), generate official candidate dossier
-    if (!sub.fileUrl) {
-      const dossierPdf = generateCandidateProfilePdf(sub);
-      sub.fileData = dossierPdf;
-      return dossierPdf;
     }
     return null;
   }
