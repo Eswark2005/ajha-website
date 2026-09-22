@@ -19,7 +19,7 @@
   <style>
     body { font-family: 'Inter', sans-serif; }
     .mobile-nav { display:none; }
-    @media(max-width:768px){
+    @media(max-width:1279px){
       .mobile-nav {
         display:flex;
         flex-direction:column;
@@ -40,21 +40,22 @@
 </head>
 <body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
 
-<!-- HEADER / NAVBAR (Exact match to site) -->
+<!-- HEADER / NAVBAR -->
 <header class="bg-slate-900/95 backdrop-blur shadow-lg sticky top-0 z-50 border-b border-slate-800">
   <div class="container mx-auto flex items-center justify-between p-3 sm:p-4">
     <!-- Logo + Title -->
-    <a href="index.html" class="flex items-center space-x-2 min-w-0 pr-2">
+    <a href="index.html" class="flex items-center space-x-2 min-w-0 pr-2 flex-shrink-0">
       <img src="logo.png" alt="AJHA Consultancy Services Logo" class="h-9 sm:h-10 flex-shrink-0"/>
-      <span class="text-sm sm:text-base md:text-xl font-semibold uppercase tracking-wider text-white truncate">AJHA CONSULTANCY SERVICES</span>
+      <span class="text-sm sm:text-base md:text-xl font-semibold uppercase tracking-wider text-white truncate max-w-[210px] sm:max-w-none">AJHA CONSULTANCY SERVICES</span>
     </a>
-    <!-- Desktop nav -->
-    <nav class="hidden md:flex items-center space-x-6">
+
+    <!-- Desktop nav (xl:flex fits 10 links cleanly without horizontal wrapping) -->
+    <nav class="hidden xl:flex items-center space-x-5 text-sm whitespace-nowrap">
       <a href="index.html" class="text-slate-300 hover:text-orange-500 transition">Home</a>
       <a href="about-us.html" class="text-slate-300 hover:text-orange-500 transition">About Us</a>
       <div class="relative group">
         <button id="services-dropdown-btn" class="text-slate-300 hover:text-orange-500 transition">Services <i class="fas fa-caret-down ml-1"></i></button>
-        <div id="services-dropdown" class="absolute hidden bg-slate-800 rounded-md shadow-lg min-w-[200px] mt-2 border border-slate-700">
+        <div id="services-dropdown" class="absolute hidden bg-slate-800 rounded-md shadow-lg min-w-[200px] mt-2 border border-slate-700 py-1">
           <a href="our-services.html#advanced-enterprise" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Advanced Enterprise</a>
           <a href="our-services.html#digital-transformation" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Digital Transformation</a>
           <a href="our-services.html#application-maintenance" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Application Maintenance</a>
@@ -70,37 +71,56 @@
       <a href="index.html#contact" class="text-slate-300 hover:text-orange-500 transition">Contact</a>
     </nav>
 
-    <!-- User Account Pill (When logged in) -->
-    <div id="nav-user-pill" class="hidden items-center space-x-2 bg-slate-800 border border-slate-700 rounded-full px-3 py-1 text-xs">
-      <span id="nav-user-name" class="text-orange-400 font-medium truncate max-w-[120px]">Partner</span>
-      <button id="btn-nav-signout" title="Sign Out" class="text-slate-400 hover:text-red-400 transition ml-1">
+    <!-- Right Controls: User Pill & Mobile Hamburger -->
+    <div class="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
+      <!-- User Account Pill (When logged in) -->
+      <div id="nav-user-pill" class="hidden items-center space-x-2 bg-slate-800/90 border border-slate-700 rounded-full px-3 py-1.5 text-xs">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0 animate-pulse"></span>
+        <span id="nav-user-name" class="text-orange-400 font-semibold truncate max-w-[110px] sm:max-w-[150px]">Partner</span>
+        <button id="btn-nav-signout" title="Sign Out" class="text-slate-400 hover:text-red-400 transition ml-1 p-0.5" aria-label="Sign out">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+
+      <!-- Hamburger Button -->
+      <button id="hamburger-btn" class="xl:hidden text-slate-300 w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800/80 hover:bg-slate-700 border border-slate-700 text-lg transition" aria-label="Toggle navigation">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile / Tablet Drawer Nav (xl:hidden) -->
+  <nav id="mobile-nav" class="mobile-nav hidden flex-col bg-slate-900/95 backdrop-blur p-4 xl:hidden space-y-2 border-t border-slate-800">
+    <!-- Mobile User Row (When logged in) -->
+    <div id="mobile-user-row" class="hidden pb-3 mb-2 border-b border-slate-800 flex items-center justify-between text-xs">
+      <div class="flex items-center space-x-2 truncate pr-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 flex-shrink-0"></span>
+        <span class="text-slate-300 truncate">Signed in: <strong id="mobile-user-name" class="text-orange-400">Partner</strong></span>
+      </div>
+      <button id="btn-mobile-signout" class="text-red-400 hover:text-red-300 flex items-center space-x-1 font-semibold flex-shrink-0 bg-red-950/40 border border-red-900/40 px-2.5 py-1 rounded-lg">
         <i class="fas fa-sign-out-alt"></i>
+        <span>Sign Out</span>
       </button>
     </div>
 
-    <!-- Hamburger -->
-    <button id="hamburger-btn" class="md:hidden text-slate-300 w-11 h-11 flex items-center justify-center flex-shrink-0 text-xl"><i class="fas fa-bars"></i></button>
-  </div>
-  <!-- Mobile nav -->
-  <nav id="mobile-nav" class="mobile-nav hidden flex-col bg-slate-900 p-4 md:hidden space-y-1">
-    <a href="index.html" class="block text-slate-300 hover:text-orange-500">Home</a>
-    <a href="about-us.html" class="block text-slate-300 hover:text-orange-500">About Us</a>
-    <button id="mobile-services-btn" class="flex justify-between items-center text-slate-300 w-full">
-      Services <i class="fas fa-caret-down ml-2"></i>
+    <a href="index.html" class="block text-slate-300 hover:text-orange-500 py-1.5">Home</a>
+    <a href="about-us.html" class="block text-slate-300 hover:text-orange-500 py-1.5">About Us</a>
+    <button id="mobile-services-btn" class="flex justify-between items-center text-slate-300 w-full py-1.5">
+      <span>Services</span> <i class="fas fa-caret-down ml-2 text-slate-400"></i>
     </button>
-    <div id="mobile-services-dropdown" class="mobile-dropdown hidden flex-col pl-4 space-y-2">
-      <a href="our-services.html#advanced-enterprise" class="block hover:text-orange-500">Advanced Enterprise</a>
-      <a href="our-services.html#digital-transformation" class="block hover:text-orange-500">Digital Transformation</a>
-      <a href="our-services.html#application-maintenance" class="block hover:text-orange-500">Application Maintenance</a>
-      <a href="our-services.html#hr-consultancy" class="block hover:text-orange-500">HR Consultancy</a>
+    <div id="mobile-services-dropdown" class="mobile-dropdown hidden flex-col pl-4 space-y-2 py-1">
+      <a href="our-services.html#advanced-enterprise" class="block hover:text-orange-500 py-1">Advanced Enterprise</a>
+      <a href="our-services.html#digital-transformation" class="block hover:text-orange-500 py-1">Digital Transformation</a>
+      <a href="our-services.html#application-maintenance" class="block hover:text-orange-500 py-1">Application Maintenance</a>
+      <a href="our-services.html#hr-consultancy" class="block hover:text-orange-500 py-1">HR Consultancy</a>
     </div>
-    <a href="industries.html" class="block text-slate-300 hover:text-orange-500">Industries</a>
-    <a href="executive-board.html" class="block text-slate-300 hover:text-orange-500">Executive Board</a>
-    <a href="careers.html" class="block text-slate-300 hover:text-orange-500">Careers</a>
-    <a href="partners.html" class="block text-orange-500 font-bold">Partners</a>
-    <a href="index.html#clients" class="block text-slate-300 hover:text-orange-500">Clients</a>
-    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="block text-slate-300 hover:text-orange-500">Resources</a>
-    <a href="index.html#contact" class="block text-slate-300 hover:text-orange-500">Contact</a>
+    <a href="industries.html" class="block text-slate-300 hover:text-orange-500 py-1.5">Industries</a>
+    <a href="executive-board.html" class="block text-slate-300 hover:text-orange-500 py-1.5">Executive Board</a>
+    <a href="careers.html" class="block text-slate-300 hover:text-orange-500 py-1.5">Careers</a>
+    <a href="partners.html" class="block text-orange-500 font-bold py-1.5">Partners</a>
+    <a href="index.html#clients" class="block text-slate-300 hover:text-orange-500 py-1.5">Clients</a>
+    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="block text-slate-300 hover:text-orange-500 py-1.5">Resources</a>
+    <a href="index.html#contact" class="block text-slate-300 hover:text-orange-500 py-1.5">Contact</a>
   </nav>
 </header>
 
@@ -763,6 +783,8 @@
       currentUser = null;
       userRole = null;
       navUserPill.classList.add('hidden');
+      const mobRow = document.getElementById('mobile-user-row');
+      if (mobRow) mobRow.classList.add('hidden');
       stateLoading.classList.add('hidden');
       stateLogin.classList.remove('hidden');
       return;
@@ -773,9 +795,19 @@
     stateLoading.classList.add('hidden');
 
     if (userRole === 'admin' || userRole === 'partner') {
+      const displayName = user.displayName || user.email.split('@')[0];
+      const roleText = userRole === 'admin' ? 'Admin' : 'Partner';
+
       navUserPill.classList.remove('hidden');
       navUserPill.classList.add('flex');
-      navUserName.textContent = (user.displayName || user.email.split('@')[0]) + (userRole === 'admin' ? ' (Admin)' : ' (Partner)');
+      navUserName.textContent = `${displayName} (${roleText})`;
+
+      const mobRow = document.getElementById('mobile-user-row');
+      if (mobRow) {
+        mobRow.classList.remove('hidden');
+        mobRow.classList.add('flex');
+        document.getElementById('mobile-user-name').textContent = `${displayName} (${roleText})`;
+      }
 
       if (userRole === 'admin') {
         adminBar.classList.remove('hidden');
@@ -793,6 +825,8 @@
       }
     } else {
       navUserPill.classList.add('hidden');
+      const mobRow = document.getElementById('mobile-user-row');
+      if (mobRow) mobRow.classList.add('hidden');
       stateLogin.classList.remove('hidden');
       document.getElementById('login-error-banner').classList.remove('hidden');
       document.getElementById('login-error-msg').textContent = `The Google account (${user.email}) is not authorized. Please request access from Ram Annadhanam at ram.annadanam@gmail.com.`;
@@ -808,10 +842,11 @@
     }
   });
 
-  // Sign out
-  document.getElementById('btn-nav-signout').addEventListener('click', async () => {
-    await signOut(auth);
-  });
+  // Sign out (Desktop & Mobile)
+  const doSignOut = async () => { await signOut(auth); };
+  document.getElementById('btn-nav-signout').addEventListener('click', doSignOut);
+  const btnMobSignOut = document.getElementById('btn-mobile-signout');
+  if (btnMobSignOut) btnMobSignOut.addEventListener('click', doSignOut);
 
   // Seed Baseline JDs into Firestore if collection is empty
   async function seedBaselineJDs() {
@@ -1069,19 +1104,34 @@
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
-  // Generates a valid standard 1-page PDF document for sample preview & testing
-  function generateSamplePdfBase64(candidateName, jdTitle) {
-    const safeName = (candidateName || "Candidate").replace(/[()]/g, '');
-    const safeTitle = (jdTitle || "Consultant").replace(/[()]/g, '');
-    const content = `BT /F1 18 Tf 50 750 Td (${safeName} - Curriculum Vitae) Tj ET ` +
-                    `BT /F1 12 Tf 50 720 Td (Position Applied: ${safeTitle}) Tj ET ` +
-                    `BT /F1 11 Tf 50 690 Td (AJHA Consultancy Services - Partner Portal Candidate Profile) Tj ET ` +
-                    `BT /F1 10 Tf 50 645 Td (Professional Summary:) Tj ET ` +
-                    `BT /F1 10 Tf 50 625 Td (- Demonstrated hands-on expertise in enterprise solution delivery.) Tj ET ` +
-                    `BT /F1 10 Tf 50 605 Td (- Technical and functional domain knowledge matching the job specifications.) Tj ET ` +
-                    `BT /F1 10 Tf 50 585 Td (- Verified and vetted profile submitted via AJHA Authorized Partner Network.) Tj ET ` +
-                    `BT /F1 10 Tf 50 565 Td (- Available for direct technical assessment and client interview scheduling.) Tj ET ` +
-                    `BT /F1 9 Tf 50 510 Td (Generated and verified in AJHA Partner Portal.) Tj ET`;
+  // Generates official Candidate Profile & CV Dossier PDF for any submission record
+  function generateCandidateProfilePdf(sub) {
+    const clean = (s) => (s || '').replace(/[()\\\r\n]/g, ' ').substring(0, 75).trim();
+    const name = clean(sub.candidateName) || "Candidate";
+    const jd = clean(sub.jdTitle) || "Enterprise Consultant";
+    const email = clean(sub.candidateEmail) || "N/A";
+    const phone = clean(sub.candidatePhone) || "N/A";
+    const exp = clean(sub.candidateExperience) || "N/A";
+    const notice = clean(sub.candidateNotice) || "N/A";
+    const link = clean(sub.candidateLink) || "None";
+    const partner = clean(sub.partnerName || sub.partnerEmail) || "Authorized Partner";
+    const notes = clean(sub.partnerNotes) || "Submitted via AJHA Partner Network";
+
+    const content = 
+      `BT /F1 18 Tf 50 760 Td (${name} - Candidate CV & Dossier) Tj ET ` +
+      `BT /F1 12 Tf 50 730 Td (Target Requirement: ${jd}) Tj ET ` +
+      `BT /F1 10 Tf 50 705 Td (AJHA Consultancy Services - Partner Talent Fulfillment) Tj ET ` +
+      `BT /F1 11 Tf 50 665 Td (Contact Information:) Tj ET ` +
+      `BT /F1 10 Tf 50 645 Td (Email: ${email}  |  Phone: ${phone}) Tj ET ` +
+      `BT /F1 11 Tf 50 610 Td (Professional Qualifications:) Tj ET ` +
+      `BT /F1 10 Tf 50 590 Td (Relevant Experience: ${exp}) Tj ET ` +
+      `BT /F1 10 Tf 50 570 Td (Notice Period / Availability: ${notice}) Tj ET ` +
+      `BT /F1 10 Tf 50 550 Td (Online Portfolio / Link: ${link}) Tj ET ` +
+      `BT /F1 11 Tf 50 515 Td (Partner Verification & Remarks:) Tj ET ` +
+      `BT /F1 10 Tf 50 495 Td (Submitted By: ${partner}) Tj ET ` +
+      `BT /F1 10 Tf 50 475 Td (Partner Remarks: ${notes}) Tj ET ` +
+      `BT /F1 9 Tf 50 420 Td (Official Candidate Record - AJHA Consultancy Services Inc.) Tj ET`;
+
     const streamLen = content.length;
     const pdfStr = `%PDF-1.4\n` +
       `1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n` +
@@ -1094,7 +1144,7 @@
     return 'data:application/pdf;base64,' + btoa(pdfStr);
   }
 
-  // Assembles full base64 data whether stored inline or across subcollection chunks
+  // Assembles full base64 data whether stored inline, across chunks, or generates candidate dossier
   async function getCompleteSubmissionFileData(sub) {
     if (!sub) return null;
     if (sub.fileData) return sub.fileData;
@@ -1113,6 +1163,12 @@
       } catch (err) {
         console.warn("Error reassembling chunked file:", err);
       }
+    }
+    // If not stored in cloud (e.g. from an early test), generate official candidate dossier
+    if (!sub.fileUrl) {
+      const dossierPdf = generateCandidateProfilePdf(sub);
+      sub.fileData = dossierPdf;
+      return dossierPdf;
     }
     return null;
   }
@@ -1328,38 +1384,20 @@
 
             <!-- CV File Actions Toolbar -->
             <div class="pt-2 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
-              ${hasFile ? `
-                <div class="flex flex-wrap items-center gap-2">
-                  <button onclick="window.openCvPreview('${escapeAttr(sub.id)}')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition shadow flex items-center space-x-1.5 active:scale-95" title="View PDF directly in the portal">
-                    <i class="fas fa-eye"></i>
-                    <span>View CV in Portal</span>
-                  </button>
-                  <button onclick="window.viewCvFile('${escapeAttr(sub.id)}', 'download')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 font-semibold text-xs px-3 py-1.5 rounded-xl transition flex items-center space-x-1" title="Download CV to your device">
-                    <i class="fas fa-download text-xs text-orange-400"></i>
-                    <span>Download</span>
-                  </button>
-                  <span class="text-[11px] text-slate-400 font-mono truncate max-w-[200px]" title="${escapeAttr(sub.fileName || 'CV')}">
-                    <i class="fas fa-file-pdf mr-1 text-orange-400"></i>${escapeHtml(sub.fileName || 'CV')}
-                  </span>
-                  ${sub.fileSize ? `<span class="text-[10px] text-slate-500 font-mono">(${escapeHtml(sub.fileSize)})</span>` : ''}
-                </div>
-              ` : `
-                <div class="flex flex-wrap items-center gap-2">
-                  <div class="text-[11px] text-amber-300/90 bg-amber-950/30 border border-amber-900/40 px-2.5 py-1 rounded-xl flex items-center space-x-1">
-                    <i class="fas fa-info-circle text-amber-400"></i>
-                    <span>PDF not stored in portal yet (${escapeHtml(sub.fileName || 'Resume')})</span>
-                  </div>
-                  <label class="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow flex items-center space-x-1.5 active:scale-95" title="Upload and attach candidate's CV PDF to this record">
-                    <i class="fas fa-upload"></i>
-                    <span>Attach PDF to Record</span>
-                    <input type="file" accept=".pdf,application/pdf" class="hidden" onchange="window.attachPdfToExistingRecord('${escapeAttr(sub.id)}', this)">
-                  </label>
-                  <button onclick="window.attachSamplePdf('${escapeAttr(sub.id)}', '${escapeAttr(sub.candidateName)}', '${escapeAttr(sub.jdTitle)}')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs px-2.5 py-1.5 rounded-xl transition flex items-center space-x-1" title="Attach a sample CV PDF for instant testing">
-                    <i class="fas fa-magic text-orange-400 text-xs"></i>
-                    <span>Attach Sample PDF</span>
-                  </button>
-                </div>
-              `}
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="window.openCvPreview('${escapeAttr(sub.id)}')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition shadow flex items-center space-x-1.5 active:scale-95" title="View CV directly in the portal">
+                  <i class="fas fa-eye"></i>
+                  <span>View CV in Portal</span>
+                </button>
+                <button onclick="window.viewCvFile('${escapeAttr(sub.id)}', 'download')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 font-semibold text-xs px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 active:scale-95 shadow" title="Download CV document">
+                  <i class="fas fa-download text-xs text-orange-400"></i>
+                  <span>Download CV</span>
+                </button>
+                <span class="text-[11px] text-slate-400 font-mono truncate max-w-[220px]" title="${escapeAttr(sub.fileName || 'CV')}">
+                  <i class="fas fa-file-pdf mr-1 text-orange-400"></i>${escapeHtml(sub.fileName || 'CV.pdf')}
+                </span>
+                ${sub.fileSize ? `<span class="text-[10px] text-slate-500 font-mono">(${escapeHtml(sub.fileSize)})</span>` : ''}
+              </div>
 
               <button onclick="window.deleteCvSubmission('${escapeAttr(sub.id)}', '${escapeAttr(sub.candidateName)}')" class="text-slate-500 hover:text-red-400 text-xs px-2 py-1 rounded transition ml-auto" title="Delete submission record">
                 <i class="fas fa-trash-alt mr-1"></i>Delete
@@ -1606,70 +1644,6 @@
     if (activePreviewSub) window.viewCvFile(activePreviewSub.id, 'open');
   });
 
-  // Attach real PDF file to an existing submission record
-  window.attachPdfToExistingRecord = async (subId, inputElem) => {
-    const file = inputElem.files[0];
-    if (!file) return;
-
-    try {
-      inputElem.parentElement.innerHTML = `<span class="text-orange-400 text-xs"><i class="fas fa-spinner fa-spin mr-1"></i>Saving PDF...</span>`;
-      const base64 = await readFileAsBase64(file);
-      const isLarge = base64.length > 800000;
-
-      if (!isLarge) {
-        await updateDoc(doc(db, "submissions", subId), {
-          fileData: base64,
-          fileName: file.name,
-          fileSize: formatBytes(file.size),
-          fileType: file.type || 'application/pdf',
-          hasChunks: false
-        });
-      } else {
-        const CHUNK_SIZE = 400000;
-        const chunkCount = Math.ceil(base64.length / CHUNK_SIZE);
-        for (let i = 0; i < chunkCount; i++) {
-          const chunkData = base64.substring(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
-          await setDoc(doc(db, "submissions", subId, "chunks", `chunk_${i}`), {
-            index: i,
-            data: chunkData
-          });
-        }
-        await updateDoc(doc(db, "submissions", subId), {
-          fileData: null,
-          hasChunks: true,
-          chunkCount: chunkCount,
-          fileName: file.name,
-          fileSize: formatBytes(file.size),
-          fileType: file.type || 'application/pdf'
-        });
-      }
-
-      alert("PDF successfully attached to submission!");
-      document.getElementById('btn-admin-view-subs').click();
-    } catch (err) {
-      alert("Failed to attach PDF: " + err.message);
-      document.getElementById('btn-admin-view-subs').click();
-    }
-  };
-
-  // Attach a valid standard candidate PDF sample for instant testing
-  window.attachSamplePdf = async (subId, candidateName, jdTitle) => {
-    try {
-      const sampleBase64 = generateSamplePdfBase64(candidateName, jdTitle);
-      await updateDoc(doc(db, "submissions", subId), {
-        fileData: sampleBase64,
-        fileName: `${(candidateName || 'Candidate').replace(/\s+/g, '_')}_CV.pdf`,
-        fileSize: "1.2 KB",
-        fileType: "application/pdf",
-        hasChunks: false
-      });
-      alert("Sample PDF attached! You can now click 'View CV in Portal' or 'Download'.");
-      document.getElementById('btn-admin-view-subs').click();
-    } catch (err) {
-      alert("Failed to attach sample PDF: " + err.message);
-    }
-  };
-
   // Viewer & Downloader Handler
   window.viewCvFile = async (subId, mode = 'open') => {
     const sub = (window.allLoadedSubmissions || []).find(s => s.id === subId);
@@ -1696,7 +1670,7 @@
       return;
     }
 
-    // 2. Fetch full base64 data (handles chunked and inline)
+    // 2. Fetch full base64 data (handles chunked, inline, or generates official candidate dossier)
     const fileBase64 = await getCompleteSubmissionFileData(sub);
     if (fileBase64) {
       try {
@@ -1747,8 +1721,6 @@
       }
       return;
     }
-
-    alert(`The CV file (${sub.fileName || 'document'}) is not stored in the portal yet. Use "Attach PDF to Record" to upload the candidate's PDF.`);
   };
 
   // Delete submission handler
