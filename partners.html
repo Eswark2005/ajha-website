@@ -945,6 +945,24 @@
   document.getElementById('btn-close-upload').addEventListener('click', closeUpload);
   document.getElementById('btn-cancel-upload').addEventListener('click', closeUpload);
 
+  // File conversion helpers
+  function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (err) => reject(err);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function formatBytes(bytes) {
+    if (!bytes || bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
   formUpload.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-submit-upload');
@@ -966,11 +984,38 @@
     try {
       btn.disabled = true;
       spinner.classList.remove('hidden');
-      btnText.textContent = "Submitting CV...";
+      btnText.textContent = "Processing CV...";
       feedback.classList.add('hidden');
 
-      // 1. Save in Firestore
-      const docRef = await addDoc(collection(db, "submissions"), {
+      let fileBase64 = null;
+      let storageUrl = null;
+      let fileSizeStr = file ? formatBytes(file.size) : '';
+
+      if (file) {
+        // 1. Read Base64 Data URI
+        try {
+          fileBase64 = await readFileAsBase64(file);
+        } catch (readErr) {
+          console.warn("Base64 read error:", readErr);
+        }
+
+        // 2. Attempt Firebase Storage upload
+        try {
+          const { getStorage, ref, uploadBytes, getDownloadURL } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js");
+          const storage = getStorage();
+          const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+          const storageRef = ref(storage, `resumes/${Date.now()}_${cleanName}`);
+          const uploadSnap = await uploadBytes(storageRef, file);
+          storageUrl = await getDownloadURL(uploadSnap.ref);
+        } catch (storageErr) {
+          console.warn("Storage bucket upload note (using base64 fallback):", storageErr.message);
+        }
+      }
+
+      btnText.textContent = "Saving candidate...";
+
+      // 3. Save in Firestore (stores Base64 Data URL if <= 700KB for direct, instant zero-latency view)
+      const submissionPayload = {
         jdId,
         jdTitle,
         candidateName: name,
@@ -983,11 +1028,18 @@
         partnerEmail: currentUser.email,
         partnerName: currentUser.displayName || currentUser.email,
         fileName: file ? file.name : "CV Attached",
+        fileSize: fileSizeStr,
+        fileType: file ? (file.type || 'application/pdf') : 'application/pdf',
+        fileData: (file && file.size <= 700000) ? fileBase64 : null,
+        fileUrl: storageUrl || null,
         createdAt: serverTimestamp()
-      });
+      };
 
-      // 2. Email dispatch with attachment to AJHA
+      const docRef = await addDoc(collection(db, "submissions"), submissionPayload);
+
+      // 4. Email dispatch with file attachment to AJHA leadership
       try {
+        btnText.textContent = "Sending confirmation email...";
         const emailData = new FormData();
         emailData.append('JD Requirement', jdTitle);
         emailData.append('Candidate Name', name);
@@ -1011,11 +1063,11 @@
           body: emailData
         });
       } catch (errMail) {
-        console.warn("Mail note:", errMail);
+        console.warn("Mail dispatch note:", errMail);
       }
 
       feedback.className = "text-xs text-emerald-400 block p-2.5 bg-emerald-950/40 rounded-xl";
-      feedback.textContent = `Candidate CV for ${name} submitted successfully to AJHA recruitment!`;
+      feedback.textContent = `Candidate CV for ${name} submitted and saved successfully!`;
 
       setTimeout(() => {
         closeUpload();
@@ -1033,8 +1085,10 @@
   });
 
   // -------------------------------------------------------------
-  // ADMIN: SUBMISSIONS COUNT & REVIEW
+  // ADMIN: SUBMISSIONS COUNT & REVIEW (WITH FILE VIEW / DOWNLOAD)
   // -------------------------------------------------------------
+  window.allLoadedSubmissions = [];
+
   async function loadSubmissionsCount() {
     try {
       const snap = await getDocs(collection(db, "submissions"));
@@ -1047,33 +1101,191 @@
     modalSubmissions.classList.remove('hidden');
     const container = document.getElementById('submissions-container');
     try {
+      container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500"><i class="fas fa-spinner fa-spin mr-1 text-orange-400"></i> Loading submissions...</div>`;
       const snap = await getDocs(collection(db, "submissions"));
       const list = [];
       snap.forEach(d => list.push({ id: d.id, ...d.data() }));
       list.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+      window.allLoadedSubmissions = list;
 
       if (list.length === 0) {
         container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">No candidate CVs submitted yet.</div>`;
         return;
       }
 
-      container.innerHTML = list.map(sub => `
-        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-1.5 text-xs">
-          <div class="flex justify-between font-bold text-white">
-            <span class="text-orange-400">${escapeHtml(sub.candidateName)}</span>
-            <span class="text-slate-500 font-normal">${sub.createdAt?.toDate ? sub.createdAt.toDate().toLocaleDateString() : 'Recent'}</span>
+      container.innerHTML = list.map(sub => {
+        const date = sub.createdAt?.toDate 
+          ? sub.createdAt.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })
+          : 'Recent';
+
+        const hasFile = !!(sub.fileUrl || sub.fileData);
+
+        return `
+          <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3 text-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-slate-800/80 pb-2.5">
+              <div>
+                <span class="text-orange-400 font-bold text-sm">${escapeHtml(sub.candidateName)}</span>
+                <span class="text-xs text-slate-400 ml-2">for <strong class="text-white">${escapeHtml(sub.jdTitle)}</strong></span>
+              </div>
+              <span class="text-xs text-slate-500 font-mono">${date}</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-slate-300">
+              <div><strong>Email:</strong> <a href="mailto:${escapeAttr(sub.candidateEmail)}" class="text-orange-400 hover:underline">${escapeHtml(sub.candidateEmail)}</a></div>
+              <div><strong>Phone:</strong> ${escapeHtml(sub.candidatePhone)}</div>
+              <div><strong>Experience:</strong> ${escapeHtml(sub.candidateExperience)}</div>
+            </div>
+
+            <div class="text-slate-400 text-[11px] flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span><strong>Notice:</strong> ${escapeHtml(sub.candidateNotice)}</span>
+              <span>•</span>
+              <span><strong>Submitted By:</strong> ${escapeHtml(sub.partnerName || '')} (${escapeHtml(sub.partnerEmail || '')})</span>
+            </div>
+
+            ${sub.candidateLink && sub.candidateLink !== 'None' ? `
+              <div class="text-[11px] text-slate-300">
+                <strong>Profile Link:</strong> <a href="${escapeAttr(sub.candidateLink)}" target="_blank" class="text-orange-400 hover:underline inline-flex items-center ml-1"><i class="fas fa-external-link-alt text-[10px] mr-1"></i>${escapeHtml(sub.candidateLink)}</a>
+              </div>
+            ` : ''}
+
+            ${sub.partnerNotes ? `
+              <div class="bg-slate-900/90 border border-slate-800 p-2.5 rounded-lg text-slate-300 text-[11px]">
+                <strong class="text-slate-400">Partner Remarks:</strong> ${escapeHtml(sub.partnerNotes)}
+              </div>
+            ` : ''}
+
+            <!-- CV File Actions Toolbar -->
+            <div class="pt-2 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
+              ${hasFile ? `
+                <div class="flex flex-wrap items-center gap-2">
+                  <button onclick="window.viewCvFile('${escapeAttr(sub.id)}', 'open')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition shadow flex items-center space-x-1.5 active:scale-95" title="Open and view PDF in a new tab">
+                    <i class="fas fa-file-pdf"></i>
+                    <span>View CV</span>
+                  </button>
+                  <button onclick="window.viewCvFile('${escapeAttr(sub.id)}', 'download')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 font-semibold text-xs px-3 py-1.5 rounded-xl transition flex items-center space-x-1" title="Download CV to your device">
+                    <i class="fas fa-download text-xs text-orange-400"></i>
+                    <span>Download</span>
+                  </button>
+                  <span class="text-[11px] text-slate-400 font-mono truncate max-w-[200px]" title="${escapeAttr(sub.fileName || 'CV')}">
+                    <i class="fas fa-paperclip mr-1 text-slate-500"></i>${escapeHtml(sub.fileName || 'CV')}
+                  </span>
+                  ${sub.fileSize ? `<span class="text-[10px] text-slate-500 font-mono">(${escapeHtml(sub.fileSize)})</span>` : ''}
+                </div>
+              ` : `
+                <div class="text-[11px] text-amber-300/90 bg-amber-950/30 border border-amber-900/40 px-3 py-1.5 rounded-xl flex items-center space-x-1.5">
+                  <i class="fas fa-envelope text-xs"></i>
+                  <span>File: <strong>${escapeHtml(sub.fileName || 'Resume Attached')}</strong> (Delivered via notification email to mohaneswar3@gmail.com)</span>
+                </div>
+              `}
+
+              <button onclick="window.deleteCvSubmission('${escapeAttr(sub.id)}', '${escapeAttr(sub.candidateName)}')" class="text-slate-500 hover:text-red-400 text-xs px-2 py-1 rounded transition ml-auto" title="Delete submission record">
+                <i class="fas fa-trash-alt mr-1"></i>Delete
+              </button>
+            </div>
           </div>
-          <div class="text-slate-300">JD: <strong>${escapeHtml(sub.jdTitle)}</strong></div>
-          <div class="text-slate-400">Email: ${escapeHtml(sub.candidateEmail)} • Phone: ${escapeHtml(sub.candidatePhone)} • Exp: ${escapeHtml(sub.candidateExperience)}</div>
-          <div class="text-slate-500">Submitted by: ${escapeHtml(sub.partnerName || '')} (${escapeHtml(sub.partnerEmail || '')})</div>
-          ${sub.partnerNotes ? `<div class="bg-slate-900 p-2 rounded text-slate-300 mt-1">Notes: ${escapeHtml(sub.partnerNotes)}</div>` : ''}
-        </div>
-      `).join('');
+        `;
+      }).join('');
     } catch (e) {
-      container.innerHTML = `<div class="text-red-400 text-xs">Failed: ${e.message}</div>`;
+      container.innerHTML = `<div class="text-red-400 text-xs p-4">Failed: ${e.message}</div>`;
     }
   });
+
   document.getElementById('btn-close-submissions').addEventListener('click', () => { modalSubmissions.classList.add('hidden'); });
+
+  // Viewer & Downloader Handler
+  window.viewCvFile = (subId, mode = 'open') => {
+    const sub = (window.allLoadedSubmissions || []).find(s => s.id === subId);
+    if (!sub) {
+      alert("Submission file not found.");
+      return;
+    }
+
+    const defaultFilename = sub.fileName || `${(sub.candidateName || 'Candidate').replace(/\s+/g, '_')}_CV.pdf`;
+
+    // 1. If Firebase Storage download URL is available
+    if (sub.fileUrl) {
+      if (mode === 'download') {
+        const a = document.createElement('a');
+        a.href = sub.fileUrl;
+        a.download = defaultFilename;
+        a.target = '_blank';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      } else {
+        window.open(sub.fileUrl, '_blank');
+      }
+      return;
+    }
+
+    // 2. If Base64 Data URL is available
+    if (sub.fileData) {
+      try {
+        const parts = sub.fileData.split(';base64,');
+        const contentType = parts[0].replace('data:', '') || 'application/pdf';
+        const b64 = parts[1];
+        const byteCharacters = atob(b64);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+          byteArrays.push(new Uint8Array(byteNumbers));
+        }
+
+        const blob = new Blob(byteArrays, { type: contentType });
+        const blobUrl = URL.createObjectURL(blob);
+
+        if (mode === 'download') {
+          const a = document.createElement('a');
+          a.href = blobUrl;
+          a.download = defaultFilename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+        } else {
+          const newWin = window.open(blobUrl, '_blank');
+          if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+            // Popup blocked: download instead
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = defaultFilename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+        }
+      } catch (err) {
+        // Fallback to data URI link
+        const a = document.createElement('a');
+        a.href = sub.fileData;
+        a.download = defaultFilename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+      return;
+    }
+
+    alert(`The CV file (${sub.fileName || 'document'}) was delivered as an email attachment to mohaneswar3@gmail.com and ram.annadanam@gmail.com when submitted.`);
+  };
+
+  // Delete submission handler
+  window.deleteCvSubmission = async (id, name) => {
+    if (!confirm(`Are you sure you want to delete the submission record for ${name}?`)) return;
+    try {
+      await deleteDoc(doc(db, "submissions", id));
+      window.allLoadedSubmissions = window.allLoadedSubmissions.filter(s => s.id !== id);
+      document.getElementById('btn-admin-view-subs').click();
+      loadSubmissionsCount();
+    } catch (e) {
+      alert("Failed to delete submission: " + e.message);
+    }
+  };
 
   // -------------------------------------------------------------
   // ADMIN: ACCESS DIRECTORY & DELEGATED ADMIN ROLES
