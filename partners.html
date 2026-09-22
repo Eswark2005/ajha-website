@@ -294,14 +294,82 @@
 <!-- MODAL: ADMIN REVIEW SUBMISSIONS -->
 <!-- ============================================== -->
 <div id="modal-submissions" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-4xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
     <button id="btn-close-submissions" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
       <i class="fas fa-times"></i>
     </button>
-    <h3 class="text-base font-bold text-white mb-1">Uploaded Candidate CVs</h3>
-    <p class="text-slate-400 text-xs mb-4">All candidate resumes uploaded by enterprise partners for AJHA JDs.</p>
+    <div class="mb-4">
+      <span class="bg-orange-500/15 text-orange-400 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-orange-500/30">
+        Recruitment Pipeline
+      </span>
+      <h3 class="text-xl font-bold text-white mt-1">Uploaded Candidate CVs</h3>
+      <p class="text-slate-400 text-xs">View candidate resumes, preview CVs directly inside the portal, or download them to your computer.</p>
+    </div>
     <div id="submissions-container" class="space-y-3">
       <div class="text-center py-6 text-slate-500 text-xs">Loading submissions...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL: IN-PORTAL CV PREVIEWER -->
+<!-- ============================================== -->
+<div id="modal-preview-cv" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-5 overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-5xl w-full h-[94vh] flex flex-col shadow-2xl relative overflow-hidden">
+    <!-- Preview Header -->
+    <div class="p-3 sm:p-4 border-b border-slate-800 flex items-center justify-between flex-shrink-0 bg-slate-900/95">
+      <div class="flex items-center space-x-3 min-w-0 pr-2">
+        <div class="w-9 h-9 rounded-xl bg-orange-500/15 border border-orange-500/30 flex items-center justify-center text-orange-400 text-sm flex-shrink-0">
+          <i class="fas fa-file-pdf"></i>
+        </div>
+        <div class="min-w-0">
+          <h3 id="preview-cand-name" class="font-bold text-white text-sm sm:text-base truncate">Candidate Name - CV Preview</h3>
+          <p class="text-xs text-slate-400 truncate">
+            <span id="preview-jd-title" class="text-slate-300">JD Role</span> • <span id="preview-file-meta" class="font-mono text-[11px] text-slate-400">resume.pdf</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2 flex-shrink-0">
+        <button id="btn-preview-download" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold text-xs px-3.5 py-2 rounded-xl transition shadow flex items-center space-x-1.5 active:scale-95" title="Download CV file">
+          <i class="fas fa-download"></i>
+          <span class="hidden sm:inline">Download CV</span>
+        </button>
+        <button id="btn-preview-newtab" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs px-3 py-2 rounded-xl transition flex items-center space-x-1.5" title="Open in new window">
+          <i class="fas fa-external-link-alt"></i>
+          <span class="hidden sm:inline">Full Window</span>
+        </button>
+        <button id="btn-close-preview" class="text-slate-400 hover:text-white text-lg w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-800 transition">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Preview Content Area -->
+    <div id="preview-content-box" class="flex-grow bg-slate-950 p-2 sm:p-4 overflow-hidden flex flex-col items-center justify-center relative">
+      <!-- Loading Indicator -->
+      <div id="preview-loading" class="text-slate-400 text-xs flex flex-col items-center justify-center">
+        <i class="fas fa-spinner fa-spin text-2xl text-orange-500 mb-2"></i>
+        <span>Loading document preview...</span>
+      </div>
+
+      <!-- PDF / Document Iframe Viewer -->
+      <iframe id="cv-iframe" class="w-full h-full rounded-xl border border-slate-800 bg-slate-900 hidden" title="CV Document Preview"></iframe>
+
+      <!-- Non-PDF / Fallback Box -->
+      <div id="preview-fallback" class="hidden text-center max-w-md p-8 bg-slate-900 border border-slate-800 rounded-2xl space-y-4">
+        <div class="w-16 h-16 rounded-2xl bg-orange-500/10 border border-orange-500/30 mx-auto flex items-center justify-center text-3xl text-orange-400">
+          <i class="fas fa-file-word"></i>
+        </div>
+        <div>
+          <h4 id="fallback-file-name" class="text-white font-bold text-base mb-1">Resume.docx</h4>
+          <p class="text-slate-400 text-xs">Word documents and certain file formats cannot be previewed natively in the browser frame. Click below to download and open.</p>
+        </div>
+        <button id="btn-fallback-download" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition shadow flex items-center justify-center space-x-2 mx-auto">
+          <i class="fas fa-download"></i>
+          <span>Download Document</span>
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -1158,9 +1226,9 @@
             <div class="pt-2 border-t border-slate-800/80 flex flex-wrap items-center justify-between gap-2">
               ${hasFile ? `
                 <div class="flex flex-wrap items-center gap-2">
-                  <button onclick="window.viewCvFile('${escapeAttr(sub.id)}', 'open')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition shadow flex items-center space-x-1.5 active:scale-95" title="Open and view PDF in a new tab">
-                    <i class="fas fa-file-pdf"></i>
-                    <span>View CV</span>
+                  <button onclick="window.openCvPreview('${escapeAttr(sub.id)}')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl transition shadow flex items-center space-x-1.5 active:scale-95" title="View PDF directly in the portal">
+                    <i class="fas fa-eye"></i>
+                    <span>View CV in Portal</span>
                   </button>
                   <button onclick="window.viewCvFile('${escapeAttr(sub.id)}', 'download')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 font-semibold text-xs px-3 py-1.5 rounded-xl transition flex items-center space-x-1" title="Download CV to your device">
                     <i class="fas fa-download text-xs text-orange-400"></i>
@@ -1191,6 +1259,119 @@
   });
 
   document.getElementById('btn-close-submissions').addEventListener('click', () => { modalSubmissions.classList.add('hidden'); });
+
+  // -------------------------------------------------------------
+  // IN-PORTAL CV PREVIEWER LOGIC
+  // -------------------------------------------------------------
+  let activePreviewBlobUrl = null;
+  let activePreviewSub = null;
+
+  window.openCvPreview = (subId) => {
+    const sub = (window.allLoadedSubmissions || []).find(s => s.id === subId);
+    if (!sub) {
+      alert("Submission not found.");
+      return;
+    }
+
+    activePreviewSub = sub;
+    const modalPreview = document.getElementById('modal-preview-cv');
+    const iframe = document.getElementById('cv-iframe');
+    const loading = document.getElementById('preview-loading');
+    const fallback = document.getElementById('preview-fallback');
+
+    document.getElementById('preview-cand-name').textContent = `${sub.candidateName} - CV`;
+    document.getElementById('preview-jd-title').textContent = sub.jdTitle || 'Job Requirement';
+    document.getElementById('preview-file-meta').textContent = `${sub.fileName || 'CV.pdf'} ${sub.fileSize ? `(${sub.fileSize})` : ''}`;
+
+    if (activePreviewBlobUrl) {
+      URL.revokeObjectURL(activePreviewBlobUrl);
+      activePreviewBlobUrl = null;
+    }
+
+    iframe.classList.add('hidden');
+    fallback.classList.add('hidden');
+    loading.classList.remove('hidden');
+    modalPreview.classList.remove('hidden');
+
+    const defaultFilename = sub.fileName || `${(sub.candidateName || 'Candidate').replace(/\s+/g, '_')}_CV.pdf`;
+    const isPdf = (sub.fileName || '').toLowerCase().endsWith('.pdf') || (sub.fileType || '').includes('pdf') || (!sub.fileName && !sub.fileType);
+
+    // 1. If Firebase Storage download URL is available
+    if (sub.fileUrl) {
+      loading.classList.add('hidden');
+      if (isPdf) {
+        iframe.src = sub.fileUrl;
+        iframe.classList.remove('hidden');
+      } else {
+        document.getElementById('fallback-file-name').textContent = defaultFilename;
+        fallback.classList.remove('hidden');
+      }
+      return;
+    }
+
+    // 2. If Base64 Data URL is available
+    if (sub.fileData) {
+      try {
+        const parts = sub.fileData.split(';base64,');
+        const contentType = parts[0].replace('data:', '') || 'application/pdf';
+        const b64 = parts[1];
+        const byteCharacters = atob(b64);
+        const byteArrays = [];
+
+        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+          const slice = byteCharacters.slice(offset, offset + 512);
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+          byteArrays.push(new Uint8Array(byteNumbers));
+        }
+
+        const blob = new Blob(byteArrays, { type: contentType });
+        activePreviewBlobUrl = URL.createObjectURL(blob);
+
+        loading.classList.add('hidden');
+        if (isPdf || contentType.includes('pdf')) {
+          iframe.src = activePreviewBlobUrl;
+          iframe.classList.remove('hidden');
+        } else {
+          document.getElementById('fallback-file-name').textContent = defaultFilename;
+          fallback.classList.remove('hidden');
+        }
+      } catch (err) {
+        loading.classList.add('hidden');
+        document.getElementById('fallback-file-name').textContent = defaultFilename;
+        fallback.classList.remove('hidden');
+      }
+      return;
+    }
+
+    // 3. Fallback for older submission
+    loading.classList.add('hidden');
+    document.getElementById('fallback-file-name').textContent = defaultFilename;
+    fallback.querySelector('p').textContent = "This CV was submitted prior to in-portal storage and was delivered via email attachment to mohaneswar3@gmail.com.";
+    fallback.classList.remove('hidden');
+  };
+
+  const closeCvPreview = () => {
+    document.getElementById('modal-preview-cv').classList.add('hidden');
+    document.getElementById('cv-iframe').src = '';
+    if (activePreviewBlobUrl) {
+      URL.revokeObjectURL(activePreviewBlobUrl);
+      activePreviewBlobUrl = null;
+    }
+  };
+  document.getElementById('btn-close-preview').addEventListener('click', closeCvPreview);
+
+  document.getElementById('btn-preview-download').addEventListener('click', () => {
+    if (activePreviewSub) window.viewCvFile(activePreviewSub.id, 'download');
+  });
+  document.getElementById('btn-fallback-download').addEventListener('click', () => {
+    if (activePreviewSub) window.viewCvFile(activePreviewSub.id, 'download');
+  });
+  document.getElementById('btn-preview-newtab').addEventListener('click', () => {
+    if (activePreviewSub) window.viewCvFile(activePreviewSub.id, 'open');
+  });
 
   // Viewer & Downloader Handler
   window.viewCvFile = (subId, mode = 'open') => {
@@ -1250,7 +1431,6 @@
         } else {
           const newWin = window.open(blobUrl, '_blank');
           if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
-            // Popup blocked: download instead
             const a = document.createElement('a');
             a.href = blobUrl;
             a.download = defaultFilename;
@@ -1260,7 +1440,6 @@
           }
         }
       } catch (err) {
-        // Fallback to data URI link
         const a = document.createElement('a');
         a.href = sub.fileData;
         a.download = defaultFilename;
