@@ -9,6 +9,13 @@
   <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
         crossorigin="anonymous"/>
+  <!-- PDF.js Engine for In-Portal Native PDF Rendering -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    if (window.pdfjsLib) {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    }
+  </script>
   <style>
     body { font-family: 'Inter', sans-serif; }
     .mobile-nav { display:none; }
@@ -345,6 +352,31 @@
       </div>
     </div>
 
+    <!-- PDF Toolbar (PDF.js Controls) -->
+    <div id="pdf-toolbar" class="w-full flex flex-wrap items-center justify-between gap-2 bg-slate-950/90 px-4 py-2 border-b border-slate-800 text-xs text-slate-300 flex-shrink-0">
+      <div class="flex items-center space-x-2">
+        <button id="pdf-prev-btn" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-slate-700 transition flex items-center space-x-1" title="Previous Page">
+          <i class="fas fa-chevron-left text-[10px]"></i>
+          <span>Prev</span>
+        </button>
+        <span class="text-xs">Page <strong id="pdf-page-num" class="text-orange-400 font-mono font-bold">1</strong> of <strong id="pdf-page-count" class="font-mono">1</strong></span>
+        <button id="pdf-next-btn" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-slate-700 transition flex items-center space-x-1" title="Next Page">
+          <span>Next</span>
+          <i class="fas fa-chevron-right text-[10px]"></i>
+        </button>
+      </div>
+      <div class="flex items-center space-x-2">
+        <button id="pdf-zoom-out" class="p-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-slate-700 transition" title="Zoom Out">
+          <i class="fas fa-minus text-[10px]"></i>
+        </button>
+        <span id="pdf-zoom-text" class="text-[11px] font-mono font-bold text-slate-300 w-12 text-center">100%</span>
+        <button id="pdf-zoom-in" class="p-1.5 px-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-slate-700 transition" title="Zoom In">
+          <i class="fas fa-plus text-[10px]"></i>
+        </button>
+        <button id="pdf-zoom-fit" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 text-[11px] transition hidden sm:inline-block">Fit Width</button>
+      </div>
+    </div>
+
     <!-- Preview Content Area -->
     <div id="preview-content-box" class="flex-grow bg-slate-950 p-2 sm:p-4 overflow-hidden flex flex-col items-center justify-center relative">
       <!-- Loading Indicator -->
@@ -353,7 +385,12 @@
         <span>Loading document preview...</span>
       </div>
 
-      <!-- PDF / Document Iframe Viewer -->
+      <!-- PDF Canvas Viewport Container -->
+      <div id="pdf-viewport-container" class="w-full h-full overflow-auto flex justify-center items-start p-2 hidden">
+        <canvas id="pdf-render-canvas" class="shadow-2xl rounded-lg border border-slate-800 bg-white max-w-full"></canvas>
+      </div>
+
+      <!-- PDF / Document Iframe Viewer (fallback for direct URLs) -->
       <iframe id="cv-iframe" class="w-full h-full rounded-xl border border-slate-800 bg-slate-900 hidden" title="CV Document Preview"></iframe>
 
       <!-- Non-PDF / Fallback Box -->
@@ -363,7 +400,7 @@
         </div>
         <div>
           <h4 id="fallback-file-name" class="text-white font-bold text-base mb-1">Resume.docx</h4>
-          <p class="text-slate-400 text-xs">Word documents and certain file formats cannot be previewed natively in the browser frame. Click below to download and open.</p>
+          <p id="fallback-file-desc" class="text-slate-400 text-xs">Word documents and certain file formats cannot be previewed natively in the browser frame. Click below to download and open.</p>
         </div>
         <button id="btn-fallback-download" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl transition shadow flex items-center justify-center space-x-2 mx-auto">
           <i class="fas fa-download"></i>
@@ -604,6 +641,7 @@
 <!-- SCRIPT: FIREBASE LOGIC -->
 <script type="module">
   import {
+    app,
     auth,
     googleProvider,
     signInWithPopup,
@@ -1031,6 +1069,54 @@
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   }
 
+  // Generates a valid standard 1-page PDF document for sample preview & testing
+  function generateSamplePdfBase64(candidateName, jdTitle) {
+    const safeName = (candidateName || "Candidate").replace(/[()]/g, '');
+    const safeTitle = (jdTitle || "Consultant").replace(/[()]/g, '');
+    const content = `BT /F1 18 Tf 50 750 Td (${safeName} - Curriculum Vitae) Tj ET ` +
+                    `BT /F1 12 Tf 50 720 Td (Position Applied: ${safeTitle}) Tj ET ` +
+                    `BT /F1 11 Tf 50 690 Td (AJHA Consultancy Services - Partner Portal Candidate Profile) Tj ET ` +
+                    `BT /F1 10 Tf 50 645 Td (Professional Summary:) Tj ET ` +
+                    `BT /F1 10 Tf 50 625 Td (- Demonstrated hands-on expertise in enterprise solution delivery.) Tj ET ` +
+                    `BT /F1 10 Tf 50 605 Td (- Technical and functional domain knowledge matching the job specifications.) Tj ET ` +
+                    `BT /F1 10 Tf 50 585 Td (- Verified and vetted profile submitted via AJHA Authorized Partner Network.) Tj ET ` +
+                    `BT /F1 10 Tf 50 565 Td (- Available for direct technical assessment and client interview scheduling.) Tj ET ` +
+                    `BT /F1 9 Tf 50 510 Td (Generated and verified in AJHA Partner Portal.) Tj ET`;
+    const streamLen = content.length;
+    const pdfStr = `%PDF-1.4\n` +
+      `1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n` +
+      `2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n` +
+      `3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n` +
+      `4 0 obj\n<< /Length ${streamLen} >>\nstream\n${content}\nendstream\nendobj\n` +
+      `5 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n` +
+      `xref\n0 6\n0000000000 65535 f \n0000000009 00000 n \n0000000058 00000 n \n0000000115 00000 n \n0000000244 00000 n \n0000000300 00000 n \n` +
+      `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n360\n%%EOF`;
+    return 'data:application/pdf;base64,' + btoa(pdfStr);
+  }
+
+  // Assembles full base64 data whether stored inline or across subcollection chunks
+  async function getCompleteSubmissionFileData(sub) {
+    if (!sub) return null;
+    if (sub.fileData) return sub.fileData;
+    if (sub.hasChunks && sub.chunkCount) {
+      try {
+        const chunks = [];
+        for (let i = 0; i < sub.chunkCount; i++) {
+          const cDoc = await getDoc(doc(db, "submissions", sub.id, "chunks", `chunk_${i}`));
+          if (cDoc.exists()) {
+            chunks.push(cDoc.data().data);
+          }
+        }
+        const fullBase64 = chunks.join('');
+        sub.fileData = fullBase64; // Cache in memory
+        return fullBase64;
+      } catch (err) {
+        console.warn("Error reassembling chunked file:", err);
+      }
+    }
+    return null;
+  }
+
   formUpload.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = document.getElementById('btn-submit-upload');
@@ -1070,7 +1156,7 @@
         // 2. Attempt Firebase Storage upload
         try {
           const { getStorage, ref, uploadBytes, getDownloadURL } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js");
-          const storage = getStorage();
+          const storage = getStorage(app);
           const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
           const storageRef = ref(storage, `resumes/${Date.now()}_${cleanName}`);
           const uploadSnap = await uploadBytes(storageRef, file);
@@ -1082,7 +1168,11 @@
 
       btnText.textContent = "Saving candidate...";
 
-      // 3. Save in Firestore (stores Base64 Data URL if <= 700KB for direct, instant zero-latency view)
+      const isLargeFile = fileBase64 && fileBase64.length > 800000;
+      const CHUNK_SIZE = 400000;
+      const chunkCount = isLargeFile ? Math.ceil(fileBase64.length / CHUNK_SIZE) : 0;
+
+      // 3. Save submission document in Firestore
       const submissionPayload = {
         jdId,
         jdTitle,
@@ -1098,16 +1188,30 @@
         fileName: file ? file.name : "CV Attached",
         fileSize: fileSizeStr,
         fileType: file ? (file.type || 'application/pdf') : 'application/pdf',
-        fileData: (file && file.size <= 700000) ? fileBase64 : null,
+        fileData: isLargeFile ? null : fileBase64,
+        hasChunks: isLargeFile,
+        chunkCount: chunkCount,
         fileUrl: storageUrl || null,
         createdAt: serverTimestamp()
       };
 
       const docRef = await addDoc(collection(db, "submissions"), submissionPayload);
 
+      // If file exceeds single-doc size, save chunks in subcollection
+      if (isLargeFile) {
+        btnText.textContent = "Saving CV chunks...";
+        for (let i = 0; i < chunkCount; i++) {
+          const chunkData = fileBase64.substring(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+          await setDoc(doc(db, "submissions", docRef.id, "chunks", `chunk_${i}`), {
+            index: i,
+            data: chunkData
+          });
+        }
+      }
+
       // 4. Email dispatch with file attachment to AJHA leadership
       try {
-        btnText.textContent = "Sending confirmation email...";
+        btnText.textContent = "Sending notification email...";
         const emailData = new FormData();
         emailData.append('JD Requirement', jdTitle);
         emailData.append('Candidate Name', name);
@@ -1135,7 +1239,7 @@
       }
 
       feedback.className = "text-xs text-emerald-400 block p-2.5 bg-emerald-950/40 rounded-xl";
-      feedback.textContent = `Candidate CV for ${name} submitted and saved successfully!`;
+      feedback.textContent = `Candidate CV for ${name} submitted and stored in portal successfully!`;
 
       setTimeout(() => {
         closeUpload();
@@ -1186,7 +1290,7 @@
           ? sub.createdAt.toDate().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })
           : 'Recent';
 
-        const hasFile = !!(sub.fileUrl || sub.fileData);
+        const hasFile = !!(sub.fileUrl || sub.fileData || sub.hasChunks);
 
         return `
           <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 sm:p-5 space-y-3 text-xs">
@@ -1235,14 +1339,25 @@
                     <span>Download</span>
                   </button>
                   <span class="text-[11px] text-slate-400 font-mono truncate max-w-[200px]" title="${escapeAttr(sub.fileName || 'CV')}">
-                    <i class="fas fa-paperclip mr-1 text-slate-500"></i>${escapeHtml(sub.fileName || 'CV')}
+                    <i class="fas fa-file-pdf mr-1 text-orange-400"></i>${escapeHtml(sub.fileName || 'CV')}
                   </span>
                   ${sub.fileSize ? `<span class="text-[10px] text-slate-500 font-mono">(${escapeHtml(sub.fileSize)})</span>` : ''}
                 </div>
               ` : `
-                <div class="text-[11px] text-amber-300/90 bg-amber-950/30 border border-amber-900/40 px-3 py-1.5 rounded-xl flex items-center space-x-1.5">
-                  <i class="fas fa-envelope text-xs"></i>
-                  <span>File: <strong>${escapeHtml(sub.fileName || 'Resume Attached')}</strong> (Delivered via notification email to mohaneswar3@gmail.com)</span>
+                <div class="flex flex-wrap items-center gap-2">
+                  <div class="text-[11px] text-amber-300/90 bg-amber-950/30 border border-amber-900/40 px-2.5 py-1 rounded-xl flex items-center space-x-1">
+                    <i class="fas fa-info-circle text-amber-400"></i>
+                    <span>PDF not stored in portal yet (${escapeHtml(sub.fileName || 'Resume')})</span>
+                  </div>
+                  <label class="cursor-pointer bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-3 py-1.5 rounded-xl transition shadow flex items-center space-x-1.5 active:scale-95" title="Upload and attach candidate's CV PDF to this record">
+                    <i class="fas fa-upload"></i>
+                    <span>Attach PDF to Record</span>
+                    <input type="file" accept=".pdf,application/pdf" class="hidden" onchange="window.attachPdfToExistingRecord('${escapeAttr(sub.id)}', this)">
+                  </label>
+                  <button onclick="window.attachSamplePdf('${escapeAttr(sub.id)}', '${escapeAttr(sub.candidateName)}', '${escapeAttr(sub.jdTitle)}')" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs px-2.5 py-1.5 rounded-xl transition flex items-center space-x-1" title="Attach a sample CV PDF for instant testing">
+                    <i class="fas fa-magic text-orange-400 text-xs"></i>
+                    <span>Attach Sample PDF</span>
+                  </button>
                 </div>
               `}
 
@@ -1261,12 +1376,108 @@
   document.getElementById('btn-close-submissions').addEventListener('click', () => { modalSubmissions.classList.add('hidden'); });
 
   // -------------------------------------------------------------
-  // IN-PORTAL CV PREVIEWER LOGIC
+  // IN-PORTAL CV PREVIEWER & PDF.JS CANVAS ENGINE
   // -------------------------------------------------------------
   let activePreviewBlobUrl = null;
   let activePreviewSub = null;
+  let currentPdfDoc = null;
+  let currentPdfPage = 1;
+  let currentPdfScale = 1.25;
+  let isPdfRendering = false;
+  let pendingPdfPage = null;
 
-  window.openCvPreview = (subId) => {
+  async function renderPdfPage(num) {
+    if (!currentPdfDoc) return;
+    isPdfRendering = true;
+    try {
+      const page = await currentPdfDoc.getPage(num);
+      const canvas = document.getElementById('pdf-render-canvas');
+      const ctx = canvas.getContext('2d');
+      const viewport = page.getViewport({ scale: currentPdfScale });
+
+      // Support high DPI screens crisp rendering
+      const outputScale = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(viewport.width * outputScale);
+      canvas.height = Math.floor(viewport.height * outputScale);
+      canvas.style.width = Math.floor(viewport.width) + "px";
+      canvas.style.height = Math.floor(viewport.height) + "px";
+
+      const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+
+      const renderContext = {
+        canvasContext: ctx,
+        transform: transform,
+        viewport: viewport
+      };
+
+      await page.render(renderContext).promise;
+      isPdfRendering = false;
+      document.getElementById('pdf-page-num').textContent = num;
+      document.getElementById('pdf-page-count').textContent = currentPdfDoc.numPages;
+      document.getElementById('pdf-zoom-text').textContent = `${Math.round(currentPdfScale * 100)}%`;
+
+      if (pendingPdfPage !== null) {
+        const next = pendingPdfPage;
+        pendingPdfPage = null;
+        renderPdfPage(next);
+      }
+    } catch (err) {
+      console.error("PDF render error:", err);
+      isPdfRendering = false;
+    }
+  }
+
+  function queueRenderPdfPage(num) {
+    if (isPdfRendering) {
+      pendingPdfPage = num;
+    } else {
+      renderPdfPage(num);
+    }
+  }
+
+  document.getElementById('pdf-prev-btn').addEventListener('click', () => {
+    if (currentPdfDoc && currentPdfPage > 1) {
+      currentPdfPage--;
+      queueRenderPdfPage(currentPdfPage);
+    }
+  });
+
+  document.getElementById('pdf-next-btn').addEventListener('click', () => {
+    if (currentPdfDoc && currentPdfPage < currentPdfDoc.numPages) {
+      currentPdfPage++;
+      queueRenderPdfPage(currentPdfPage);
+    }
+  });
+
+  document.getElementById('pdf-zoom-in').addEventListener('click', () => {
+    if (currentPdfScale < 3.0) {
+      currentPdfScale = +(currentPdfScale + 0.25).toFixed(2);
+      queueRenderPdfPage(currentPdfPage);
+    }
+  });
+
+  document.getElementById('pdf-zoom-out').addEventListener('click', () => {
+    if (currentPdfScale > 0.5) {
+      currentPdfScale = +(currentPdfScale - 0.25).toFixed(2);
+      queueRenderPdfPage(currentPdfPage);
+    }
+  });
+
+  document.getElementById('pdf-zoom-fit').addEventListener('click', () => {
+    const container = document.getElementById('pdf-viewport-container');
+    if (container && currentPdfDoc) {
+      currentPdfDoc.getPage(currentPdfPage).then(page => {
+        const unscaledViewport = page.getViewport({ scale: 1 });
+        const availWidth = container.clientWidth - 40;
+        if (availWidth > 200) {
+          currentPdfScale = +(availWidth / unscaledViewport.width).toFixed(2);
+          queueRenderPdfPage(currentPdfPage);
+        }
+      });
+    }
+  });
+
+  window.openCvPreview = async (subId) => {
     const sub = (window.allLoadedSubmissions || []).find(s => s.id === subId);
     if (!sub) {
       alert("Submission not found.");
@@ -1276,6 +1487,8 @@
     activePreviewSub = sub;
     const modalPreview = document.getElementById('modal-preview-cv');
     const iframe = document.getElementById('cv-iframe');
+    const viewportContainer = document.getElementById('pdf-viewport-container');
+    const toolbar = document.getElementById('pdf-toolbar');
     const loading = document.getElementById('preview-loading');
     const fallback = document.getElementById('preview-fallback');
 
@@ -1288,7 +1501,13 @@
       activePreviewBlobUrl = null;
     }
 
+    currentPdfDoc = null;
+    currentPdfPage = 1;
+    currentPdfScale = 1.25;
+
     iframe.classList.add('hidden');
+    viewportContainer.classList.add('hidden');
+    toolbar.classList.add('hidden');
     fallback.classList.add('hidden');
     loading.classList.remove('hidden');
     modalPreview.classList.remove('hidden');
@@ -1296,8 +1515,53 @@
     const defaultFilename = sub.fileName || `${(sub.candidateName || 'Candidate').replace(/\s+/g, '_')}_CV.pdf`;
     const isPdf = (sub.fileName || '').toLowerCase().endsWith('.pdf') || (sub.fileType || '').includes('pdf') || (!sub.fileName && !sub.fileType);
 
-    // 1. If Firebase Storage download URL is available
+    // Fetch complete Base64 data (whether inline or chunked)
+    const fileBase64 = await getCompleteSubmissionFileData(sub);
+
+    // If PDF and we have Base64 data, render natively via PDF.js on HTML5 canvas
+    if (fileBase64 && isPdf && window.pdfjsLib) {
+      try {
+        const parts = fileBase64.split(';base64,');
+        const b64 = parts[1] || parts[0];
+        const binaryStr = atob(b64);
+        const bytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) {
+          bytes[i] = binaryStr.charCodeAt(i);
+        }
+
+        const blob = new Blob([bytes], { type: 'application/pdf' });
+        activePreviewBlobUrl = URL.createObjectURL(blob);
+
+        const loadingTask = pdfjsLib.getDocument({ data: bytes });
+        currentPdfDoc = await loadingTask.promise;
+
+        loading.classList.add('hidden');
+        toolbar.classList.remove('hidden');
+        viewportContainer.classList.remove('hidden');
+
+        await renderPdfPage(1);
+        return;
+      } catch (pdfErr) {
+        console.warn("PDF.js render error, falling back:", pdfErr);
+      }
+    }
+
+    // If Firebase Storage download URL is available
     if (sub.fileUrl) {
+      if (isPdf && window.pdfjsLib) {
+        try {
+          const loadingTask = pdfjsLib.getDocument(sub.fileUrl);
+          currentPdfDoc = await loadingTask.promise;
+          loading.classList.add('hidden');
+          toolbar.classList.remove('hidden');
+          viewportContainer.classList.remove('hidden');
+          await renderPdfPage(1);
+          return;
+        } catch (storagePdfErr) {
+          console.warn("Storage PDF.js render error:", storagePdfErr);
+        }
+      }
+
       loading.classList.add('hidden');
       if (isPdf) {
         iframe.src = sub.fileUrl;
@@ -1309,53 +1573,22 @@
       return;
     }
 
-    // 2. If Base64 Data URL is available
-    if (sub.fileData) {
-      try {
-        const parts = sub.fileData.split(';base64,');
-        const contentType = parts[0].replace('data:', '') || 'application/pdf';
-        const b64 = parts[1];
-        const byteCharacters = atob(b64);
-        const byteArrays = [];
-
-        for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-          const slice = byteCharacters.slice(offset, offset + 512);
-          const byteNumbers = new Array(slice.length);
-          for (let i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-          }
-          byteArrays.push(new Uint8Array(byteNumbers));
-        }
-
-        const blob = new Blob(byteArrays, { type: contentType });
-        activePreviewBlobUrl = URL.createObjectURL(blob);
-
-        loading.classList.add('hidden');
-        if (isPdf || contentType.includes('pdf')) {
-          iframe.src = activePreviewBlobUrl;
-          iframe.classList.remove('hidden');
-        } else {
-          document.getElementById('fallback-file-name').textContent = defaultFilename;
-          fallback.classList.remove('hidden');
-        }
-      } catch (err) {
-        loading.classList.add('hidden');
-        document.getElementById('fallback-file-name').textContent = defaultFilename;
-        fallback.classList.remove('hidden');
-      }
-      return;
-    }
-
-    // 3. Fallback for older submission
+    // Fallback if file data not present or non-PDF
     loading.classList.add('hidden');
     document.getElementById('fallback-file-name').textContent = defaultFilename;
-    fallback.querySelector('p').textContent = "This CV was submitted prior to in-portal storage and was delivered via email attachment to mohaneswar3@gmail.com.";
+    const fallbackDesc = document.getElementById('fallback-file-desc');
+    if (fallbackDesc) {
+      fallbackDesc.textContent = !isPdf 
+        ? "Word documents and other formats cannot be rendered inside the canvas viewer. Click below to download."
+        : "This CV file is not yet stored in portal storage. You can attach a PDF to this record from the submissions list.";
+    }
     fallback.classList.remove('hidden');
   };
 
   const closeCvPreview = () => {
     document.getElementById('modal-preview-cv').classList.add('hidden');
     document.getElementById('cv-iframe').src = '';
+    currentPdfDoc = null;
     if (activePreviewBlobUrl) {
       URL.revokeObjectURL(activePreviewBlobUrl);
       activePreviewBlobUrl = null;
@@ -1373,8 +1606,72 @@
     if (activePreviewSub) window.viewCvFile(activePreviewSub.id, 'open');
   });
 
+  // Attach real PDF file to an existing submission record
+  window.attachPdfToExistingRecord = async (subId, inputElem) => {
+    const file = inputElem.files[0];
+    if (!file) return;
+
+    try {
+      inputElem.parentElement.innerHTML = `<span class="text-orange-400 text-xs"><i class="fas fa-spinner fa-spin mr-1"></i>Saving PDF...</span>`;
+      const base64 = await readFileAsBase64(file);
+      const isLarge = base64.length > 800000;
+
+      if (!isLarge) {
+        await updateDoc(doc(db, "submissions", subId), {
+          fileData: base64,
+          fileName: file.name,
+          fileSize: formatBytes(file.size),
+          fileType: file.type || 'application/pdf',
+          hasChunks: false
+        });
+      } else {
+        const CHUNK_SIZE = 400000;
+        const chunkCount = Math.ceil(base64.length / CHUNK_SIZE);
+        for (let i = 0; i < chunkCount; i++) {
+          const chunkData = base64.substring(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+          await setDoc(doc(db, "submissions", subId, "chunks", `chunk_${i}`), {
+            index: i,
+            data: chunkData
+          });
+        }
+        await updateDoc(doc(db, "submissions", subId), {
+          fileData: null,
+          hasChunks: true,
+          chunkCount: chunkCount,
+          fileName: file.name,
+          fileSize: formatBytes(file.size),
+          fileType: file.type || 'application/pdf'
+        });
+      }
+
+      alert("PDF successfully attached to submission!");
+      document.getElementById('btn-admin-view-subs').click();
+    } catch (err) {
+      alert("Failed to attach PDF: " + err.message);
+      document.getElementById('btn-admin-view-subs').click();
+    }
+  };
+
+  // Attach a valid standard candidate PDF sample for instant testing
+  window.attachSamplePdf = async (subId, candidateName, jdTitle) => {
+    try {
+      const sampleBase64 = generateSamplePdfBase64(candidateName, jdTitle);
+      await updateDoc(doc(db, "submissions", subId), {
+        fileData: sampleBase64,
+        fileName: `${(candidateName || 'Candidate').replace(/\s+/g, '_')}_CV.pdf`,
+        fileSize: "1.2 KB",
+        fileType: "application/pdf",
+        hasChunks: false
+      });
+      alert("Sample PDF attached! You can now click 'View CV in Portal' or 'Download'.");
+      document.getElementById('btn-admin-view-subs').click();
+    } catch (err) {
+      alert("Failed to attach sample PDF: " + err.message);
+    }
+  };
+
   // Viewer & Downloader Handler
-  window.viewCvFile = (subId, mode = 'open') => {
+  window.viewCvFile = async (subId, mode = 'open') => {
     const sub = (window.allLoadedSubmissions || []).find(s => s.id === subId);
     if (!sub) {
       alert("Submission file not found.");
@@ -1399,12 +1696,13 @@
       return;
     }
 
-    // 2. If Base64 Data URL is available
-    if (sub.fileData) {
+    // 2. Fetch full base64 data (handles chunked and inline)
+    const fileBase64 = await getCompleteSubmissionFileData(sub);
+    if (fileBase64) {
       try {
-        const parts = sub.fileData.split(';base64,');
+        const parts = fileBase64.split(';base64,');
         const contentType = parts[0].replace('data:', '') || 'application/pdf';
-        const b64 = parts[1];
+        const b64 = parts[1] || parts[0];
         const byteCharacters = atob(b64);
         const byteArrays = [];
 
@@ -1427,7 +1725,7 @@
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-          setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
+          setTimeout(() => URL.revokeObjectURL(blobUrl), 15000);
         } else {
           const newWin = window.open(blobUrl, '_blank');
           if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
@@ -1441,7 +1739,7 @@
         }
       } catch (err) {
         const a = document.createElement('a');
-        a.href = sub.fileData;
+        a.href = fileBase64;
         a.download = defaultFilename;
         document.body.appendChild(a);
         a.click();
@@ -1450,7 +1748,7 @@
       return;
     }
 
-    alert(`The CV file (${sub.fileName || 'document'}) was delivered as an email attachment to mohaneswar3@gmail.com and ram.annadanam@gmail.com when submitted.`);
+    alert(`The CV file (${sub.fileName || 'document'}) is not stored in the portal yet. Use "Attach PDF to Record" to upload the candidate's PDF.`);
   };
 
   // Delete submission handler

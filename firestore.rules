@@ -58,6 +58,11 @@ service cloud.firestore {
     match /submissions/{submissionId} {
       allow create: if isPartner();
       allow read, update, delete: if isAdmin();
+
+      match /{allSubcollections=**} {
+        allow create: if isPartner();
+        allow read, update, delete: if isAdmin();
+      }
     }
   }
 }
