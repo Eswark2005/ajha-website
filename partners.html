@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Partners - AJHA Consultancy Services</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        crossorigin="anonymous"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .mobile-nav { display:none; }
+    @media(max-width:768px){
+      .mobile-nav {
+        display:flex;
+        flex-direction:column;
+        background:#0c0e16;
+        padding:1rem 1.5rem 2.5rem;
+        max-height:calc(100vh - 65px);
+        max-height:calc(100dvh - 65px);
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
+        border-top:1px solid rgba(255,255,255,0.08);
+      }
+      .mobile-nav a { padding:0.75rem 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:1rem; }
+      .mobile-dropdown { display:none; flex-direction:column; padding-left:1rem; background:rgba(30,41,59,0.6); border-radius:6px; margin:0.3rem 0; }
+      .mobile-dropdown.show { display:flex; }
+      .mobile-dropdown a { padding:0.6rem 0.75rem; border-bottom:1px solid rgba(255,255,255,0.03); }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
+
+<!-- HEADER / NAVBAR (Exact match to site) -->
+<header class="bg-slate-900/95 backdrop-blur shadow-lg sticky top-0 z-50 border-b border-slate-800">
+  <div class="container mx-auto flex items-center justify-between p-3 sm:p-4">
+    <!-- Logo + Title -->
+    <a href="index.html" class="flex items-center space-x-2 min-w-0 pr-2">
+      <img src="logo.png" alt="AJHA Consultancy Services Logo" class="h-9 sm:h-10 flex-shrink-0"/>
+      <span class="text-sm sm:text-base md:text-xl font-semibold uppercase tracking-wider text-white truncate">AJHA CONSULTANCY SERVICES</span>
+    </a>
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center space-x-6">
+      <a href="index.html" class="text-slate-300 hover:text-orange-500 transition">Home</a>
+      <a href="about-us.html" class="text-slate-300 hover:text-orange-500 transition">About Us</a>
+      <div class="relative group">
+        <button id="services-dropdown-btn" class="text-slate-300 hover:text-orange-500 transition">Services <i class="fas fa-caret-down ml-1"></i></button>
+        <div id="services-dropdown" class="absolute hidden bg-slate-800 rounded-md shadow-lg min-w-[200px] mt-2 border border-slate-700">
+          <a href="our-services.html#advanced-enterprise" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Advanced Enterprise</a>
+          <a href="our-services.html#digital-transformation" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Digital Transformation</a>
+          <a href="our-services.html#application-maintenance" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Application Maintenance</a>
+          <a href="our-services.html#hr-consultancy" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">HR Consultancy</a>
+        </div>
+      </div>
+      <a href="industries.html" class="text-slate-300 hover:text-orange-500 transition">Industries</a>
+      <a href="executive-board.html" class="text-slate-300 hover:text-orange-500 transition">Executive Board</a>
+      <a href="careers.html" class="text-slate-300 hover:text-orange-500 transition">Careers</a>
+      <a href="partners.html" class="text-orange-500 font-bold">Partners</a>
+      <a href="index.html#clients" class="text-slate-300 hover:text-orange-500 transition">Clients</a>
+      <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="text-slate-300 hover:text-orange-500 transition">Resources</a>
+      <a href="index.html#contact" class="text-slate-300 hover:text-orange-500 transition">Contact</a>
+    </nav>
+
+    <!-- User Account Pill (When logged in) -->
+    <div id="nav-user-pill" class="hidden items-center space-x-2 bg-slate-800 border border-slate-700 rounded-full px-3 py-1 text-xs">
+      <span id="nav-user-name" class="text-orange-400 font-medium truncate max-w-[120px]">Partner</span>
+      <button id="btn-nav-signout" title="Sign Out" class="text-slate-400 hover:text-red-400 transition ml-1">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+
+    <!-- Hamburger -->
+    <button id="hamburger-btn" class="md:hidden text-slate-300 w-11 h-11 flex items-center justify-center flex-shrink-0 text-xl"><i class="fas fa-bars"></i></button>
+  </div>
+  <!-- Mobile nav -->
+  <nav id="mobile-nav" class="mobile-nav hidden flex-col bg-slate-900 p-4 md:hidden space-y-1">
+    <a href="index.html" class="block text-slate-300 hover:text-orange-500">Home</a>
+    <a href="about-us.html" class="block text-slate-300 hover:text-orange-500">About Us</a>
+    <button id="mobile-services-btn" class="flex justify-between items-center text-slate-300 w-full">
+      Services <i class="fas fa-caret-down ml-2"></i>
+    </button>
+    <div id="mobile-services-dropdown" class="mobile-dropdown hidden flex-col pl-4 space-y-2">
+      <a href="our-services.html#advanced-enterprise" class="block hover:text-orange-500">Advanced Enterprise</a>
+      <a href="our-services.html#digital-transformation" class="block hover:text-orange-500">Digital Transformation</a>
+      <a href="our-services.html#application-maintenance" class="block hover:text-orange-500">Application Maintenance</a>
+      <a href="our-services.html#hr-consultancy" class="block hover:text-orange-500">HR Consultancy</a>
+    </div>
+    <a href="industries.html" class="block text-slate-300 hover:text-orange-500">Industries</a>
+    <a href="executive-board.html" class="block text-slate-300 hover:text-orange-500">Executive Board</a>
+    <a href="careers.html" class="block text-slate-300 hover:text-orange-500">Careers</a>
+    <a href="partners.html" class="block text-orange-500 font-bold">Partners</a>
+    <a href="index.html#clients" class="block text-slate-300 hover:text-orange-500">Clients</a>
+    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="block text-slate-300 hover:text-orange-500">Resources</a>
+    <a href="index.html#contact" class="block text-slate-300 hover:text-orange-500">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO BANNER (Exact match to Careers style) -->
+<section class="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800/80 py-12 sm:py-16 px-4">
+  <div class="container mx-auto max-w-7xl text-center">
+    <div class="inline-flex items-center space-x-2 bg-orange-500/10 border border-orange-500/30 px-3.5 py-1 rounded-full text-orange-400 text-xs font-semibold uppercase tracking-wider mb-4">
+      <i class="fas fa-handshake"></i>
+      <span>Partner & Talent Fulfillment</span>
+    </div>
+    <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3">Enterprise Partner Portal</h1>
+    <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+      Authorized staffing partners and enterprise clients: review our needed Job Descriptions and submit candidate CVs directly to AJHA.
+    </p>
+  </div>
+</section>
+
+<!-- MAIN BODY -->
+<main class="container mx-auto max-w-7xl px-4 py-8 sm:py-12 flex-grow">
+
+  <!-- 1. LOADING STATE -->
+  <div id="state-loading" class="flex flex-col items-center justify-center py-24 text-center">
+    <div class="w-12 h-12 border-4 border-orange-500/20 border-t-orange-500 rounded-full animate-spin mb-4"></div>
+    <p class="text-slate-400 text-sm font-medium">Verifying partner authorization...</p>
+  </div>
+
+  <!-- 2. GATED LOGIN VIEW (Non-public: visitors must log in) -->
+  <div id="state-login" class="hidden max-w-md mx-auto my-12">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-7 sm:p-8 shadow-2xl text-center relative overflow-hidden">
+      <div class="w-16 h-16 bg-slate-800 border border-slate-700 rounded-2xl mx-auto flex items-center justify-center text-2xl text-orange-400 mb-5 shadow-inner">
+        <i class="fas fa-lock"></i>
+      </div>
+
+      <h2 class="text-xl font-bold text-white mb-2">Authorized Access Only</h2>
+      <p class="text-slate-400 text-xs sm:text-sm mb-6 leading-relaxed">
+        This portal is reserved for verified enterprise partners and hiring leads. Sign in to view active Job Descriptions and upload CVs.
+      </p>
+
+      <!-- Access Denied Banner -->
+      <div id="login-error-banner" class="hidden mb-5 bg-red-950/60 border border-red-800/80 rounded-xl p-4 text-left text-xs text-red-200">
+        <p class="font-bold text-red-300 mb-1">Access Restricted</p>
+        <p id="login-error-msg" class="text-[11px] leading-normal text-red-200">
+          This account is not on the authorized partner list. Please contact Ram Annadhanam at ram.annadanam@gmail.com for access.
+        </p>
+      </div>
+
+      <!-- Google Login Button -->
+      <button id="btn-login" class="w-full flex items-center justify-center space-x-3 bg-white hover:bg-slate-100 text-slate-900 font-semibold py-3 px-4 rounded-xl text-sm transition shadow-lg active:scale-98">
+        <svg class="w-5 h-5" viewBox="0 0 24 24">
+          <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+          <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+          <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.2s.7 5.5 1.9 7.9l3.7-3z"/>
+          <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
+        </svg>
+        <span>Sign In with Google</span>
+      </button>
+
+      <div class="mt-6 text-[11px] text-slate-500">
+        Managed by <span class="text-slate-400 font-medium">Ram Annadhanam</span> • AJHA Consultancy Services
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. AUTHORIZED PORTAL CONTENT -->
+  <div id="state-portal" class="hidden space-y-8">
+    
+    <!-- Top Action Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+      <div>
+        <h2 class="text-lg font-bold text-white flex items-center">
+          <i class="fas fa-clipboard-list text-orange-400 mr-2"></i>
+          Needed Job Descriptions (JDs)
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">
+          Select a role below to submit matching candidate CVs directly to our recruitment team.
+        </p>
+      </div>
+
+      <!-- Admin Actions (Only for Ram Annadhanam & Eswar) -->
+      <div id="admin-bar" class="hidden flex-wrap items-center gap-2">
+        <button id="btn-admin-add-jd" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow flex items-center space-x-1.5">
+          <i class="fas fa-plus"></i>
+          <span>+ Post New JD</span>
+        </button>
+        <button id="btn-admin-partners" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-3.5 py-2 rounded-xl transition border border-slate-700">
+          <i class="fas fa-user-plus text-orange-400 mr-1"></i> Authorize Partners
+        </button>
+        <button id="btn-admin-view-subs" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-3.5 py-2 rounded-xl transition border border-slate-700">
+          <i class="fas fa-inbox text-orange-400 mr-1"></i> View Submitted CVs (<span id="sub-counter">0</span>)
+        </button>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div class="relative w-full sm:w-80">
+        <i class="fas fa-search absolute left-3.5 top-3 text-slate-500 text-xs"></i>
+        <input type="text" id="filter-jd-search" placeholder="Search required role or skills..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+      <div class="text-xs text-slate-400">
+        Active requirements: <strong id="active-jd-count" class="text-orange-400">0</strong>
+      </div>
+    </div>
+
+    <!-- JDs List -->
+    <div id="jds-feed" class="space-y-6">
+      <!-- Injected by JavaScript -->
+      <div class="text-center py-12 text-slate-500 text-sm">
+        <i class="fas fa-spinner fa-spin mr-2 text-orange-500"></i> Loading Job Descriptions...
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<!-- ============================================== -->
+<!-- MODAL: UPLOAD CANDIDATE CV FOR SPECIFIC JD -->
+<!-- ============================================== -->
+<div id="modal-upload-cv" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+    <button id="btn-close-upload" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="mb-5">
+      <span class="bg-orange-500/15 text-orange-400 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-orange-500/30">
+        Partner Candidate Submission
+      </span>
+      <h2 class="text-lg font-bold text-white mt-2">Upload Candidate CV</h2>
+      <p class="text-xs text-slate-400 mt-1">
+        Fulfilling JD: <span id="upload-modal-jd-title" class="text-orange-400 font-semibold">Job Title</span>
+      </p>
+    </div>
+
+    <form id="form-upload-cv" class="space-y-4">
+      <input type="hidden" id="upload-target-id" value=""/>
+      <input type="hidden" id="upload-target-title" value=""/>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Candidate Full Name *</label>
+        <input type="text" id="cand-name" required placeholder="e.g. John Doe" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Candidate Email *</label>
+          <input type="email" id="cand-email" required placeholder="candidate@email.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Phone / WhatsApp *</label>
+          <input type="tel" id="cand-phone" required placeholder="+91 / +1 ..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Relevant Experience *</label>
+          <input type="text" id="cand-exp" required placeholder="e.g. 7 years" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Notice Period *</label>
+          <input type="text" id="cand-notice" required placeholder="e.g. Immediate / 15 Days" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Upload Resume File (PDF / Word) *</label>
+        <input type="file" id="cand-file" required accept=".pdf,.doc,.docx" class="w-full text-xs text-slate-400 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-orange-500 file:text-white hover:file:bg-orange-600 bg-slate-950 border border-slate-800 rounded-xl p-2 cursor-pointer"/>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Online Resume / Drive Link (Optional)</label>
+        <input type="url" id="cand-link" placeholder="https://drive.google.com/... or LinkedIn" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Partner Remarks / Fit for this JD</label>
+        <textarea id="cand-notes" rows="2" placeholder="Key strengths, module experience, certifications, client fit..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"></textarea>
+      </div>
+
+      <div id="upload-feedback" class="hidden text-xs"></div>
+
+      <div class="pt-3 flex items-center justify-end space-x-3 border-t border-slate-800">
+        <button type="button" id="btn-cancel-upload" class="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white transition">Cancel</button>
+        <button type="submit" id="btn-submit-upload" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition shadow-lg flex items-center space-x-2">
+          <span id="upload-spinner" class="hidden"><i class="fas fa-spinner fa-spin"></i></span>
+          <span id="upload-btn-text">Submit CV to AJHA</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL: ADMIN REVIEW SUBMISSIONS -->
+<!-- ============================================== -->
+<div id="modal-submissions" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+    <button id="btn-close-submissions" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+      <i class="fas fa-times"></i>
+    </button>
+    <h3 class="text-base font-bold text-white mb-1">Uploaded Candidate CVs</h3>
+    <p class="text-slate-400 text-xs mb-4">All candidate resumes uploaded by enterprise partners for AJHA JDs.</p>
+    <div id="submissions-container" class="space-y-3">
+      <div class="text-center py-6 text-slate-500 text-xs">Loading submissions...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL: ADMIN AUTHORIZE PARTNER -->
+<!-- ============================================== -->
+<div id="modal-partner-auth" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+    <button id="btn-close-partner-auth" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+      <i class="fas fa-times"></i>
+    </button>
+    <h3 class="text-base font-bold text-white mb-1">Authorize Partner Account</h3>
+    <p class="text-slate-400 text-xs mb-4">Grant access to a staffing partner or client to view JDs and upload CVs.</p>
+
+    <form id="form-auth-partner" class="space-y-3">
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">Partner Google Email *</label>
+        <input type="email" id="partner-email" required placeholder="partner@company.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">Organization / Partner Name *</label>
+        <input type="text" id="partner-org" required placeholder="e.g. Apex Staffing" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+      <div id="partner-auth-feedback" class="hidden text-xs"></div>
+      <div class="pt-2 flex justify-end space-x-2">
+        <button type="button" id="btn-cancel-partner-auth" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white">Close</button>
+        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition">
+          Authorize Partner
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL: ADMIN POST NEW JD -->
+<!-- ============================================== -->
+<div id="modal-post-jd" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+    <button id="btn-close-post-jd" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+      <i class="fas fa-times"></i>
+    </button>
+    <h3 class="text-base font-bold text-white mb-1">Post Needed Job Description (JD)</h3>
+    <p class="text-slate-400 text-xs mb-4">This JD will immediately appear for authorized partners to upload CVs.</p>
+
+    <form id="form-post-jd" class="space-y-3">
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">JD Title *</label>
+        <input type="text" id="new-jd-title" required placeholder="e.g. S4HANA Senior FICO Consultant" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">Department *</label>
+          <input type="text" id="new-jd-dept" required placeholder="e.g. SAP Solutions" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">Experience *</label>
+          <input type="text" id="new-jd-exp" required placeholder="e.g. 5 to 8 years" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">Location *</label>
+          <input type="text" id="new-jd-loc" required placeholder="e.g. Bengaluru / Hybrid" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">Type *</label>
+          <select id="new-jd-type" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition">
+            <option value="Full-Time">Full-Time</option>
+            <option value="Contract">Contract</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">Key Responsibilities (One per line) *</label>
+        <textarea id="new-jd-resp" required rows="3" placeholder="Provide business process support&#10;Facilitate requirements gathering workshops" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"></textarea>
+      </div>
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">Qualifications (One per line) *</label>
+        <textarea id="new-jd-qual" required rows="2" placeholder="Preferable S4HANA certifications&#10;Bachelor's degree in Computer Science" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"></textarea>
+      </div>
+      <div class="pt-2 flex justify-end space-x-2">
+        <button type="button" id="btn-cancel-post-jd" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition">
+          Publish JD
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="bg-slate-900 text-slate-400 p-8 border-t border-slate-800 mt-12">
+  <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div>
+      <div class="flex items-center space-x-4 mb-4">
+        <img src="logo.png" class="h-12" alt="Logo" />
+        <h3 class="text-2xl font-bold text-white">AJHA CONSULTANCY SERVICES</h3>
+      </div>
+      <p>Your partner in Enterprise Application Solutions, Digital Transformation, and Strategic Staffing.</p>
+    </div>
+    <div>
+      <h4 class="text-xl font-bold text-white mb-4">Quick Links</h4>
+      <ul class="space-y-2">
+        <li><a href="index.html" class="hover:text-white">Home</a></li>
+        <li><a href="about-us.html" class="hover:text-white">About Us</a></li>
+        <li><a href="our-services.html" class="hover:text-white">Services</a></li>
+        <li><a href="industries.html" class="hover:text-white">Industries</a></li>
+        <li><a href="executive-board.html" class="hover:text-white">Executive Board</a></li>
+        <li><a href="careers.html" class="hover:text-white">Careers</a></li>
+        <li><a href="partners.html" class="text-orange-400 font-semibold">Partners</a></li>
+        <li><a href="index.html#clients" class="hover:text-white">Clients</a></li>
+        <li><a href="index.html#contact" class="hover:text-white">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="text-xl font-bold text-white mb-4">Contact Us</h4>
+      <div class="space-y-2 text-sm">
+        <p><strong class="text-white">India:</strong> HD-066, We work Cinnabar Hills, Challaghatta Road, Bengaluru 560071</p>
+        <p><strong class="text-white">USA:</strong> 2716 Baron Ln Irving, TX, 75063, USA</p>
+        <p><strong class="text-white">Email:</strong> <a href="mailto:marketing@ajhacs.com" class="hover:text-white text-orange-400">marketing@ajhacs.com</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-8 pt-4 border-t border-slate-800 text-slate-500 text-xs">
+    <p>© 2019 Ajha Consultancy Services, Inc. All rights reserved. • Confidential Partner Portal</p>
+  </div>
+</footer>
+
+<!-- SCRIPT: FIREBASE LOGIC -->
+<script type="module">
+  import {
+    auth,
+    googleProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged,
+    db,
+    collection,
+    addDoc,
+    doc,
+    getDocs,
+    getDoc,
+    setDoc,
+    serverTimestamp
+  } from "./firebase-config.js";
+
+  const ROOT_ADMINS = [
+    "ram.annadanam@gmail.com",
+    "mohaneswar3@gmail.com"
+  ];
+
+  const BASELINE_JDS = [
+    {
+      id: "jd-1",
+      title: "S4HANA Senior FICO Consultants",
+      department: "SAP Solutions",
+      experience: "5 to 8 years relevant experience",
+      location: "Bengaluru (Hybrid)",
+      jobType: "Full-Time",
+      responsibilities: [
+        "Provide business process and functional support for the SAP FI module, including its sub-ledgers (AP, AR, and AA).",
+        "Must have experience on S4 Implementation on a private cloud or public cloud, Support engagement.",
+        "Facilitate requirements gathering workshops/discussions and assess, challenge, and document the business requirements.",
+        "Provide alternatives and recommend a solution.",
+        "Develop functional specifications for customizations and enhancements, which include reports, data processing, load programs, and adjustment tools.",
+        "Good knowledge of integration aspects between FICO, SD, MM and all other core modules."
+      ],
+      qualifications: [
+        "Preferable S4HANA certifications.",
+        "Bachelor's degree in Computer Science, IT, or related fields."
+      ]
+    },
+    {
+      id: "jd-2",
+      title: "S4HANA Junior Consultants",
+      department: "SAP Solutions",
+      experience: "1 to 4 years relevant experience",
+      location: "Bengaluru (Hybrid)",
+      jobType: "Full-Time",
+      responsibilities: [
+        "Must have experience on S4 Implementation on a private cloud or public cloud, Support engagement.",
+        "Develop functional specifications for customizations and enhancements, which include reports, data processing, load programs, and adjustment tools.",
+        "Develop test strategies, test plans and test scripts.",
+        "Perform functional testing (execution) after development completion.",
+        "Good knowledge of integration aspects between FICO, SD, MM and all other core modules."
+      ],
+      qualifications: [
+        "Preferable S4HANA certifications."
+      ]
+    },
+    {
+      id: "jd-3",
+      title: "S4HANA Junior and Senior Developers",
+      department: "SAP Solutions",
+      experience: "1 to 10 years relevant experience",
+      location: "Bengaluru / Remote",
+      jobType: "Full-Time",
+      responsibilities: [
+        "Must have experience on S4 Implementation on a private cloud or public cloud, Support engagement.",
+        "Develop functional specifications for customizations and enhancements, which include reports, data processing, load programs, and adjustment tools.",
+        "BTP integrations - outbound /Inbound, AI core and machine."
+      ],
+      qualifications: [
+        "Preferable S4HANA certifications."
+      ]
+    }
+  ];
+
+  let currentUser = null;
+  let userRole = null; // 'admin' or 'partner'
+  let allJDs = [];
+
+  const stateLoading = document.getElementById('state-loading');
+  const stateLogin = document.getElementById('state-login');
+  const statePortal = document.getElementById('state-portal');
+  const navUserPill = document.getElementById('nav-user-pill');
+  const navUserName = document.getElementById('nav-user-name');
+  const adminBar = document.getElementById('admin-bar');
+
+  // Role Checker
+  async function checkRole(user) {
+    if (!user || !user.email) return null;
+    const emailLower = user.email.toLowerCase();
+    if (ROOT_ADMINS.includes(emailLower)) return 'admin';
+    try {
+      const adminSnap = await getDoc(doc(db, "admins", emailLower));
+      if (adminSnap.exists()) return 'admin';
+    } catch(e) {}
+    try {
+      const partnerSnap = await getDoc(doc(db, "partners", emailLower));
+      if (partnerSnap.exists()) return 'partner';
+    } catch(e) {}
+    return null;
+  }
+
+  // Auth State
+  onAuthStateChanged(auth, async (user) => {
+    stateLoading.classList.remove('hidden');
+    stateLogin.classList.add('hidden');
+    statePortal.classList.add('hidden');
+
+    if (!user) {
+      currentUser = null;
+      userRole = null;
+      navUserPill.classList.add('hidden');
+      stateLoading.classList.add('hidden');
+      stateLogin.classList.remove('hidden');
+      return;
+    }
+
+    currentUser = user;
+    userRole = await checkRole(user);
+    stateLoading.classList.add('hidden');
+
+    if (userRole === 'admin' || userRole === 'partner') {
+      navUserPill.classList.remove('hidden');
+      navUserPill.classList.add('flex');
+      navUserName.textContent = user.displayName || user.email.split('@')[0];
+
+      if (userRole === 'admin') {
+        adminBar.classList.remove('hidden');
+        adminBar.classList.add('flex');
+      } else {
+        adminBar.classList.add('hidden');
+      }
+
+      statePortal.classList.remove('hidden');
+      await loadJDs();
+      if (userRole === 'admin') loadSubmissionsCount();
+    } else {
+      navUserPill.classList.add('hidden');
+      stateLogin.classList.remove('hidden');
+      document.getElementById('login-error-banner').classList.remove('hidden');
+      document.getElementById('login-error-msg').textContent = `The Google account (${user.email}) is not authorized. Please request partner access from Ram Annadhanam.`;
+    }
+  });
+
+  // Login
+  document.getElementById('btn-login').addEventListener('click', async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      alert("Sign in error: " + err.message);
+    }
+  });
+
+  // Sign out
+  document.getElementById('btn-nav-signout').addEventListener('click', async () => {
+    await signOut(auth);
+  });
+
+  // Load JDs
+  async function loadJDs() {
+    try {
+      const snap = await getDocs(collection(db, "jobs"));
+      const custom = [];
+      snap.forEach(d => custom.push({ id: d.id, ...d.data() }));
+      allJDs = [...custom, ...BASELINE_JDS];
+      renderJDs();
+    } catch(e) {
+      allJDs = BASELINE_JDS;
+      renderJDs();
+    }
+  }
+
+  function renderJDs() {
+    const feed = document.getElementById('jds-feed');
+    const search = document.getElementById('filter-jd-search').value.toLowerCase();
+    const countBadge = document.getElementById('active-jd-count');
+
+    const filtered = allJDs.filter(jd => {
+      const title = (jd.title || '').toLowerCase();
+      const dept = (jd.department || '').toLowerCase();
+      return !search || title.includes(search) || dept.includes(search);
+    });
+
+    countBadge.textContent = filtered.length;
+
+    if (filtered.length === 0) {
+      feed.innerHTML = `<div class="p-10 text-center text-slate-500 text-xs">No matching JDs found.</div>`;
+      return;
+    }
+
+    feed.innerHTML = filtered.map(jd => {
+      const resp = Array.isArray(jd.responsibilities) ? jd.responsibilities : [];
+      const qual = Array.isArray(jd.qualifications) ? jd.qualifications : [];
+
+      return `
+        <article class="bg-slate-900 border border-slate-800/90 hover:border-slate-700/80 rounded-2xl p-6 sm:p-8 transition shadow-lg space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <span class="bg-orange-500/15 text-orange-400 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-orange-500/30">
+                  <i class="fas fa-bullseye mr-1 text-[10px]"></i> Active JD
+                </span>
+                <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">
+                  ${escapeHtml(jd.department || 'Consulting')}
+                </span>
+                <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">
+                  ${escapeHtml(jd.location || 'Flexible')}
+                </span>
+                <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">
+                  ${escapeHtml(jd.jobType || 'Full-Time')}
+                </span>
+              </div>
+              <h2 class="text-xl sm:text-2xl font-bold text-white">${escapeHtml(jd.title)}</h2>
+              <p class="text-xs sm:text-sm text-slate-400 mt-1">
+                <strong class="text-slate-300">Experience:</strong> ${escapeHtml(jd.experience || 'Not specified')}
+              </p>
+            </div>
+
+            <!-- Upload CV Action -->
+            <button onclick="window.openUploadModal('${escapeAttr(jd.id)}', '${escapeAttr(jd.title)}')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition shadow-lg flex items-center space-x-2 flex-shrink-0 active:scale-95">
+              <i class="fas fa-upload text-xs"></i>
+              <span>Upload Candidate CV</span>
+            </button>
+          </div>
+
+          ${resp.length > 0 ? `
+            <div class="pt-2">
+              <h4 class="text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">Key JD Responsibilities:</h4>
+              <ul class="space-y-1.5 text-xs sm:text-sm text-slate-300 list-disc list-inside">
+                ${resp.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          ${qual.length > 0 ? `
+            <div>
+              <h4 class="text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">Qualifications:</h4>
+              <ul class="space-y-1.5 text-xs sm:text-sm text-slate-300 list-disc list-inside">
+                ${qual.map(q => `<li>${escapeHtml(q)}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+        </article>
+      `;
+    }).join('');
+  }
+
+  document.getElementById('filter-jd-search').addEventListener('input', renderJDs);
+
+  // Upload CV Modal
+  const modalUpload = document.getElementById('modal-upload-cv');
+  const formUpload = document.getElementById('form-upload-cv');
+
+  window.openUploadModal = (id, title) => {
+    formUpload.reset();
+    document.getElementById('upload-target-id').value = id;
+    document.getElementById('upload-target-title').value = title;
+    document.getElementById('upload-modal-jd-title').textContent = title;
+    document.getElementById('upload-feedback').classList.add('hidden');
+    modalUpload.classList.remove('hidden');
+  };
+
+  const closeUpload = () => { modalUpload.classList.add('hidden'); };
+  document.getElementById('btn-close-upload').addEventListener('click', closeUpload);
+  document.getElementById('btn-cancel-upload').addEventListener('click', closeUpload);
+
+  formUpload.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btn-submit-upload');
+    const spinner = document.getElementById('upload-spinner');
+    const btnText = document.getElementById('upload-btn-text');
+    const feedback = document.getElementById('upload-feedback');
+
+    const jdId = document.getElementById('upload-target-id').value;
+    const jdTitle = document.getElementById('upload-target-title').value;
+    const name = document.getElementById('cand-name').value.trim();
+    const email = document.getElementById('cand-email').value.trim();
+    const phone = document.getElementById('cand-phone').value.trim();
+    const exp = document.getElementById('cand-exp').value.trim();
+    const notice = document.getElementById('cand-notice').value.trim();
+    const link = document.getElementById('cand-link').value.trim();
+    const notes = document.getElementById('cand-notes').value.trim();
+    const file = document.getElementById('cand-file').files[0];
+
+    try {
+      btn.disabled = true;
+      spinner.classList.remove('hidden');
+      btnText.textContent = "Submitting CV...";
+      feedback.classList.add('hidden');
+
+      // 1. Save in Firestore
+      const docRef = await addDoc(collection(db, "submissions"), {
+        jdId,
+        jdTitle,
+        candidateName: name,
+        candidateEmail: email,
+        candidatePhone: phone,
+        candidateExperience: exp,
+        candidateNotice: notice,
+        candidateLink: link || "None",
+        partnerNotes: notes,
+        partnerEmail: currentUser.email,
+        partnerName: currentUser.displayName || currentUser.email,
+        fileName: file ? file.name : "CV Attached",
+        createdAt: serverTimestamp()
+      });
+
+      // 2. Email dispatch with attachment to AJHA
+      try {
+        const emailData = new FormData();
+        emailData.append('JD Requirement', jdTitle);
+        emailData.append('Candidate Name', name);
+        emailData.append('Candidate Email', email);
+        emailData.append('Candidate Phone', phone);
+        emailData.append('Relevant Experience', exp);
+        emailData.append('Notice Period', notice);
+        emailData.append('Online Resume Link', link || 'None');
+        emailData.append('Partner Notes', notes);
+        emailData.append('Submitted By Partner', `${currentUser.displayName || 'Partner'} (${currentUser.email})`);
+        emailData.append('Submission Record ID', docRef.id);
+        emailData.append('_subject', `[Partner CV Upload] ${name} for ${jdTitle} - via ${currentUser.email}`);
+        emailData.append('_replyto', email);
+        emailData.append('_cc', 'ram.annadanam@gmail.com');
+        if (file) {
+          emailData.append('attachment', file);
+        }
+
+        await fetch('https://formsubmit.co/ajax/mohaneswar3@gmail.com', {
+          method: 'POST',
+          body: emailData
+        });
+      } catch (errMail) {
+        console.warn("Mail note:", errMail);
+      }
+
+      feedback.className = "text-xs text-emerald-400 block p-2.5 bg-emerald-950/40 rounded-xl";
+      feedback.textContent = `Candidate CV for ${name} submitted successfully to AJHA recruitment!`;
+
+      setTimeout(() => {
+        closeUpload();
+        if (userRole === 'admin') loadSubmissionsCount();
+      }, 1500);
+
+    } catch (err) {
+      feedback.className = "text-xs text-red-400 block p-2 bg-red-950/40 rounded-xl";
+      feedback.textContent = "Submission failed: " + err.message;
+    } finally {
+      btn.disabled = false;
+      spinner.classList.add('hidden');
+      btnText.textContent = "Submit CV to AJHA";
+    }
+  });
+
+  // Admin: Submissions Count & Review
+  async function loadSubmissionsCount() {
+    try {
+      const snap = await getDocs(collection(db, "submissions"));
+      document.getElementById('sub-counter').textContent = snap.size;
+    } catch(e) {}
+  }
+
+  // Admin Modals
+  const modalSubmissions = document.getElementById('modal-submissions');
+  document.getElementById('btn-admin-view-subs').addEventListener('click', async () => {
+    modalSubmissions.classList.remove('hidden');
+    const container = document.getElementById('submissions-container');
+    try {
+      const snap = await getDocs(collection(db, "submissions"));
+      const list = [];
+      snap.forEach(d => list.push({ id: d.id, ...d.data() }));
+      list.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">No candidate CVs submitted yet.</div>`;
+        return;
+      }
+
+      container.innerHTML = list.map(sub => `
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-1.5 text-xs">
+          <div class="flex justify-between font-bold text-white">
+            <span class="text-orange-400">${escapeHtml(sub.candidateName)}</span>
+            <span class="text-slate-500 font-normal">${sub.createdAt?.toDate ? sub.createdAt.toDate().toLocaleDateString() : 'Recent'}</span>
+          </div>
+          <div class="text-slate-300">JD: <strong>${escapeHtml(sub.jdTitle)}</strong></div>
+          <div class="text-slate-400">Email: ${escapeHtml(sub.candidateEmail)} • Phone: ${escapeHtml(sub.candidatePhone)} • Exp: ${escapeHtml(sub.candidateExperience)}</div>
+          <div class="text-slate-500">Submitted by: ${escapeHtml(sub.partnerName || '')} (${escapeHtml(sub.partnerEmail || '')})</div>
+          ${sub.partnerNotes ? `<div class="bg-slate-900 p-2 rounded text-slate-300 mt-1">Notes: ${escapeHtml(sub.partnerNotes)}</div>` : ''}
+        </div>
+      `).join('');
+    } catch (e) {
+      container.innerHTML = `<div class="text-red-400 text-xs">Failed: ${e.message}</div>`;
+    }
+  });
+  document.getElementById('btn-close-submissions').addEventListener('click', () => { modalSubmissions.classList.add('hidden'); });
+
+  // Admin Authorize Partner
+  const modalAuth = document.getElementById('modal-partner-auth');
+  document.getElementById('btn-admin-partners').addEventListener('click', () => {
+    document.getElementById('form-auth-partner').reset();
+    document.getElementById('partner-auth-feedback').classList.add('hidden');
+    modalAuth.classList.remove('hidden');
+  });
+  const closeAuth = () => { modalAuth.classList.add('hidden'); };
+  document.getElementById('btn-close-partner-auth').addEventListener('click', closeAuth);
+  document.getElementById('btn-cancel-partner-auth').addEventListener('click', closeAuth);
+
+  document.getElementById('form-auth-partner').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('partner-email').value.trim().toLowerCase();
+    const org = document.getElementById('partner-org').value.trim();
+    const fb = document.getElementById('partner-auth-feedback');
+    try {
+      fb.className = "text-xs text-slate-400 block";
+      fb.textContent = "Authorizing...";
+      await setDoc(doc(db, "partners", email), {
+        email,
+        organization: org,
+        authorizedBy: currentUser.email,
+        createdAt: serverTimestamp()
+      });
+      fb.className = "text-xs text-emerald-400 block";
+      fb.textContent = `Authorized ${email} successfully!`;
+      setTimeout(closeAuth, 1200);
+    } catch (e) {
+      fb.className = "text-xs text-red-400 block";
+      fb.textContent = "Failed: " + e.message;
+    }
+  });
+
+  // Admin Post JD
+  const modalPostJd = document.getElementById('modal-post-jd');
+  document.getElementById('btn-admin-add-jd').addEventListener('click', () => {
+    document.getElementById('form-post-jd').reset();
+    modalPostJd.classList.remove('hidden');
+  });
+  const closePostJd = () => { modalPostJd.classList.add('hidden'); };
+  document.getElementById('btn-close-post-jd').addEventListener('click', closePostJd);
+  document.getElementById('btn-cancel-post-jd').addEventListener('click', closePostJd);
+
+  document.getElementById('form-post-jd').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const title = document.getElementById('new-jd-title').value.trim();
+    const dept = document.getElementById('new-jd-dept').value.trim();
+    const exp = document.getElementById('new-jd-exp').value.trim();
+    const loc = document.getElementById('new-jd-loc').value.trim();
+    const type = document.getElementById('new-jd-type').value;
+    const resp = document.getElementById('new-jd-resp').value.trim().split('\n').filter(Boolean);
+    const qual = document.getElementById('new-jd-qual').value.trim().split('\n').filter(Boolean);
+
+    try {
+      await addDoc(collection(db, "jobs"), {
+        title,
+        department: dept,
+        experience: exp,
+        location: loc,
+        jobType: type,
+        responsibilities: resp,
+        qualifications: qual,
+        status: "active",
+        postedBy: currentUser.email,
+        createdAt: serverTimestamp()
+      });
+      closePostJd();
+      await loadJDs();
+    } catch(e) {
+      alert("Failed: " + e.message);
+    }
+  });
+
+  function escapeHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  }
+  function escapeAttr(s) {
+    if (!s) return '';
+    return String(s).replace(/"/g, '&quot;');
+  }
+</script>
+
+<!-- Mobile Nav Toggle -->
+<script>
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const mobileNav = document.getElementById('mobile-nav');
+  hamburgerBtn.addEventListener('click', () => {
+    const isHidden = mobileNav.classList.toggle('hidden');
+    const icon = hamburgerBtn.querySelector('i');
+    if (icon) icon.className = isHidden ? 'fas fa-bars' : 'fas fa-times';
+  });
+  const mobileServicesBtn = document.getElementById('mobile-services-btn');
+  const mobileServicesDropdown = document.getElementById('mobile-services-dropdown');
+  mobileServicesBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    mobileServicesDropdown.classList.toggle('show');
+  });
+  document.getElementById('services-dropdown-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('services-dropdown').classList.toggle('hidden');
+  });
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('services-dropdown').contains(e.target) && !document.getElementById('services-dropdown-btn').contains(e.target)) {
+      document.getElementById('services-dropdown').classList.add('hidden');
+    }
+  });
+</script>
+
+</body>
+</html>
