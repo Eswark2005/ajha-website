@@ -330,7 +330,7 @@
       });
 
       firestoreJobs.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-      allJobs = [...firestoreJobs, ...BASELINE_JOBS];
+      allJobs = firestoreJobs.length > 0 ? firestoreJobs : BASELINE_JOBS;
       renderFeed();
     } catch (e) {
       console.warn("Using baseline fallback:", e);

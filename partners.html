@@ -172,17 +172,19 @@
         </p>
       </div>
 
-      <!-- Admin Actions (Only for Ram Annadhanam & Eswar) -->
+      <!-- Admin Actions (For Ram Annadhanam, Eswar & Delegated Admins) -->
       <div id="admin-bar" class="hidden flex-wrap items-center gap-2">
         <button id="btn-admin-add-jd" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow flex items-center space-x-1.5">
           <i class="fas fa-plus"></i>
           <span>+ Post New JD</span>
         </button>
-        <button id="btn-admin-partners" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-3.5 py-2 rounded-xl transition border border-slate-700">
-          <i class="fas fa-user-plus text-orange-400 mr-1"></i> Authorize Partners
+        <button id="btn-admin-access" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-3.5 py-2 rounded-xl transition border border-slate-700 flex items-center space-x-1.5">
+          <i class="fas fa-users-cog text-orange-400"></i>
+          <span>Manage Access & Permissions (<span id="user-count-badge">0</span>)</span>
         </button>
-        <button id="btn-admin-view-subs" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-3.5 py-2 rounded-xl transition border border-slate-700">
-          <i class="fas fa-inbox text-orange-400 mr-1"></i> View Submitted CVs (<span id="sub-counter">0</span>)
+        <button id="btn-admin-view-subs" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs px-3.5 py-2 rounded-xl transition border border-slate-700 flex items-center space-x-1.5">
+          <i class="fas fa-inbox text-orange-400"></i>
+          <span>View Submitted CVs (<span id="sub-counter">0</span>)</span>
         </button>
       </div>
     </div>
@@ -305,30 +307,131 @@
 </div>
 
 <!-- ============================================== -->
-<!-- MODAL: ADMIN AUTHORIZE PARTNER -->
+<!-- MODAL: PORTAL ACCESS & ADMIN ROLES MANAGEMENT -->
 <!-- ============================================== -->
-<div id="modal-partner-auth" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
-    <button id="btn-close-partner-auth" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+<div id="modal-portal-access" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+    <button id="btn-close-access-modal" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
       <i class="fas fa-times"></i>
     </button>
-    <h3 class="text-base font-bold text-white mb-1">Authorize Partner Account</h3>
-    <p class="text-slate-400 text-xs mb-4">Grant access to a staffing partner or client to view JDs and upload CVs.</p>
+    <div class="mb-5">
+      <span class="bg-orange-500/15 text-orange-400 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-orange-500/30">
+        Admin Security & Access Management
+      </span>
+      <h3 class="text-xl font-bold text-white mt-2">Portal Access & Permissions</h3>
+      <p class="text-slate-400 text-xs mt-1">
+        Review who has access to the portal, grant or revoke access, and assign Administrator powers to other emails.
+      </p>
+    </div>
 
-    <form id="form-auth-partner" class="space-y-3">
+    <!-- Grant New Access Form -->
+    <div class="bg-slate-950/70 border border-slate-800/90 rounded-xl p-4 sm:p-5 mb-6">
+      <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center">
+        <i class="fas fa-user-plus text-orange-400 mr-2"></i> Grant Portal Access / Add Admin
+      </h4>
+      <form id="form-grant-access" class="space-y-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">Google Email *</label>
+            <input type="email" id="access-input-email" required placeholder="user@example.com" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+          </div>
+          <div>
+            <label class="block text-[11px] text-slate-400 mb-1">Name / Organization *</label>
+            <input type="text" id="access-input-org" required placeholder="e.g. Apex Staffing / Recruitment Lead" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+          </div>
+        </div>
+        <div>
+          <label class="block text-[11px] text-slate-400 mb-1">Access Role & Privileges *</label>
+          <select id="access-input-role" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition">
+            <option value="partner">Enterprise Partner (Can view JDs and upload candidate CVs)</option>
+            <option value="admin">Administrator (Full Admin Power: Edit/Delete JDs, Post JDs, Grant/Revoke Access & Admins)</option>
+          </select>
+        </div>
+        <div id="access-grant-feedback" class="hidden text-xs"></div>
+        <div class="flex justify-end pt-1">
+          <button type="submit" id="btn-submit-access" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition shadow flex items-center space-x-1.5">
+            <i class="fas fa-check-circle"></i>
+            <span>Grant Access</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- User Directory -->
+    <div>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-3">
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center">
+          <i class="fas fa-users text-orange-400 mr-2"></i> Current Authorized Users (<span id="modal-user-count">0</span>)
+        </h4>
+        <input type="text" id="access-filter-input" placeholder="Search email or organization..." class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-orange-500 w-full sm:w-56"/>
+      </div>
+
+      <div id="access-users-list" class="space-y-2 max-h-72 overflow-y-auto pr-1">
+        <div class="text-center py-6 text-slate-500 text-xs">Loading authorized users...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL: EDIT EXISTING JD -->
+<!-- ============================================== -->
+<div id="modal-edit-jd" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+    <button id="btn-close-edit-jd" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="mb-4">
+      <span class="bg-orange-500/15 text-orange-400 text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-orange-500/30">
+        Admin Action
+      </span>
+      <h3 class="text-lg font-bold text-white mt-1">Edit Job Description</h3>
+      <p class="text-slate-400 text-xs">Modify the requirements, experience, responsibilities, or qualifications for this JD.</p>
+    </div>
+
+    <form id="form-edit-jd" class="space-y-3">
+      <input type="hidden" id="edit-jd-id" value=""/>
       <div>
-        <label class="block text-xs text-slate-300 mb-1">Partner Google Email *</label>
-        <input type="email" id="partner-email" required placeholder="partner@company.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        <label class="block text-xs text-slate-300 mb-1">JD Title *</label>
+        <input type="text" id="edit-jd-title" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">Department *</label>
+          <input type="text" id="edit-jd-dept" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">Experience *</label>
+          <input type="text" id="edit-jd-exp" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">Location *</label>
+          <input type="text" id="edit-jd-loc" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+        <div>
+          <label class="block text-xs text-slate-300 mb-1">Type *</label>
+          <select id="edit-jd-type" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition">
+            <option value="Full-Time">Full-Time</option>
+            <option value="Contract">Contract</option>
+            <option value="Part-Time">Part-Time</option>
+          </select>
+        </div>
       </div>
       <div>
-        <label class="block text-xs text-slate-300 mb-1">Organization / Partner Name *</label>
-        <input type="text" id="partner-org" required placeholder="e.g. Apex Staffing" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        <label class="block text-xs text-slate-300 mb-1">Key Responsibilities (One per line) *</label>
+        <textarea id="edit-jd-resp" required rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition"></textarea>
       </div>
-      <div id="partner-auth-feedback" class="hidden text-xs"></div>
+      <div>
+        <label class="block text-xs text-slate-300 mb-1">Qualifications (One per line) *</label>
+        <textarea id="edit-jd-qual" required rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition"></textarea>
+      </div>
+      <div id="edit-jd-feedback" class="hidden text-xs"></div>
       <div class="pt-2 flex justify-end space-x-2">
-        <button type="button" id="btn-cancel-partner-auth" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white">Close</button>
-        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition">
-          Authorize Partner
+        <button type="button" id="btn-cancel-edit-jd" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white">Cancel</button>
+        <button type="submit" id="btn-submit-edit-jd" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition">
+          Save Changes
         </button>
       </div>
     </form>
@@ -445,6 +548,8 @@
     getDocs,
     getDoc,
     setDoc,
+    updateDoc,
+    deleteDoc,
     serverTimestamp
   } from "./firebase-config.js";
 
@@ -513,6 +618,7 @@
   let currentUser = null;
   let userRole = null; // 'admin' or 'partner'
   let allJDs = [];
+  let allAccessUsers = [];
 
   const stateLoading = document.getElementById('state-loading');
   const stateLogin = document.getElementById('state-login');
@@ -521,10 +627,10 @@
   const navUserName = document.getElementById('nav-user-name');
   const adminBar = document.getElementById('admin-bar');
 
-  // Role Checker
+  // Role Checker: checks Root Admins, /admins collection, and /partners collection
   async function checkRole(user) {
     if (!user || !user.email) return null;
-    const emailLower = user.email.toLowerCase();
+    const emailLower = user.email.toLowerCase().trim();
     if (ROOT_ADMINS.includes(emailLower)) return 'admin';
     try {
       const adminSnap = await getDoc(doc(db, "admins", emailLower));
@@ -532,12 +638,16 @@
     } catch(e) {}
     try {
       const partnerSnap = await getDoc(doc(db, "partners", emailLower));
-      if (partnerSnap.exists()) return 'partner';
+      if (partnerSnap.exists()) {
+        const pData = partnerSnap.data();
+        if (pData && pData.role === 'admin') return 'admin';
+        return 'partner';
+      }
     } catch(e) {}
     return null;
   }
 
-  // Auth State
+  // Auth State Listener
   onAuthStateChanged(auth, async (user) => {
     stateLoading.classList.remove('hidden');
     stateLogin.classList.add('hidden');
@@ -559,7 +669,7 @@
     if (userRole === 'admin' || userRole === 'partner') {
       navUserPill.classList.remove('hidden');
       navUserPill.classList.add('flex');
-      navUserName.textContent = user.displayName || user.email.split('@')[0];
+      navUserName.textContent = (user.displayName || user.email.split('@')[0]) + (userRole === 'admin' ? ' (Admin)' : ' (Partner)');
 
       if (userRole === 'admin') {
         adminBar.classList.remove('hidden');
@@ -570,12 +680,16 @@
 
       statePortal.classList.remove('hidden');
       await loadJDs();
-      if (userRole === 'admin') loadSubmissionsCount();
+      if (userRole === 'admin') {
+        await seedBaselineJDs();
+        loadSubmissionsCount();
+        loadAccessUsersCount();
+      }
     } else {
       navUserPill.classList.add('hidden');
       stateLogin.classList.remove('hidden');
       document.getElementById('login-error-banner').classList.remove('hidden');
-      document.getElementById('login-error-msg').textContent = `The Google account (${user.email}) is not authorized. Please request partner access from Ram Annadhanam.`;
+      document.getElementById('login-error-msg').textContent = `The Google account (${user.email}) is not authorized. Please request access from Ram Annadhanam at ram.annadanam@gmail.com.`;
     }
   });
 
@@ -593,16 +707,39 @@
     await signOut(auth);
   });
 
+  // Seed Baseline JDs into Firestore if collection is empty
+  async function seedBaselineJDs() {
+    try {
+      const snap = await getDocs(collection(db, "jobs"));
+      if (snap.empty) {
+        for (const bJd of BASELINE_JDS) {
+          await setDoc(doc(db, "jobs", bJd.id), {
+            ...bJd,
+            status: "active",
+            createdAt: serverTimestamp()
+          });
+        }
+        await loadJDs();
+      }
+    } catch(e) {
+      console.warn("Seed check note:", e);
+    }
+  }
+
   // Load JDs
   async function loadJDs() {
     try {
       const snap = await getDocs(collection(db, "jobs"));
-      const custom = [];
-      snap.forEach(d => custom.push({ id: d.id, ...d.data() }));
-      allJDs = [...custom, ...BASELINE_JDS];
+      if (!snap.empty) {
+        const custom = [];
+        snap.forEach(d => custom.push({ id: d.id, ...d.data() }));
+        allJDs = custom;
+      } else {
+        allJDs = [...BASELINE_JDS];
+      }
       renderJDs();
     } catch(e) {
-      allJDs = BASELINE_JDS;
+      allJDs = [...BASELINE_JDS];
       renderJDs();
     }
   }
@@ -653,11 +790,23 @@
               </p>
             </div>
 
-            <!-- Upload CV Action -->
-            <button onclick="window.openUploadModal('${escapeAttr(jd.id)}', '${escapeAttr(jd.title)}')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition shadow-lg flex items-center space-x-2 flex-shrink-0 active:scale-95">
-              <i class="fas fa-upload text-xs"></i>
-              <span>Upload Candidate CV</span>
-            </button>
+            <!-- Action Area -->
+            <div class="flex flex-wrap items-center gap-2 flex-shrink-0">
+              ${userRole === 'admin' ? `
+                <button onclick="window.openEditJdModal('${escapeAttr(jd.id)}')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 font-semibold text-xs px-3.5 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow" title="Edit JD details">
+                  <i class="fas fa-edit text-orange-400"></i>
+                  <span>Edit JD</span>
+                </button>
+                <button onclick="window.confirmDeleteJd('${escapeAttr(jd.id)}', '${escapeAttr(jd.title)}')" class="bg-red-950/40 hover:bg-red-900/60 text-red-300 border border-red-800/60 hover:border-red-700 font-semibold text-xs px-3.5 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow" title="Delete JD permanently">
+                  <i class="fas fa-trash-alt"></i>
+                  <span>Delete</span>
+                </button>
+              ` : ''}
+              <button onclick="window.openUploadModal('${escapeAttr(jd.id)}', '${escapeAttr(jd.title)}')" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl transition shadow flex items-center space-x-2 active:scale-95">
+                <i class="fas fa-upload text-xs"></i>
+                <span>Upload Candidate CV</span>
+              </button>
+            </div>
           </div>
 
           ${resp.length > 0 ? `
@@ -684,7 +833,102 @@
 
   document.getElementById('filter-jd-search').addEventListener('input', renderJDs);
 
-  // Upload CV Modal
+  // -------------------------------------------------------------
+  // ADMIN: EDIT JD MODAL & LOGIC
+  // -------------------------------------------------------------
+  window.openEditJdModal = (id) => {
+    const jd = allJDs.find(j => j.id === id);
+    if (!jd) {
+      alert("JD not found.");
+      return;
+    }
+    document.getElementById('edit-jd-id').value = jd.id;
+    document.getElementById('edit-jd-title').value = jd.title || '';
+    document.getElementById('edit-jd-dept').value = jd.department || '';
+    document.getElementById('edit-jd-exp').value = jd.experience || '';
+    document.getElementById('edit-jd-loc').value = jd.location || '';
+    document.getElementById('edit-jd-type').value = jd.jobType || 'Full-Time';
+
+    const resp = Array.isArray(jd.responsibilities) ? jd.responsibilities.join('\n') : (jd.responsibilities || '');
+    const qual = Array.isArray(jd.qualifications) ? jd.qualifications.join('\n') : (jd.qualifications || '');
+    document.getElementById('edit-jd-resp').value = resp;
+    document.getElementById('edit-jd-qual').value = qual;
+
+    document.getElementById('edit-jd-feedback').classList.add('hidden');
+    document.getElementById('modal-edit-jd').classList.remove('hidden');
+  };
+
+  const closeEditJd = () => { document.getElementById('modal-edit-jd').classList.add('hidden'); };
+  document.getElementById('btn-close-edit-jd').addEventListener('click', closeEditJd);
+  document.getElementById('btn-cancel-edit-jd').addEventListener('click', closeEditJd);
+
+  document.getElementById('form-edit-jd').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('edit-jd-id').value;
+    const title = document.getElementById('edit-jd-title').value.trim();
+    const dept = document.getElementById('edit-jd-dept').value.trim();
+    const exp = document.getElementById('edit-jd-exp').value.trim();
+    const loc = document.getElementById('edit-jd-loc').value.trim();
+    const type = document.getElementById('edit-jd-type').value;
+    const resp = document.getElementById('edit-jd-resp').value.trim().split('\n').filter(Boolean);
+    const qual = document.getElementById('edit-jd-qual').value.trim().split('\n').filter(Boolean);
+    const fb = document.getElementById('edit-jd-feedback');
+    const submitBtn = document.getElementById('btn-submit-edit-jd');
+
+    try {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Saving...";
+      fb.className = "text-xs text-slate-400 block p-2 bg-slate-900 rounded-lg";
+      fb.textContent = "Updating JD in database...";
+
+      await setDoc(doc(db, "jobs", id), {
+        title,
+        department: dept,
+        experience: exp,
+        location: loc,
+        jobType: type,
+        responsibilities: resp,
+        qualifications: qual,
+        status: "active",
+        updatedAt: serverTimestamp(),
+        updatedBy: currentUser.email
+      }, { merge: true });
+
+      fb.className = "text-xs text-emerald-400 block p-2 bg-emerald-950/40 rounded-lg";
+      fb.textContent = "Job Description updated successfully!";
+      setTimeout(async () => {
+        closeEditJd();
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Save Changes";
+        await loadJDs();
+      }, 700);
+    } catch(err) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Save Changes";
+      fb.className = "text-xs text-red-400 block p-2 bg-red-950/40 rounded-lg";
+      fb.textContent = "Failed to update JD: " + err.message;
+    }
+  });
+
+  // -------------------------------------------------------------
+  // ADMIN: DELETE JD LOGIC
+  // -------------------------------------------------------------
+  window.confirmDeleteJd = async (id, title) => {
+    const confirmed = confirm(`Are you sure you want to permanently delete the JD:\n\n"${title}"?\n\nThis will remove it from the portal for all partners.`);
+    if (!confirmed) return;
+
+    try {
+      await deleteDoc(doc(db, "jobs", id));
+      allJDs = allJDs.filter(j => j.id !== id);
+      renderJDs();
+    } catch(err) {
+      alert("Failed to delete JD: " + err.message);
+    }
+  };
+
+  // -------------------------------------------------------------
+  // UPLOAD CV MODAL & DISPATCH
+  // -------------------------------------------------------------
   const modalUpload = document.getElementById('modal-upload-cv');
   const formUpload = document.getElementById('form-upload-cv');
 
@@ -788,7 +1032,9 @@
     }
   });
 
-  // Admin: Submissions Count & Review
+  // -------------------------------------------------------------
+  // ADMIN: SUBMISSIONS COUNT & REVIEW
+  // -------------------------------------------------------------
   async function loadSubmissionsCount() {
     try {
       const snap = await getDocs(collection(db, "submissions"));
@@ -796,7 +1042,6 @@
     } catch(e) {}
   }
 
-  // Admin Modals
   const modalSubmissions = document.getElementById('modal-submissions');
   document.getElementById('btn-admin-view-subs').addEventListener('click', async () => {
     modalSubmissions.classList.remove('hidden');
@@ -830,41 +1075,304 @@
   });
   document.getElementById('btn-close-submissions').addEventListener('click', () => { modalSubmissions.classList.add('hidden'); });
 
-  // Admin Authorize Partner
-  const modalAuth = document.getElementById('modal-partner-auth');
-  document.getElementById('btn-admin-partners').addEventListener('click', () => {
-    document.getElementById('form-auth-partner').reset();
-    document.getElementById('partner-auth-feedback').classList.add('hidden');
-    modalAuth.classList.remove('hidden');
-  });
-  const closeAuth = () => { modalAuth.classList.add('hidden'); };
-  document.getElementById('btn-close-partner-auth').addEventListener('click', closeAuth);
-  document.getElementById('btn-cancel-partner-auth').addEventListener('click', closeAuth);
-
-  document.getElementById('form-auth-partner').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('partner-email').value.trim().toLowerCase();
-    const org = document.getElementById('partner-org').value.trim();
-    const fb = document.getElementById('partner-auth-feedback');
+  // -------------------------------------------------------------
+  // ADMIN: ACCESS DIRECTORY & DELEGATED ADMIN ROLES
+  // -------------------------------------------------------------
+  async function loadAccessUsersCount() {
     try {
-      fb.className = "text-xs text-slate-400 block";
-      fb.textContent = "Authorizing...";
-      await setDoc(doc(db, "partners", email), {
-        email,
-        organization: org,
-        authorizedBy: currentUser.email,
-        createdAt: serverTimestamp()
+      const usersMap = new Map();
+      ROOT_ADMINS.forEach(email => usersMap.set(email.toLowerCase(), true));
+      try {
+        const snapA = await getDocs(collection(db, "admins"));
+        snapA.forEach(d => usersMap.set(d.id.toLowerCase(), true));
+      } catch(e) {}
+      try {
+        const snapP = await getDocs(collection(db, "partners"));
+        snapP.forEach(d => usersMap.set(d.id.toLowerCase(), true));
+      } catch(e) {}
+      const badge = document.getElementById('user-count-badge');
+      if (badge) badge.textContent = usersMap.size;
+    } catch(e) {}
+  }
+
+  async function loadAccessUsers() {
+    const listContainer = document.getElementById('access-users-list');
+    const modalCount = document.getElementById('modal-user-count');
+    const badgeCount = document.getElementById('user-count-badge');
+
+    try {
+      listContainer.innerHTML = `<div class="text-center py-6 text-slate-500 text-xs"><i class="fas fa-spinner fa-spin mr-1 text-orange-400"></i> Loading authorized accounts...</div>`;
+
+      const usersMap = new Map();
+
+      // 1. Root Hardcoded Admins
+      ROOT_ADMINS.forEach(email => {
+        usersMap.set(email.toLowerCase(), {
+          email: email.toLowerCase(),
+          name: email.toLowerCase().includes('ram') ? 'Ram Annadhanam' : 'Eswar',
+          role: 'root_admin',
+          authorizedBy: 'Primary Superadmin'
+        });
       });
-      fb.className = "text-xs text-emerald-400 block";
-      fb.textContent = `Authorized ${email} successfully!`;
-      setTimeout(closeAuth, 1200);
-    } catch (e) {
-      fb.className = "text-xs text-red-400 block";
-      fb.textContent = "Failed: " + e.message;
+
+      // 2. Delegated Admins from /admins
+      try {
+        const snapA = await getDocs(collection(db, "admins"));
+        snapA.forEach(d => {
+          const email = d.id.toLowerCase();
+          const data = d.data();
+          if (!usersMap.has(email)) {
+            usersMap.set(email, {
+              email,
+              name: data.name || data.organization || email.split('@')[0],
+              role: 'admin',
+              authorizedBy: data.authorizedBy || 'Admin',
+              createdAt: data.createdAt
+            });
+          } else if (usersMap.get(email).role !== 'root_admin') {
+            usersMap.get(email).role = 'admin';
+          }
+        });
+      } catch(e) {}
+
+      // 3. Partners from /partners
+      try {
+        const snapP = await getDocs(collection(db, "partners"));
+        snapP.forEach(d => {
+          const email = d.id.toLowerCase();
+          const data = d.data();
+          if (!usersMap.has(email)) {
+            usersMap.set(email, {
+              email,
+              name: data.organization || data.name || email.split('@')[0],
+              role: data.role === 'admin' ? 'admin' : 'partner',
+              authorizedBy: data.authorizedBy || 'Admin',
+              createdAt: data.createdAt
+            });
+          } else {
+            if (data.organization && (!usersMap.get(email).name || usersMap.get(email).name === email.split('@')[0])) {
+              usersMap.get(email).name = data.organization;
+            }
+          }
+        });
+      } catch(e) {}
+
+      allAccessUsers = Array.from(usersMap.values());
+      if (badgeCount) badgeCount.textContent = allAccessUsers.length;
+      if (modalCount) modalCount.textContent = allAccessUsers.length;
+
+      renderAccessUsers();
+    } catch(err) {
+      listContainer.innerHTML = `<div class="text-xs text-red-400 p-4">Error loading accounts: ${err.message}</div>`;
+    }
+  }
+
+  function renderAccessUsers() {
+    const listContainer = document.getElementById('access-users-list');
+    const filterText = (document.getElementById('access-filter-input').value || '').toLowerCase().trim();
+
+    const filtered = allAccessUsers.filter(u => {
+      return !filterText || u.email.toLowerCase().includes(filterText) || (u.name || '').toLowerCase().includes(filterText);
+    });
+
+    if (filtered.length === 0) {
+      listContainer.innerHTML = `<div class="text-center py-6 text-slate-500 text-xs">No accounts match your search.</div>`;
+      return;
+    }
+
+    listContainer.innerHTML = filtered.map(u => {
+      const isRoot = u.role === 'root_admin';
+      const isAdmin = u.role === 'admin' || isRoot;
+      const isCurrent = currentUser && currentUser.email && currentUser.email.toLowerCase() === u.email.toLowerCase();
+
+      let roleBadge = '';
+      if (isRoot) {
+        roleBadge = `<span class="bg-orange-500/20 text-orange-400 border border-orange-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center"><i class="fas fa-crown text-[9px] mr-1"></i>Root Admin</span>`;
+      } else if (isAdmin) {
+        roleBadge = `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center"><i class="fas fa-user-shield text-[9px] mr-1"></i>Admin</span>`;
+      } else {
+        roleBadge = `<span class="bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center"><i class="fas fa-handshake text-[9px] mr-1"></i>Partner</span>`;
+      }
+
+      let actionBtns = '';
+      if (isRoot) {
+        actionBtns = `<span class="text-[11px] text-slate-500 italic pr-2">Protected Root</span>`;
+      } else {
+        actionBtns = `
+          <div class="flex items-center space-x-1.5 flex-shrink-0">
+            ${isAdmin ? `
+              <button onclick="window.changeUserRole('${escapeAttr(u.email)}', 'partner')" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 text-[10px] rounded-lg transition border border-slate-700 hover:text-white" title="Demote to Partner">
+                Demote to Partner
+              </button>
+            ` : `
+              <button onclick="window.changeUserRole('${escapeAttr(u.email)}', 'admin')" class="px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 text-[10px] font-semibold rounded-lg transition border border-amber-500/40" title="Grant Administrator Power">
+                <i class="fas fa-arrow-up mr-1 text-[9px]"></i>Make Admin
+              </button>
+            `}
+            <button onclick="window.revokeUserAccess('${escapeAttr(u.email)}')" class="px-2.5 py-1 bg-red-950/40 hover:bg-red-900/60 text-red-300 text-[10px] font-semibold rounded-lg transition border border-red-800/60" title="Revoke Access">
+              <i class="fas fa-user-minus mr-1 text-[9px]"></i>Revoke
+            </button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs hover:border-slate-700/80 transition">
+          <div class="min-w-0">
+            <div class="flex items-center space-x-2">
+              <span class="font-semibold text-white truncate max-w-[200px] sm:max-w-xs">${escapeHtml(u.email)}</span>
+              ${roleBadge}
+              ${isCurrent ? '<span class="text-[10px] text-slate-500">(You)</span>' : ''}
+            </div>
+            <div class="text-[11px] text-slate-400 mt-0.5">
+              <span>${escapeHtml(u.name || 'Account')}</span>
+              <span class="mx-1.5">•</span>
+              <span>Added by: ${escapeHtml(u.authorizedBy || 'Admin')}</span>
+            </div>
+          </div>
+          ${actionBtns}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Filter accounts
+  document.getElementById('access-filter-input').addEventListener('input', renderAccessUsers);
+
+  // Modal open/close
+  const modalAccess = document.getElementById('modal-portal-access');
+  document.getElementById('btn-admin-access').addEventListener('click', async () => {
+    document.getElementById('form-grant-access').reset();
+    document.getElementById('access-grant-feedback').classList.add('hidden');
+    modalAccess.classList.remove('hidden');
+    await loadAccessUsers();
+  });
+  document.getElementById('btn-close-access-modal').addEventListener('click', () => {
+    modalAccess.classList.add('hidden');
+  });
+
+  // Grant Access Form Submission
+  document.getElementById('form-grant-access').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('access-input-email').value.trim().toLowerCase();
+    const org = document.getElementById('access-input-org').value.trim();
+    const role = document.getElementById('access-input-role').value;
+    const fb = document.getElementById('access-grant-feedback');
+    const submitBtn = document.getElementById('btn-submit-access');
+
+    try {
+      submitBtn.disabled = true;
+      fb.className = "text-xs text-slate-400 block p-2 bg-slate-900 rounded-lg";
+      fb.textContent = `Granting ${role === 'admin' ? 'Administrator' : 'Partner'} access to ${email}...`;
+
+      if (role === 'admin') {
+        await setDoc(doc(db, "admins", email), {
+          email,
+          name: org,
+          role: 'admin',
+          authorizedBy: currentUser.email,
+          createdAt: serverTimestamp()
+        });
+        await setDoc(doc(db, "partners", email), {
+          email,
+          organization: org,
+          role: 'admin',
+          authorizedBy: currentUser.email,
+          createdAt: serverTimestamp()
+        });
+      } else {
+        await setDoc(doc(db, "partners", email), {
+          email,
+          organization: org,
+          role: 'partner',
+          authorizedBy: currentUser.email,
+          createdAt: serverTimestamp()
+        });
+        try {
+          await deleteDoc(doc(db, "admins", email));
+        } catch(e) {}
+      }
+
+      fb.className = "text-xs text-emerald-400 block p-2 bg-emerald-950/40 rounded-lg";
+      fb.textContent = `Granted ${role === 'admin' ? 'Administrator' : 'Partner'} privileges to ${email}!`;
+      document.getElementById('form-grant-access').reset();
+      await loadAccessUsers();
+      loadAccessUsersCount();
+    } catch(err) {
+      fb.className = "text-xs text-red-400 block p-2 bg-red-950/40 rounded-lg";
+      fb.textContent = "Failed to grant access: " + err.message;
+    } finally {
+      submitBtn.disabled = false;
     }
   });
 
-  // Admin Post JD
+  // Change Role Handler
+  window.changeUserRole = async (email, newRole) => {
+    email = email.toLowerCase().trim();
+    if (ROOT_ADMINS.includes(email)) {
+      alert("Cannot change role for Root Administrator.");
+      return;
+    }
+
+    const actionText = newRole === 'admin' 
+      ? `promote ${email} to Administrator (giving full admin powers to edit JDs, manage users, and view submissions)`
+      : `demote ${email} to Enterprise Partner (can view JDs and upload CVs)`;
+
+    if (!confirm(`Are you sure you want to ${actionText}?`)) return;
+
+    try {
+      if (newRole === 'admin') {
+        await setDoc(doc(db, "admins", email), {
+          email,
+          role: 'admin',
+          authorizedBy: currentUser.email,
+          createdAt: serverTimestamp()
+        }, { merge: true });
+        await setDoc(doc(db, "partners", email), {
+          email,
+          role: 'admin',
+          authorizedBy: currentUser.email,
+          createdAt: serverTimestamp()
+        }, { merge: true });
+      } else {
+        try { await deleteDoc(doc(db, "admins", email)); } catch(e) {}
+        await setDoc(doc(db, "partners", email), {
+          email,
+          role: 'partner',
+          authorizedBy: currentUser.email,
+          createdAt: serverTimestamp()
+        }, { merge: true });
+      }
+
+      await loadAccessUsers();
+    } catch(err) {
+      alert("Failed to change user role: " + err.message);
+    }
+  };
+
+  // Revoke Access Handler
+  window.revokeUserAccess = async (email) => {
+    email = email.toLowerCase().trim();
+    if (ROOT_ADMINS.includes(email)) {
+      alert("Cannot revoke access for primary Root Administrator.");
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to revoke portal access for:\n\n${email}?\n\nThey will no longer be able to log in.`)) return;
+
+    try {
+      try { await deleteDoc(doc(db, "admins", email)); } catch(e) {}
+      try { await deleteDoc(doc(db, "partners", email)); } catch(e) {}
+      await loadAccessUsers();
+      loadAccessUsersCount();
+    } catch(err) {
+      alert("Failed to revoke access: " + err.message);
+    }
+  };
+
+  // -------------------------------------------------------------
+  // ADMIN: POST NEW JD
+  // -------------------------------------------------------------
   const modalPostJd = document.getElementById('modal-post-jd');
   document.getElementById('btn-admin-add-jd').addEventListener('click', () => {
     document.getElementById('form-post-jd').reset();
