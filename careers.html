@@ -1,12 +1,939 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=jobs.html">
-  <script>window.location.replace("jobs.html");</script>
-  <title>Redirecting to Jobs - AJHA Consultancy Services</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Careers - AJHA Consultancy Services</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        crossorigin="anonymous"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .mobile-nav { display:none; }
+    @media(max-width:768px){
+      .mobile-nav {
+        display:flex;
+        flex-direction:column;
+        background:#0c0e16;
+        padding:1rem 1.5rem 2.5rem;
+        max-height:calc(100vh - 65px);
+        max-height:calc(100dvh - 65px);
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
+        border-top:1px solid rgba(255,255,255,0.08);
+      }
+      .mobile-nav a { padding:0.75rem 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:1rem; }
+      .mobile-dropdown { display:none; flex-direction:column; padding-left:1rem; background:rgba(30,41,59,0.6); border-radius:6px; margin:0.3rem 0; }
+      .mobile-dropdown.show { display:flex; }
+      .mobile-dropdown a { padding:0.6rem 0.75rem; border-bottom:1px solid rgba(255,255,255,0.03); }
+    }
+  </style>
 </head>
-<body style="background:#020617; color:#cbd5e1; font-family:sans-serif; text-align:center; padding:80px 20px;">
-  <p>Careers has moved. Redirecting to <a href="jobs.html" style="color:#f97316; font-weight:bold;">Available Jobs</a>...</p>
+<body class="bg-slate-950 text-slate-200 min-h-screen flex flex-col selection:bg-orange-500 selection:text-white">
+
+<!-- HEADER / NAVBAR -->
+<header class="bg-slate-900/95 backdrop-blur shadow-lg sticky top-0 z-50 border-b border-slate-800">
+  <div class="container mx-auto flex items-center justify-between p-3 sm:p-4">
+    <!-- Logo + Title -->
+    <a href="index.html" class="flex items-center space-x-2 min-w-0 pr-2">
+      <img src="logo.png" alt="AJHA Consultancy Services Logo" class="h-9 sm:h-10 flex-shrink-0"/>
+      <span class="text-sm sm:text-base md:text-xl font-semibold uppercase tracking-wider text-white truncate">AJHA CONSULTANCY SERVICES</span>
+    </a>
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex items-center space-x-6">
+      <a href="index.html" class="text-slate-300 hover:text-orange-500 transition">Home</a>
+      <a href="about-us.html" class="text-slate-300 hover:text-orange-500 transition">About Us</a>
+      <div class="relative group">
+        <button id="services-dropdown-btn" class="text-slate-300 hover:text-orange-500 transition">Services <i class="fas fa-caret-down ml-1"></i></button>
+        <div id="services-dropdown" class="absolute hidden bg-slate-800 rounded-md shadow-lg min-w-[200px] mt-2 border border-slate-700">
+          <a href="our-services.html#advanced-enterprise" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Advanced Enterprise</a>
+          <a href="our-services.html#digital-transformation" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Digital Transformation</a>
+          <a href="our-services.html#application-maintenance" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">Application Maintenance</a>
+          <a href="our-services.html#hr-consultancy" class="block px-4 py-2 hover:bg-slate-700 hover:text-orange-500">HR Consultancy</a>
+        </div>
+      </div>
+      <a href="industries.html" class="text-slate-300 hover:text-orange-500 transition">Industries</a>
+      <a href="executive-board.html" class="text-slate-300 hover:text-orange-500 transition">Executive Board</a>
+      <a href="careers.html" class="text-orange-500 font-bold">Careers</a>
+      <a href="index.html#clients" class="text-slate-300 hover:text-orange-500 transition">Clients</a>
+      <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="text-slate-300 hover:text-orange-500 transition">Resources</a>
+      <a href="index.html#contact" class="text-slate-300 hover:text-orange-500 transition">Contact</a>
+    </nav>
+    <!-- Hamburger -->
+    <button id="hamburger-btn" class="md:hidden text-slate-300 w-11 h-11 flex items-center justify-center flex-shrink-0 text-xl"><i class="fas fa-bars"></i></button>
+  </div>
+  <!-- Mobile nav -->
+  <nav id="mobile-nav" class="mobile-nav hidden flex-col bg-slate-900 p-4 md:hidden space-y-1">
+    <a href="index.html" class="block text-slate-300 hover:text-orange-500">Home</a>
+    <a href="about-us.html" class="block text-slate-300 hover:text-orange-500">About Us</a>
+    <button id="mobile-services-btn" class="flex justify-between items-center text-slate-300 w-full">
+      Services <i class="fas fa-caret-down ml-2"></i>
+    </button>
+    <div id="mobile-services-dropdown" class="mobile-dropdown hidden flex-col pl-4 space-y-2">
+      <a href="our-services.html#advanced-enterprise" class="block hover:text-orange-500">Advanced Enterprise</a>
+      <a href="our-services.html#digital-transformation" class="block hover:text-orange-500">Digital Transformation</a>
+      <a href="our-services.html#application-maintenance" class="block hover:text-orange-500">Application Maintenance</a>
+      <a href="our-services.html#hr-consultancy" class="block hover:text-orange-500">HR Consultancy</a>
+    </div>
+    <a href="industries.html" class="block text-slate-300 hover:text-orange-500">Industries</a>
+    <a href="executive-board.html" class="block text-slate-300 hover:text-orange-500">Executive Board</a>
+    <a href="careers.html" class="block text-orange-500 font-bold">Careers</a>
+    <a href="index.html#clients" class="block text-slate-300 hover:text-orange-500">Clients</a>
+    <a href="https://drive.google.com/drive/folders/1VIjop_FFJI-BzwXEJJSJB11dVu3qcw8U" target="_blank" class="block text-slate-300 hover:text-orange-500">Resources</a>
+    <a href="index.html#contact" class="block text-slate-300 hover:text-orange-500">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO HEADER BANNER -->
+<section class="bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800/80 py-12 sm:py-16 px-4">
+  <div class="container mx-auto max-w-7xl text-center">
+    <div class="inline-flex items-center space-x-2 bg-orange-500/10 border border-orange-500/30 px-3.5 py-1 rounded-full text-orange-400 text-xs font-semibold uppercase tracking-wider mb-4">
+      <i class="fas fa-briefcase"></i>
+      <span>Career Opportunities</span>
+    </div>
+    <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3">Available Job Openings</h1>
+    <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
+      Explore open positions across our global technology consulting teams, or sign in to post new openings.
+    </p>
+  </div>
+</section>
+
+<!-- MAIN CONTAINER: SIDEBAR + JOBS FEED -->
+<div class="container mx-auto max-w-7xl px-4 py-8 sm:py-12 flex-grow">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ============================================== -->
+    <!-- LEFT SIDEBAR: ADMIN POSTING PORTAL + FILTERS -->
+    <!-- ============================================== -->
+    <aside class="lg:col-span-4 space-y-6 lg:sticky lg:top-24">
+      
+      <!-- 1. POSTING & ACCESS CONTROL CARD -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-24 h-24 bg-orange-500/10 rounded-full blur-xl pointer-events-none"></div>
+
+        <div class="flex items-center space-x-2.5 mb-3">
+          <div class="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center text-sm font-bold">
+            <i class="fas fa-user-shield"></i>
+          </div>
+          <h2 class="text-base font-bold text-white tracking-wide">Recruiter & Staff Access</h2>
+        </div>
+
+        <!-- STATE A: LOGGED OUT -->
+        <div id="sidebar-auth-logged-out" class="space-y-3">
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Authorized recruiters & managers (<span class="text-slate-300 font-medium">Ram Annadhanam</span> or team members with access) can sign in to post and manage jobs.
+          </p>
+
+          <!-- Unauthorized Domain Help Notice -->
+          <div id="domain-warning" class="hidden bg-amber-950/40 border border-amber-800/80 rounded-xl p-3 text-xs text-amber-200">
+            <p class="font-semibold text-amber-300 mb-1"><i class="fas fa-exclamation-triangle mr-1"></i> Domain Setup Needed</p>
+            <p class="text-[11px] leading-normal text-amber-200/90">
+              In Firebase Console > Authentication > Settings > Authorized domains, add <span class="font-mono bg-black/40 px-1 py-0.5 rounded">ajhaconsultancyservices.com</span>.
+            </p>
+          </div>
+
+          <button id="btn-sidebar-login" class="w-full flex items-center justify-center space-x-2.5 bg-white hover:bg-slate-100 text-slate-900 font-semibold py-2.5 px-4 rounded-xl text-xs sm:text-sm transition shadow-md active:scale-95">
+            <svg class="w-4 h-4" viewBox="0 0 24 24">
+              <path fill="#EA4335" d="M12 5c1.6 0 3 .6 4.1 1.7l3.1-3.1C17.3 1.8 14.8 1 12 1 7.5 1 3.7 3.6 1.9 7.3l3.7 2.9C6.5 7.3 9 5 12 5z"/>
+              <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5c-.3 1.5-1.1 2.8-2.4 3.7l3.7 2.9c2.2-2 3.7-5 3.7-8.8z"/>
+              <path fill="#FBBC05" d="M5.6 14.8c-.2-.7-.4-1.5-.4-2.3s.2-1.6.4-2.3L1.9 7.3C.7 9.7 0 12.3 0 15.2s.7 5.5 1.9 7.9l3.7-3z"/>
+              <path fill="#34A853" d="M12 23.5c3.2 0 6-1.1 8-3l-3.7-2.9c-1.1.7-2.5 1.2-4.3 1.2-3 0-5.5-2.3-6.4-5.2L1.9 16.5C3.7 20.2 7.5 23.5 12 23.5z"/>
+            </svg>
+            <span>Sign In to Post Jobs</span>
+          </button>
+        </div>
+
+        <!-- STATE B: LOGGED IN & AUTHORIZED (RAM / ADMIN) -->
+        <div id="sidebar-auth-logged-in" class="hidden space-y-4">
+          <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5 overflow-hidden">
+              <div id="admin-avatar" class="w-8 h-8 rounded-full bg-orange-500 text-slate-950 font-bold text-xs flex items-center justify-center uppercase flex-shrink-0">
+                A
+              </div>
+              <div class="truncate text-left">
+                <div id="admin-name" class="text-xs font-bold text-white truncate">Ram Annadhanam</div>
+                <div id="admin-email" class="text-[11px] text-slate-400 truncate">ram.annadanam@gmail.com</div>
+              </div>
+            </div>
+            <button id="btn-sidebar-signout" title="Sign Out" class="text-slate-400 hover:text-red-400 text-xs p-1.5 transition flex-shrink-0">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="space-y-2">
+            <button id="btn-open-post-job" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl transition shadow-lg flex items-center justify-center space-x-2">
+              <i class="fas fa-plus-circle"></i>
+              <span>Post a New Job</span>
+            </button>
+            <button id="btn-open-access-modal" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 border border-slate-700/60">
+              <i class="fas fa-user-plus text-[11px] text-orange-400"></i>
+              <span>Grant Access to Another User</span>
+            </button>
+            <a href="dashboard.html" class="block text-center text-xs text-slate-400 hover:text-orange-400 py-1 transition">
+              <i class="fas fa-external-link-alt text-[10px] mr-1"></i> Open Full Admin Dashboard
+            </a>
+          </div>
+        </div>
+
+        <!-- STATE C: LOGGED IN BUT NOT AUTHORIZED -->
+        <div id="sidebar-auth-unauthorized" class="hidden space-y-3">
+          <div class="bg-red-950/50 border border-red-800/80 rounded-xl p-3 text-xs text-red-300">
+            <p class="font-bold text-red-200 mb-1">Access Restricted</p>
+            <p id="sidebar-unauth-email" class="text-[11px] text-red-300 leading-normal">
+              Your Google account is not on the approved administrator list.
+            </p>
+          </div>
+          <button id="btn-sidebar-signout-unauth" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold py-2 px-3 rounded-xl transition">
+            Sign Out / Switch Account
+          </button>
+        </div>
+
+      </div>
+
+      <!-- 2. SEARCH & FILTER JOBS -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4">
+        <h3 class="text-sm font-bold text-white uppercase tracking-wider flex items-center">
+          <i class="fas fa-filter text-orange-400 mr-2"></i> Filter Jobs
+        </h3>
+        
+        <!-- Search Keyword -->
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Search Keywords</label>
+          <div class="relative">
+            <i class="fas fa-search absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+            <input type="text" id="filter-search" placeholder="Job title, skill, or keyword..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+          </div>
+        </div>
+
+        <!-- Department Filter -->
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Department</label>
+          <select id="filter-dept" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-orange-500 transition">
+            <option value="all">All Departments</option>
+            <option value="SAP">SAP Solutions / FICO</option>
+            <option value="Digital">Digital Transformation</option>
+            <option value="Cloud">Cloud & Infrastructure</option>
+            <option value="Enterprise">Enterprise Application</option>
+          </select>
+        </div>
+
+        <!-- Location Filter -->
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Work Mode / Location</label>
+          <select id="filter-location" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-orange-500 transition">
+            <option value="all">All Locations</option>
+            <option value="Bengaluru">Bengaluru, India</option>
+            <option value="Irving">Irving, TX (USA)</option>
+            <option value="Remote">Remote / Flexible</option>
+          </select>
+        </div>
+
+        <button id="btn-reset-filters" class="text-xs text-slate-400 hover:text-orange-400 transition underline pt-1 block">
+          Reset all filters
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- ============================================== -->
+    <!-- RIGHT MAIN CONTENT: AVAILABLE JOBS FEED -->
+    <!-- ============================================== -->
+    <main class="lg:col-span-8 space-y-6">
+      
+      <!-- Top Counter Bar -->
+      <div class="flex items-center justify-between bg-slate-900/60 border border-slate-800/80 px-4 py-3 rounded-xl">
+        <div class="text-xs sm:text-sm text-slate-300">
+          Showing <span id="jobs-count-badge" class="font-bold text-orange-400">0</span> open positions
+        </div>
+        <div class="text-xs text-slate-500">
+          Updated in real-time
+        </div>
+      </div>
+
+      <!-- Jobs Listings Container -->
+      <div id="jobs-feed" class="space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+          <i class="fas fa-spinner fa-spin text-2xl text-orange-500 mb-3"></i>
+          <p class="text-slate-400 text-sm">Loading available jobs...</p>
+        </div>
+      </div>
+
+      <!-- Application CTA Card -->
+      <div class="bg-gradient-to-r from-slate-900 to-slate-800 border border-slate-700/60 rounded-2xl p-6 sm:p-8 text-center shadow-lg space-y-3">
+        <h3 class="text-xl sm:text-2xl font-bold text-white">Don't see a matching position?</h3>
+        <p class="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto">
+          We are always looking for exceptional talent. Submit your resume to our general pool and our recruiters will reach out when a suitable position opens.
+        </p>
+        <div class="pt-2">
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog" target="_blank" class="inline-flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm py-2.5 px-6 rounded-xl transition shadow-lg">
+            <span>Send General CV</span>
+            <i class="fas fa-arrow-right text-xs"></i>
+          </a>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL: POST / EDIT JOB (FOR AUTHORIZED ADMINS) -->
+<!-- ============================================== -->
+<div id="modal-job" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+    <button id="btn-close-job-modal" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+      <i class="fas fa-times"></i>
+    </button>
+    
+    <div class="mb-5">
+      <h2 id="modal-heading" class="text-xl font-bold text-white">Post New Job Opening</h2>
+      <p class="text-slate-400 text-xs mt-0.5">This position will appear immediately under Available Jobs.</p>
+    </div>
+
+    <form id="form-job" class="space-y-4">
+      <input type="hidden" id="job-id" value=""/>
+      
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Job Title *</label>
+        <input type="text" id="input-job-title" required placeholder="e.g. S4HANA Senior FICO Consultant" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Department *</label>
+          <input type="text" id="input-job-dept" required placeholder="e.g. SAP Solutions" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Experience *</label>
+          <input type="text" id="input-job-exp" required placeholder="e.g. 5 to 8 years" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Location / Mode *</label>
+          <input type="text" id="input-job-loc" required placeholder="e.g. Bengaluru / Irving TX / Remote" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Job Type *</label>
+          <select id="input-job-type" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition">
+            <option value="Full-Time">Full-Time</option>
+            <option value="Contract">Contract</option>
+            <option value="Part-Time">Part-Time</option>
+            <option value="Internship">Internship</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Key Responsibilities (One per line) *</label>
+        <textarea id="input-job-resp" required rows="4" placeholder="Provide business process and functional support for SAP FI module&#10;Facilitate requirements gathering workshops&#10;Develop functional specifications for customizations" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Qualifications (One per line) *</label>
+        <textarea id="input-job-qual" required rows="3" placeholder="Preferable S4HANA certifications&#10;Relevant Bachelor's degree or equivalent" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"></textarea>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">Application URL</label>
+        <input type="url" id="input-job-apply" value="https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+
+      <div id="job-modal-error" class="hidden text-xs text-red-400 font-medium"></div>
+
+      <div class="pt-3 flex items-center justify-end space-x-3 border-t border-slate-800">
+        <button type="button" id="btn-cancel-job-modal" class="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white transition">Cancel</button>
+        <button type="submit" id="btn-submit-job" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition shadow-md">
+          Publish Job
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- MODAL: GRANT ACCESS TO ANOTHER USER -->
+<!-- ============================================== -->
+<div id="modal-access" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+    <button id="btn-close-access-modal" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="mb-4">
+      <h3 class="text-lg font-bold text-white">Authorize Team Member</h3>
+      <p class="text-slate-400 text-xs mt-1">Allow another Google account to post and manage jobs.</p>
+    </div>
+    <form id="form-grant-access" class="space-y-3">
+      <div>
+        <label class="block text-xs font-medium text-slate-300 mb-1">Google Email Address *</label>
+        <input type="email" id="access-email" required placeholder="colleague@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+      <div>
+        <label class="block text-xs font-medium text-slate-300 mb-1">Name / Title (Optional)</label>
+        <input type="text" id="access-name" placeholder="e.g. Lead Technical Recruiter" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"/>
+      </div>
+      <div id="access-feedback" class="hidden text-xs"></div>
+      <div class="pt-2 flex justify-end space-x-2">
+        <button type="button" id="btn-cancel-access-modal" class="px-4 py-2 text-xs text-slate-400 hover:text-white">Close</button>
+        <button type="submit" id="btn-confirm-access" class="bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold px-4 py-2 rounded-xl transition">
+          Authorize Account
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="bg-slate-900 text-slate-400 p-8 border-t border-slate-800 mt-12">
+  <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div>
+      <div class="flex items-center space-x-4 mb-4">
+        <img src="logo.png" class="h-12" alt="Logo" />
+        <h3 class="text-2xl font-bold text-white">AJHA CONSULTANCY SERVICES</h3>
+      </div>
+      <p>Your partner in Enterprise Application Solutions, Digital Transformation, and Strategic Staffing.</p>
+    </div>
+    <div>
+      <h4 class="text-xl font-bold text-white mb-4">Quick Links</h4>
+      <ul class="space-y-2">
+        <li><a href="index.html" class="hover:text-white">Home</a></li>
+        <li><a href="about-us.html" class="hover:text-white">About Us</a></li>
+        <li><a href="our-services.html" class="hover:text-white">Services</a></li>
+        <li><a href="industries.html" class="hover:text-white">Industries</a></li>
+        <li><a href="executive-board.html" class="hover:text-white">Executive Board</a></li>
+        <li><a href="careers.html" class="text-orange-400 font-semibold">Careers</a></li>
+        <li><a href="index.html#clients" class="hover:text-white">Clients</a></li>
+        <li><a href="index.html#contact" class="hover:text-white">Contact</a></li>
+        <li><a href="partner-portal.html" class="text-orange-400 hover:text-orange-300 font-semibold flex items-center pt-2"><i class="fas fa-lock text-xs mr-1.5"></i>Partner Portal (Upload CV)</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4 class="text-xl font-bold text-white mb-4">Contact Us</h4>
+      <div class="space-y-2 text-sm">
+        <p><strong class="text-white">India:</strong> HD-066, We work Cinnabar Hills, Challaghatta Road, Bengaluru 560071</p>
+        <p><strong class="text-white">USA:</strong> 2716 Baron Ln Irving, TX, 75063, USA</p>
+        <p><strong class="text-white">Email:</strong> <a href="mailto:marketing@ajhacs.com" class="hover:text-white text-orange-400">marketing@ajhacs.com</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="text-center mt-8 pt-4 border-t border-slate-800 text-slate-500 text-xs">
+    <p>© 2019 Ajha Consultancy Services, Inc. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- SCRIPT: FIREBASE AUTH & JOBS MANAGEMENT -->
+<script type="module">
+  import {
+    auth,
+    googleProvider,
+    signInWithPopup,
+    signOut,
+    onAuthStateChanged,
+    db,
+    collection,
+    addDoc,
+    doc,
+    getDocs,
+    getDoc,
+    setDoc,
+    updateDoc,
+    deleteDoc,
+    serverTimestamp
+  } from "./firebase-config.js";
+
+  // Root Super-Admins
+  const ROOT_ADMINS = [
+    "ram.annadanam@gmail.com",
+    "mohaneswar3@gmail.com"
+  ];
+
+  // Baseline Fallback Job Openings
+  const BASELINE_JOBS = [
+    {
+      id: "baseline-1",
+      title: "S4HANA Senior FICO Consultants",
+      department: "SAP Solutions",
+      experience: "5 to 8 years relevant experience",
+      location: "Bengaluru (Hybrid)",
+      jobType: "Full-Time",
+      isBaseline: true,
+      responsibilities: [
+        "Provide business process and functional support for the SAP FI module, including its sub-ledgers (AP, AR, and AA).",
+        "Must have experience on S4 Implementation on a private cloud or public cloud, Support engagement.",
+        "Facilitate requirements gathering workshops/discussions and assess, challenge, and document the business requirements.",
+        "Provide alternatives and recommend a solution.",
+        "Develop functional specifications for customizations and enhancements, which include reports, data processing, load programs, and adjustment tools.",
+        "Develop test strategies, test plans, and test scripts.",
+        "Good knowledge of integration aspects between FICO, SD, MM and all other core modules."
+      ],
+      qualifications: [
+        "Preferable S4HANA certifications.",
+        "Bachelor's degree in Computer Science, IT, or related fields."
+      ],
+      applyUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog"
+    },
+    {
+      id: "baseline-2",
+      title: "S4HANA Junior Consultants",
+      department: "SAP Solutions",
+      experience: "1 to 4 years relevant experience",
+      location: "Bengaluru (Hybrid)",
+      jobType: "Full-Time",
+      isBaseline: true,
+      responsibilities: [
+        "Must have experience on S4 Implementation on a private cloud or public cloud, Support engagement.",
+        "Develop functional specifications for customizations and enhancements, which include reports, data processing, load programs, and adjustment tools.",
+        "Develop test strategies, test plans and test scripts.",
+        "Perform functional testing (execution) after development completion.",
+        "Good knowledge of integration aspects between FICO, SD, MM and all other core modules."
+      ],
+      qualifications: [
+        "Preferable S4HANA certifications."
+      ],
+      applyUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog"
+    },
+    {
+      id: "baseline-3",
+      title: "S4HANA Junior and Senior Developers",
+      department: "SAP Solutions",
+      experience: "1 to 10 years relevant experience",
+      location: "Bengaluru / Remote",
+      jobType: "Full-Time",
+      isBaseline: true,
+      responsibilities: [
+        "Must have experience on S4 Implementation on a private cloud or public cloud, Support engagement.",
+        "Develop functional specifications for customizations and enhancements, which include reports, data processing, load programs, and adjustment tools.",
+        "BTP integrations - outbound /Inbound, AI core and machine."
+      ],
+      qualifications: [
+        "Preferable S4HANA certifications."
+      ],
+      applyUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog"
+    }
+  ];
+
+  let currentUser = null;
+  let isAuthorized = false;
+  let allJobs = [];
+
+  // Sidebar Elements
+  const sidebarLoggedOut = document.getElementById('sidebar-auth-logged-out');
+  const sidebarLoggedIn = document.getElementById('sidebar-auth-logged-in');
+  const sidebarUnauth = document.getElementById('sidebar-auth-unauthorized');
+  const adminAvatar = document.getElementById('admin-avatar');
+  const adminName = document.getElementById('admin-name');
+  const adminEmail = document.getElementById('admin-email');
+  const domainWarning = document.getElementById('domain-warning');
+
+  // Modals
+  const modalJob = document.getElementById('modal-job');
+  const formJob = document.getElementById('form-job');
+  const modalHeading = document.getElementById('modal-heading');
+  const modalAccess = document.getElementById('modal-access');
+  const formAccess = document.getElementById('form-grant-access');
+
+  // Check Admin Authorization
+  async function checkAdminStatus(user) {
+    if (!user || !user.email) return false;
+    const emailLower = user.email.toLowerCase();
+    if (ROOT_ADMINS.includes(emailLower)) return true;
+    try {
+      const snap = await getDoc(doc(db, "admins", emailLower));
+      if (snap.exists()) return true;
+    } catch (e) {
+      console.warn("Access check error:", e);
+    }
+    return false;
+  }
+
+  // Auth State Listener
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      currentUser = null;
+      isAuthorized = false;
+      sidebarLoggedOut.classList.remove('hidden');
+      sidebarLoggedIn.classList.add('hidden');
+      sidebarUnauth.classList.add('hidden');
+      renderJobsFeed();
+      return;
+    }
+
+    currentUser = user;
+    isAuthorized = await checkAdminStatus(user);
+
+    if (isAuthorized) {
+      sidebarLoggedOut.classList.add('hidden');
+      sidebarLoggedIn.classList.remove('hidden');
+      sidebarUnauth.classList.add('hidden');
+      adminName.textContent = user.displayName || "Administrator";
+      adminEmail.textContent = user.email;
+      if (user.photoURL) {
+        adminAvatar.innerHTML = `<img src="${user.photoURL}" class="w-full h-full object-cover rounded-full" />`;
+      } else {
+        adminAvatar.textContent = (user.displayName || user.email)[0].toUpperCase();
+      }
+    } else {
+      sidebarLoggedOut.classList.add('hidden');
+      sidebarLoggedIn.classList.add('hidden');
+      sidebarUnauth.classList.remove('hidden');
+      document.getElementById('sidebar-unauth-email').textContent = `Account (${user.email}) is not authorized to post jobs.`;
+    }
+
+    renderJobsFeed();
+  });
+
+  // Login Click Handler
+  document.getElementById('btn-sidebar-login').addEventListener('click', async () => {
+    try {
+      domainWarning.classList.add('hidden');
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error("Login error:", err);
+      if (err.code === 'auth/unauthorized-domain') {
+        domainWarning.classList.remove('hidden');
+      } else {
+        alert("Sign-in failed: " + err.message);
+      }
+    }
+  });
+
+  // Sign Out Handlers
+  const handleSignOut = async () => { await signOut(auth); };
+  document.getElementById('btn-sidebar-signout').addEventListener('click', handleSignOut);
+  document.getElementById('btn-sidebar-signout-unauth').addEventListener('click', handleSignOut);
+
+  // Fetch Jobs
+  async function loadJobs() {
+    try {
+      const snap = await getDocs(collection(db, "jobs"));
+      const firestoreJobs = [];
+      snap.forEach(d => {
+        firestoreJobs.push({ id: d.id, ...d.data() });
+      });
+
+      // Sort Firestore jobs newest first
+      firestoreJobs.sort((a, b) => {
+        const timeA = a.createdAt?.seconds || 0;
+        const timeB = b.createdAt?.seconds || 0;
+        return timeB - timeA;
+      });
+
+      // Active jobs from Firestore + baseline positions
+      allJobs = [...firestoreJobs, ...BASELINE_JOBS];
+      renderJobsFeed();
+    } catch (err) {
+      console.warn("Using baseline jobs fallback:", err);
+      allJobs = BASELINE_JOBS;
+      renderJobsFeed();
+    }
+  }
+
+  // Render Jobs Feed
+  function renderJobsFeed() {
+    const feed = document.getElementById('jobs-feed');
+    const counterBadge = document.getElementById('jobs-count-badge');
+    const keyword = document.getElementById('filter-search').value.toLowerCase();
+    const dept = document.getElementById('filter-dept').value;
+    const loc = document.getElementById('filter-location').value;
+
+    const filtered = allJobs.filter(job => {
+      // If visitor, only show active jobs
+      if (!isAuthorized && job.status === 'draft') return false;
+
+      const title = (job.title || '').toLowerCase();
+      const department = (job.department || '').toLowerCase();
+      const location = (job.location || '').toLowerCase();
+
+      const matchesKeyword = !keyword || title.includes(keyword) || department.includes(keyword) || location.includes(keyword);
+      const matchesDept = dept === 'all' || department.includes(dept.toLowerCase());
+      const matchesLoc = loc === 'all' || location.includes(loc.toLowerCase());
+
+      return matchesKeyword && matchesDept && matchesLoc;
+    });
+
+    counterBadge.textContent = filtered.length;
+
+    if (filtered.length === 0) {
+      feed.innerHTML = `
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-12 text-center">
+          <div class="w-12 h-12 rounded-xl bg-slate-800 text-slate-500 flex items-center justify-center mx-auto mb-3 text-lg">
+            <i class="fas fa-search"></i>
+          </div>
+          <h3 class="text-white font-bold text-base mb-1">No Openings Found</h3>
+          <p class="text-slate-400 text-xs">Try adjusting your filters or search keywords.</p>
+        </div>
+      `;
+      return;
+    }
+
+    feed.innerHTML = filtered.map(job => {
+      const responsibilities = Array.isArray(job.responsibilities) ? job.responsibilities : [];
+      const qualifications = Array.isArray(job.qualifications) ? job.qualifications : [];
+      const applyUrl = job.applyUrl || "https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog";
+      const isCustom = !job.isBaseline;
+
+      return `
+        <article class="bg-slate-900 border border-slate-800/90 hover:border-slate-700/80 rounded-2xl p-6 sm:p-8 transition shadow-lg relative">
+          
+          <!-- Admin Badges & Actions (If logged in as Ram/Admin) -->
+          <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="bg-orange-500/15 text-orange-400 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-orange-500/30">
+                ${isCustom ? '<i class="fas fa-sparkles mr-1 text-[10px]"></i> Live Opening' : 'Featured Opening'}
+              </span>
+              <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">
+                <i class="fas fa-tag text-[10px] mr-1 text-orange-400"></i> ${escapeHtml(job.department || 'Consulting')}
+              </span>
+              <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">
+                <i class="fas fa-map-marker-alt text-[10px] mr-1 text-orange-400"></i> ${escapeHtml(job.location || 'Flexible')}
+              </span>
+              <span class="bg-slate-800 text-slate-300 text-xs px-2.5 py-0.5 rounded-full border border-slate-700/60">
+                <i class="fas fa-clock text-[10px] mr-1 text-orange-400"></i> ${escapeHtml(job.jobType || 'Full-Time')}
+              </span>
+            </div>
+
+            <!-- In-place Admin Controls for Ram -->
+            ${isAuthorized && isCustom ? `
+              <div class="flex items-center space-x-1.5 flex-shrink-0 bg-slate-950 p-1 rounded-lg border border-slate-800">
+                <button onclick="window.editJob('${job.id}')" title="Edit Position" class="text-xs text-slate-300 hover:text-white px-2 py-1 hover:bg-slate-800 rounded transition">
+                  <i class="fas fa-edit mr-1"></i> Edit
+                </button>
+                <button onclick="window.deleteJob('${job.id}')" title="Delete Position" class="text-xs text-red-400 hover:text-red-300 px-2 py-1 hover:bg-red-500/10 rounded transition">
+                  <i class="fas fa-trash-alt mr-1"></i> Delete
+                </button>
+              </div>
+            ` : ''}
+          </div>
+
+          <h2 class="text-xl sm:text-2xl font-bold text-white mb-1.5">${escapeHtml(job.title)}</h2>
+          <p class="text-xs sm:text-sm text-slate-400 mb-5">
+            <strong class="text-slate-300">Experience:</strong> ${escapeHtml(job.experience || 'Not specified')}
+          </p>
+
+          ${responsibilities.length > 0 ? `
+            <div class="mt-4 mb-3">
+              <h4 class="text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">Key Responsibilities:</h4>
+              <ul class="space-y-1.5 text-xs sm:text-sm text-slate-300 list-disc list-inside">
+                ${responsibilities.map(r => `<li>${escapeHtml(r)}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          ${qualifications.length > 0 ? `
+            <div class="mt-4 mb-5">
+              <h4 class="text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">Qualifications:</h4>
+              <ul class="space-y-1.5 text-xs sm:text-sm text-slate-300 list-disc list-inside">
+                ${qualifications.map(q => `<li>${escapeHtml(q)}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+
+          <div class="pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <a href="${escapeHtml(applyUrl)}" target="_blank" class="inline-flex items-center space-x-2 bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm py-2 px-5 rounded-xl transition shadow-md">
+              <span>Apply for this Position</span>
+              <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+            <span class="text-slate-500 text-xs hidden sm:inline">AJHA Consultancy Careers</span>
+          </div>
+
+        </article>
+      `;
+    }).join('');
+  }
+
+  // Filter Listeners
+  document.getElementById('filter-search').addEventListener('input', renderJobsFeed);
+  document.getElementById('filter-dept').addEventListener('change', renderJobsFeed);
+  document.getElementById('filter-location').addEventListener('change', renderJobsFeed);
+  document.getElementById('btn-reset-filters').addEventListener('click', () => {
+    document.getElementById('filter-search').value = '';
+    document.getElementById('filter-dept').value = 'all';
+    document.getElementById('filter-location').value = 'all';
+    renderJobsFeed();
+  });
+
+  // Modal: Open Post Job
+  document.getElementById('btn-open-post-job').addEventListener('click', () => {
+    formJob.reset();
+    document.getElementById('job-id').value = '';
+    modalHeading.textContent = "Post New Job Opening";
+    document.getElementById('btn-submit-job').textContent = "Publish Job";
+    document.getElementById('job-modal-error').classList.add('hidden');
+    modalJob.classList.remove('hidden');
+  });
+
+  // Modal Close Handlers
+  const closeJobModal = () => { modalJob.classList.add('hidden'); };
+  document.getElementById('btn-close-job-modal').addEventListener('click', closeJobModal);
+  document.getElementById('btn-cancel-job-modal').addEventListener('click', closeJobModal);
+
+  // Submit Job Form
+  formJob.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = document.getElementById('btn-submit-job');
+    const errBox = document.getElementById('job-modal-error');
+    const id = document.getElementById('job-id').value;
+
+    const title = document.getElementById('input-job-title').value.trim();
+    const department = document.getElementById('input-job-dept').value.trim();
+    const experience = document.getElementById('input-job-exp').value.trim();
+    const location = document.getElementById('input-job-loc').value.trim();
+    const jobType = document.getElementById('input-job-type').value;
+    const respRaw = document.getElementById('input-job-resp').value.trim();
+    const qualRaw = document.getElementById('input-job-qual').value.trim();
+    const applyUrl = document.getElementById('input-job-apply').value.trim();
+
+    const responsibilities = respRaw.split('\n').map(s => s.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+    const qualifications = qualRaw.split('\n').map(s => s.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
+
+    try {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Publishing...";
+      errBox.classList.add('hidden');
+
+      const payload = {
+        title,
+        department,
+        experience,
+        location,
+        jobType,
+        responsibilities,
+        qualifications,
+        applyUrl: applyUrl || "https://docs.google.com/forms/d/e/1FAIpQLSdZ4PIhHAsKRAL8_YDseb9hsoCpZuvDoKE3EHGMoYtrVY2JnA/viewform?usp=dialog",
+        status: "active",
+        updatedAt: serverTimestamp()
+      };
+
+      if (id) {
+        await updateDoc(doc(db, "jobs", id), payload);
+      } else {
+        payload.createdAt = serverTimestamp();
+        payload.postedBy = currentUser.email;
+        await addDoc(collection(db, "jobs"), payload);
+      }
+
+      closeJobModal();
+      await loadJobs();
+    } catch (err) {
+      console.error("Save error:", err);
+      errBox.classList.remove('hidden');
+      errBox.textContent = "Failed: " + err.message;
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = id ? "Update Job" : "Publish Job";
+    }
+  });
+
+  // Edit Job Action
+  window.editJob = (id) => {
+    const job = allJobs.find(j => j.id === id);
+    if (!job) return;
+    document.getElementById('job-id').value = job.id;
+    document.getElementById('input-job-title').value = job.title || '';
+    document.getElementById('input-job-dept').value = job.department || '';
+    document.getElementById('input-job-exp').value = job.experience || '';
+    document.getElementById('input-job-loc').value = job.location || '';
+    document.getElementById('input-job-type').value = job.jobType || 'Full-Time';
+    document.getElementById('input-job-resp').value = (job.responsibilities || []).join('\n');
+    document.getElementById('input-job-qual').value = (job.qualifications || []).join('\n');
+    document.getElementById('input-job-apply').value = job.applyUrl || '';
+    modalHeading.textContent = "Edit Job Opening";
+    document.getElementById('btn-submit-job').textContent = "Update Job";
+    document.getElementById('job-modal-error').classList.add('hidden');
+    modalJob.classList.remove('hidden');
+  };
+
+  // Delete Job Action
+  window.deleteJob = async (id) => {
+    if (!confirm("Are you sure you want to permanently delete this job opening?")) return;
+    try {
+      await deleteDoc(doc(db, "jobs", id));
+      await loadJobs();
+    } catch (err) {
+      alert("Delete failed: " + err.message);
+    }
+  };
+
+  // Access Modal Open/Close
+  document.getElementById('btn-open-access-modal').addEventListener('click', () => {
+    formAccess.reset();
+    document.getElementById('access-feedback').classList.add('hidden');
+    modalAccess.classList.remove('hidden');
+  });
+  const closeAccessModal = () => { modalAccess.classList.add('hidden'); };
+  document.getElementById('btn-close-access-modal').addEventListener('click', closeAccessModal);
+  document.getElementById('btn-cancel-access-modal').addEventListener('click', closeAccessModal);
+
+  // Grant Access Form
+  formAccess.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('access-email').value.trim().toLowerCase();
+    const name = document.getElementById('access-name').value.trim();
+    const feedback = document.getElementById('access-feedback');
+
+    if (!email) return;
+
+    try {
+      feedback.className = "text-xs text-slate-400 block";
+      feedback.textContent = "Granting access...";
+
+      await setDoc(doc(db, "admins", email), {
+        email,
+        name: name || email.split('@')[0],
+        addedBy: currentUser.email,
+        createdAt: serverTimestamp()
+      });
+
+      feedback.className = "text-xs text-emerald-400 block";
+      feedback.textContent = `Granted access to ${email}!`;
+      setTimeout(closeAccessModal, 1500);
+    } catch (err) {
+      feedback.className = "text-xs text-red-400 block";
+      feedback.textContent = "Failed: " + err.message;
+    }
+  });
+
+  // Helpers
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  }
+
+  // Initial Load
+  loadJobs();
+</script>
+
+<!-- Mobile Navigation Toggles -->
+<script>
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const mobileNav = document.getElementById('mobile-nav');
+  hamburgerBtn.addEventListener('click', () => {
+    const isHidden = mobileNav.classList.toggle('hidden');
+    const icon = hamburgerBtn.querySelector('i');
+    if (icon) icon.className = isHidden ? 'fas fa-bars' : 'fas fa-times';
+  });
+  const mobileServicesBtn = document.getElementById('mobile-services-btn');
+  const mobileServicesDropdown = document.getElementById('mobile-services-dropdown');
+  mobileServicesBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    mobileServicesDropdown.classList.toggle('show');
+  });
+  document.getElementById('services-dropdown-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('services-dropdown').classList.toggle('hidden');
+  });
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('services-dropdown').contains(e.target) && !document.getElementById('services-dropdown-btn').contains(e.target)) {
+      document.getElementById('services-dropdown').classList.add('hidden');
+    }
+  });
+</script>
+
 </body>
 </html>

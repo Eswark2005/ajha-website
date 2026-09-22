@@ -15,6 +15,13 @@ service cloud.firestore {
       );
     }
 
+    function isPartner() {
+      return isAuthenticated() && (
+        isAdmin() ||
+        exists(/databases/$(database)/documents/partners/$(request.auth.token.email.lower()))
+      );
+    }
+
     // Contact inquiries submitted from the website
     match /contacts/{contactId} {
       // Public visitors can submit contact inquiries
@@ -39,6 +46,18 @@ service cloud.firestore {
     match /admins/{adminEmail} {
       // Only authorized administrators can view or delegate admin access
       allow read, write: if isAdmin();
+    }
+
+    // Partner accounts (clients and staffing partners)
+    match /partners/{partnerEmail} {
+      allow read: if isAuthenticated() && (isAdmin() || request.auth.token.email.lower() == partnerEmail.lower());
+      allow write: if isAdmin();
+    }
+
+    // CV Submissions uploaded by authorized partners
+    match /submissions/{submissionId} {
+      allow create: if isPartner();
+      allow read, update, delete: if isAdmin();
     }
   }
 }
