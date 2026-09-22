@@ -32,8 +32,8 @@
       </div>
 
       <div class="flex items-center space-x-4">
-        <a href="careers.html" target="_blank" class="text-xs sm:text-sm text-slate-400 hover:text-orange-400 flex items-center transition">
-          <i class="fas fa-external-link-alt mr-1.5"></i> View Careers Page
+        <a href="jobs.html" target="_blank" class="text-xs sm:text-sm text-slate-400 hover:text-orange-400 flex items-center transition">
+          <i class="fas fa-external-link-alt mr-1.5"></i> View Jobs Page
         </a>
         
         <!-- Authenticated User Profile Pill -->
@@ -557,7 +557,11 @@
       } catch (err) {
         console.error("Sign-in error:", err);
         authErrorBanner.classList.remove('hidden');
-        authErrorMessage.textContent = err.message || "Failed to sign in. Please try again.";
+        if (err.code === 'auth/unauthorized-domain') {
+          authErrorMessage.innerHTML = `<strong>Domain Authorization Needed:</strong> This domain is not yet authorized in Firebase Auth.<br/><br/>To resolve this in 10 seconds: Go to <a href="https://console.firebase.google.com/project/ajha-website-c82f1/authentication/settings" target="_blank" class="underline text-orange-400 font-bold">Firebase Console &gt; Authentication &gt; Settings &gt; Authorized domains</a>, click <strong>Add domain</strong>, and enter <strong>ajhaconsultancyservices.com</strong>.`;
+        } else {
+          authErrorMessage.textContent = err.message || "Failed to sign in. Please try again.";
+        }
       }
     });
 
