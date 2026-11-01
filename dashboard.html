@@ -385,6 +385,19 @@
           </div>
         </div>
 
+        <!-- Email Trigger Checkbox for Partners -->
+        <div class="p-3 bg-slate-950 border border-slate-800 rounded-xl">
+          <label class="flex items-start space-x-2.5 cursor-pointer">
+            <input type="checkbox" id="job-notify-partners" checked class="mt-0.5 w-4 h-4 text-orange-500 bg-slate-900 border-slate-700 rounded focus:ring-orange-500 focus:ring-offset-slate-900"/>
+            <div>
+              <span class="text-xs font-semibold text-slate-200 flex items-center">
+                <i class="fas fa-bell text-orange-400 mr-1.5"></i> Trigger email alert to authorized partners / clients
+              </span>
+              <p class="text-[11px] text-slate-400 mt-0.5">Sends email notification to clients & partners that log in to post CVs.</p>
+            </div>
+          </label>
+        </div>
+
         <!-- Error Feedback -->
         <div id="job-form-error" class="hidden text-xs text-red-400 font-medium"></div>
 
@@ -607,6 +620,71 @@
     // -----------------------------------------------------------------
     // 3. JOBS MANAGEMENT (CRUD)
     // -----------------------------------------------------------------
+    // Partner Job Alert Dispatcher
+    async function triggerPartnerJobAlerts(job, jobId = null) {
+      const partnerEmails = new Set();
+      try {
+        const snapP = await getDocs(collection(db, "partners"));
+        snapP.forEach(docSnap => {
+          const d = docSnap.data() || {};
+          const email = (d.email || docSnap.id || '').trim().toLowerCase();
+          if (email && email.includes('@') && !email.includes('example.com')) partnerEmails.add(email);
+        });
+      } catch(e) {}
+      try {
+        const snapS = await getDocs(collection(db, "submissions"));
+        snapS.forEach(docSnap => {
+          const d = docSnap.data() || {};
+          const pEmail = (d.partnerEmail || '').trim().toLowerCase();
+          if (pEmail && pEmail.includes('@') && !pEmail.includes('example.com')) partnerEmails.add(pEmail);
+        });
+      } catch(e) {}
+      ROOT_ADMINS.forEach(adm => partnerEmails.add(adm.toLowerCase().trim()));
+
+      const recipients = Array.from(partnerEmails);
+      if (recipients.length === 0) return;
+
+      try {
+        await addDoc(collection(db, "notifications"), {
+          type: "new_job_alert",
+          jobId: jobId || "dashboard",
+          jobTitle: job.title,
+          recipients,
+          recipientsCount: recipients.length,
+          sentBy: (currentUser && currentUser.email) || "admin",
+          sentAt: serverTimestamp()
+        });
+      } catch(e) {}
+
+      const respList = Array.isArray(job.responsibilities) ? job.responsibilities.map(r => '• ' + r).join('\n') : (job.responsibilities || 'N/A');
+      const qualList = Array.isArray(job.qualifications) ? job.qualifications.map(q => '• ' + q).join('\n') : (job.qualifications || 'N/A');
+
+      const dispatchPromises = recipients.map(async (email) => {
+        try {
+          const formData = new FormData();
+          formData.append('_subject', `[AJHA Job Alert] New Requirement: ${job.title} (${job.location || 'Multiple'})`);
+          formData.append('Requirement Notice', 'Dear Authorized Partner / Client, a new requirement has been posted on the AJHA Partner Portal.');
+          formData.append('Position Title', job.title);
+          formData.append('Practice / Department', job.department || 'Consulting');
+          formData.append('Experience Level', job.experience || 'Not specified');
+          formData.append('Work Location', job.location || 'Flexible');
+          formData.append('Employment Type', job.jobType || 'Full-Time');
+          formData.append('Key Responsibilities', respList);
+          formData.append('Required Qualifications', qualList);
+          formData.append('Submit Matching CVs Here', 'https://www.ajhaconsultancyservices.com/partners.html');
+          formData.append('_replyto', 'marketing@ajhacs.com');
+          formData.append('_template', 'table');
+
+          await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(email)}`, {
+            method: 'POST',
+            body: formData
+          });
+        } catch(e) {}
+      });
+
+      await Promise.allSettled(dispatchPromises);
+    }
+
     async function loadAllJobs() {
       const jobsList = document.getElementById('jobs-list');
       try {
@@ -813,7 +891,16 @@
           // Create new
           jobPayload.createdAt = serverTimestamp();
           jobPayload.postedBy = currentUser.email;
-          await addDoc(collection(db, "jobs"), jobPayload);
+          const newDocRef = await addDoc(collection(db, "jobs"), jobPayload);
+
+          const shouldNotify = document.getElementById('job-notify-partners') ? document.getElementById('job-notify-partners').checked : true;
+          if (shouldNotify && status === 'active') {
+            try {
+              await triggerPartnerJobAlerts(jobPayload, newDocRef.id);
+            } catch(alertErr) {
+              console.warn("Could not trigger partner email alert:", alertErr);
+            }
+          }
         }
 
         closeJobModal();

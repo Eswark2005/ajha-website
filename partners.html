@@ -610,10 +610,25 @@
         <label class="block text-xs text-slate-300 mb-1">Qualifications (One per line) *</label>
         <textarea id="new-jd-qual" required rows="2" placeholder="Preferable S4HANA certifications&#10;Bachelor's degree in Computer Science" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-orange-500 transition"></textarea>
       </div>
+      <!-- Notification Trigger Checkbox -->
+      <div class="p-3 bg-slate-950/80 border border-slate-800 rounded-xl space-y-1">
+        <label class="flex items-start space-x-2.5 cursor-pointer">
+          <input type="checkbox" id="new-jd-notify" checked class="mt-0.5 w-4 h-4 text-orange-500 bg-slate-900 border-slate-700 rounded focus:ring-orange-500 focus:ring-offset-slate-900"/>
+          <div>
+            <span class="text-xs font-semibold text-slate-200 flex items-center">
+              <i class="fas fa-bell text-orange-400 mr-1.5"></i> Email alert to authorized partners / clients
+            </span>
+            <p class="text-[11px] text-slate-400 mt-0.5">Automatically trigger an email alert to all clients/partners authorized to submit CVs.</p>
+          </div>
+        </label>
+      </div>
+      <div id="post-jd-feedback" class="hidden text-xs py-2 px-3 rounded-lg"></div>
+
       <div class="pt-2 flex justify-end space-x-2">
         <button type="button" id="btn-cancel-post-jd" class="px-3 py-1.5 text-xs text-slate-400 hover:text-white">Cancel</button>
-        <button type="submit" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition">
-          Publish JD
+        <button type="submit" id="btn-submit-post-jd" class="bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-xl transition flex items-center space-x-1.5">
+          <i class="fas fa-paper-plane text-xs"></i>
+          <span>Publish & Alert Partners</span>
         </button>
       </div>
     </form>
@@ -647,7 +662,8 @@
     <div>
       <h4 class="text-xl font-bold text-white mb-4">Contact Us</h4>
       <div class="space-y-2 text-sm">
-        <p><strong class="text-white">India:</strong> HD-066, We work Cinnabar Hills, Challaghatta Road, Bengaluru 560071</p>
+        <p><strong class="text-white">Bengaluru:</strong> HD-066, We work Cinnabar Hills, Challaghatta Road, Bengaluru 560071</p>
+        <p><strong class="text-white">Hyderabad:</strong> OD-01, H. No. 11-13-1377/2/410, Vasavi Colony, Saroor Nagar East, Hyderabad, Telangana - 500035</p>
         <p><strong class="text-white">USA:</strong> 2716 Baron Ln Irving, TX, 75063, USA</p>
         <p><strong class="text-white">Email:</strong> <a href="mailto:marketing@ajhacs.com" class="hover:text-white text-orange-400">marketing@ajhacs.com</a></p>
       </div>
@@ -934,6 +950,10 @@
             <!-- Action Area -->
             <div class="flex flex-wrap items-center gap-2 flex-shrink-0">
               ${userRole === 'admin' ? `
+                <button onclick="window.triggerManualJobAlert('${escapeAttr(jd.id)}')" class="bg-amber-950/40 hover:bg-amber-900/60 text-amber-300 border border-amber-800/60 hover:border-amber-700 font-semibold text-xs px-3.5 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow" title="Send email alert to authorized partners">
+                  <i class="fas fa-paper-plane text-amber-400"></i>
+                  <span>Alert Partners</span>
+                </button>
                 <button onclick="window.openEditJdModal('${escapeAttr(jd.id)}')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 hover:border-slate-600 font-semibold text-xs px-3.5 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow" title="Edit JD details">
                   <i class="fas fa-edit text-orange-400"></i>
                   <span>Edit JD</span>
@@ -1997,6 +2017,131 @@
   document.getElementById('btn-close-post-jd').addEventListener('click', closePostJd);
   document.getElementById('btn-cancel-post-jd').addEventListener('click', closePostJd);
 
+  // -------------------------------------------------------------
+  // EMAIL ALERT TRIGGER: NOTIFY PARTNERS / CLIENTS OF NEW JOB
+  // -------------------------------------------------------------
+  async function triggerPartnerJobAlerts(job, jobId = null) {
+    const partnerEmails = new Set();
+
+    // 1. Query authorized partners from Firestore 'partners' collection
+    try {
+      const snapP = await getDocs(collection(db, "partners"));
+      snapP.forEach(docSnap => {
+        const d = docSnap.data() || {};
+        const email = (d.email || docSnap.id || '').trim().toLowerCase();
+        if (email && email.includes('@') && !email.includes('example.com')) {
+          partnerEmails.add(email);
+        }
+      });
+    } catch(err) {
+      console.warn("Could not query partners collection:", err);
+    }
+
+    // 2. Query clients who submitted CVs in 'submissions'
+    try {
+      const snapS = await getDocs(collection(db, "submissions"));
+      snapS.forEach(docSnap => {
+        const d = docSnap.data() || {};
+        const pEmail = (d.partnerEmail || '').trim().toLowerCase();
+        if (pEmail && pEmail.includes('@') && !pEmail.includes('example.com')) {
+          partnerEmails.add(pEmail);
+        }
+      });
+    } catch(err) {
+      console.warn("Could not query submissions collection:", err);
+    }
+
+    // 3. Always include primary admins for verification & audit
+    ROOT_ADMINS.forEach(adm => partnerEmails.add(adm.toLowerCase().trim()));
+
+    const recipients = Array.from(partnerEmails);
+    if (recipients.length === 0) {
+      return { count: 0, recipients: [] };
+    }
+
+    console.log(`Dispatching partner email alert to ${recipients.length} recipients:`, recipients);
+
+    // Save notification log in Firestore
+    try {
+      await addDoc(collection(db, "notifications"), {
+        type: "new_job_alert",
+        jobId: jobId || job.id || "portal",
+        jobTitle: job.title,
+        recipients,
+        recipientsCount: recipients.length,
+        sentBy: (currentUser && currentUser.email) || "admin",
+        sentAt: serverTimestamp()
+      });
+    } catch(err) {
+      console.warn("Could not store notification record:", err);
+    }
+
+    // Dispatch email notification via FormSubmit
+    const respList = Array.isArray(job.responsibilities) ? job.responsibilities.map(r => '• ' + r).join('\n') : (job.responsibilities || 'N/A');
+    const qualList = Array.isArray(job.qualifications) ? job.qualifications.map(q => '• ' + q).join('\n') : (job.qualifications || 'N/A');
+
+    const dispatchPromises = recipients.map(async (email) => {
+      try {
+        const formData = new FormData();
+        formData.append('_subject', `[AJHA Job Alert] New Requirement: ${job.title} (${job.location || 'Multiple'})`);
+        formData.append('Requirement Notice', 'Dear Authorized Partner / Client, a new requirement has been posted on the AJHA Partner Portal.');
+        formData.append('Position Title', job.title);
+        formData.append('Practice / Department', job.department || 'Consulting');
+        formData.append('Experience Level', job.experience || 'Not specified');
+        formData.append('Work Location', job.location || 'Flexible');
+        formData.append('Employment Type', job.jobType || 'Full-Time');
+        formData.append('Key Responsibilities', respList);
+        formData.append('Required Qualifications', qualList);
+        formData.append('Submit Matching CVs Here', 'https://www.ajhaconsultancyservices.com/partners.html');
+        formData.append('Action Required', 'Log in with your authorized Google Account to view complete JD and submit candidate CVs.');
+        formData.append('_replyto', 'marketing@ajhacs.com');
+        formData.append('_template', 'table');
+
+        await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(email)}`, {
+          method: 'POST',
+          body: formData
+        });
+      } catch (postErr) {
+        console.warn(`Error sending job alert email to ${email}:`, postErr);
+      }
+    });
+
+    await Promise.allSettled(dispatchPromises);
+    return { count: recipients.length, recipients };
+  }
+
+  // Manual Trigger for Admins on any JD card
+  window.triggerManualJobAlert = async (jdId) => {
+    const jd = allJDs.find(j => j.id === jdId);
+    if (!jd) {
+      alert("JD not found.");
+      return;
+    }
+
+    if (!confirm(`Send an email alert for "${jd.title}" to all authorized clients and partners?`)) {
+      return;
+    }
+
+    const btn = event?.currentTarget;
+    const origHtml = btn ? btn.innerHTML : null;
+    if (btn) {
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fas fa-spinner fa-spin text-amber-400"></i> <span>Sending...</span>`;
+    }
+
+    try {
+      const res = await triggerPartnerJobAlerts(jd, jdId);
+      alert(`Email alert triggered successfully for "${jd.title}" to ${res.count} recipient(s):\n\n${res.recipients.join('\n')}`);
+    } catch(err) {
+      alert("Error sending alert: " + err.message);
+    } finally {
+      if (btn && origHtml) {
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+    }
+  };
+
   document.getElementById('form-post-jd').addEventListener('submit', async (e) => {
     e.preventDefault();
     const title = document.getElementById('new-jd-title').value.trim();
@@ -2006,9 +2151,18 @@
     const type = document.getElementById('new-jd-type').value;
     const resp = document.getElementById('new-jd-resp').value.trim().split('\n').filter(Boolean);
     const qual = document.getElementById('new-jd-qual').value.trim().split('\n').filter(Boolean);
+    const shouldNotify = document.getElementById('new-jd-notify') ? document.getElementById('new-jd-notify').checked : true;
+
+    const submitBtn = document.getElementById('btn-submit-post-jd');
+    const feedback = document.getElementById('post-jd-feedback');
+    if (submitBtn) submitBtn.disabled = true;
+    if (feedback) {
+      feedback.className = "text-xs py-2 px-3 rounded-lg bg-orange-950/40 text-orange-300 block";
+      feedback.textContent = shouldNotify ? "Publishing JD and dispatching email alerts to authorized partners..." : "Publishing JD...";
+    }
 
     try {
-      await addDoc(collection(db, "jobs"), {
+      const docRef = await addDoc(collection(db, "jobs"), {
         title,
         department: dept,
         experience: exp,
@@ -2020,10 +2174,29 @@
         postedBy: currentUser.email,
         createdAt: serverTimestamp()
       });
+
+      let alertSummary = "";
+      if (shouldNotify) {
+        const res = await triggerPartnerJobAlerts({
+          title,
+          department: dept,
+          experience: exp,
+          location: loc,
+          jobType: type,
+          responsibilities: resp,
+          qualifications: qual
+        }, docRef.id);
+        alertSummary = ` and email alerts were triggered to ${res.count} partner(s)`;
+      }
+
       closePostJd();
       await loadJDs();
+      alert(`Job "${title}" was published successfully${alertSummary}!`);
     } catch(e) {
       alert("Failed: " + e.message);
+    } finally {
+      if (submitBtn) submitBtn.disabled = false;
+      if (feedback) feedback.className = "hidden";
     }
   });
 

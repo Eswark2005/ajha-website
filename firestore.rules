@@ -64,5 +64,10 @@ service cloud.firestore {
         allow read, update, delete: if isAdmin();
       }
     }
+
+    // Job notifications & email alerts
+    match /notifications/{notifId} {
+      allow read, create, update: if isAdmin();
+    }
   }
 }
